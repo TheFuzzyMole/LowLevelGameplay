@@ -1,4 +1,8 @@
 #include <SFML/Graphics.hpp>
+#include <Core/Vector2.h>
+#include <string>;
+
+using namespace LLGP;
 
 class b2World;
 
@@ -10,6 +14,8 @@ int main()
 	sf::CircleShape shape(100.f);
 	shape.setFillColor(sf::Color::Green);
 
+	Vector2<float> vf = Vector2<float>(6.f, 8.f);
+	vf = vf * 6.f;
 	while (window.isOpen())
 	{
 		sf::Event event;
