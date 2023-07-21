@@ -1,5 +1,6 @@
 # Binaries
 **/bin/
+!**/SFML-2.6.0/**/*
 bin-int/
 Intermediates/
 

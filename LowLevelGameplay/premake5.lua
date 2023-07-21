@@ -18,13 +18,13 @@ project "LowLevelGameplay"
 	includedirs
 	{
 		"src",
-		"%{prj.name}/vendor/SFML-2.6.0/include",
+		"%{prj.location}/vendor/SFML-2.6.0/include",
 		"%{IncludeDir.Box2D}"
 	}
 
 	libdirs
 	{
-		"%{prj.name}/vendor/SFML-2.6.0/lib"
+		"%{prj.location}/vendor/SFML-2.6.0/lib"
 	}
 
 	links

@@ -3,6 +3,7 @@ include "Dependencies.lua"
 
 workspace "LowLevelGameplay"
 	architecture "x64"
+	startproject "LowLevelGameplay"
 
 	configurations
 	{
