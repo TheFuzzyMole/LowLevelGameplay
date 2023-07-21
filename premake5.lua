@@ -1,3 +1,5 @@
+include "Dependencies.lua"
+
 workspace "LowLevelGameplay"
 	architecture "x64"
 
@@ -8,6 +10,10 @@ workspace "LowLevelGameplay"
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+group "Dependencies"
+	include "LowLevelGameplay/vendor/Box2D"
+group""
 
 project "LowLevelGameplay"
 	location "LowLevelGameplay"
@@ -27,7 +33,8 @@ project "LowLevelGameplay"
 
 	includedirs
 	{
-		"%{prj.name}/vendor/SFML-2.6.0/include"
+		"%{prj.name}/vendor/SFML-2.6.0/include",
+		"%{IncludeDir.Box2D}"
 	}
 
 	libdirs
@@ -46,7 +53,8 @@ project "LowLevelGameplay"
 		"vorbisfile",
 		"vorbis",
 		"ogg",
-		"ws2_32"
+		"ws2_32",
+		"Box2D"
 	}
 
 	filter "system:windows"
