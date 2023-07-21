@@ -1,5 +1,9 @@
 #include <SFML/Graphics.hpp>
 
+class b2World;
+
+b2World* m_World = nullptr;
+
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML Works!");
