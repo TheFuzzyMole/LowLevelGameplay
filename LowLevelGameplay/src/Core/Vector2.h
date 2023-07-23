@@ -1,19 +1,13 @@
 #pragma once
-#include <Core/Vector3.h>
-#include <concepts>
+#include <math.h>
+#include <Core/arithmetic_concpet.h>
 
 namespace LLGP
 {
+	template<typename T> requires arithmetic<T>
+	class Vector3;
 
-#ifndef CONCEPT_ARITHMETIC
-#define CONCEPT_ARITHMETIC
-	//C++20 concept created so templates can require arithmetic properties of tempalted typenames
-	template<typename T>
-	concept arithmetic = std::integral<T> or std::floating_point<T>;
-#endif
-
-	template<typename T>
-		requires arithmetic<T>
+	template<typename T> requires arithmetic<T>
 	class Vector2
 	{
 	public:
@@ -31,39 +25,57 @@ namespace LLGP
 		Vector2(const Vector2&) = default;
 		Vector2(T X, T Y) : x(X), y(Y) {}
 
-		template<typename U>
+		template<typename U> requires arithmetic<U>
 		explicit Vector2(const Vector2<U>& in) :
 			x(static_cast<T>(in.x)), y(static_cast<T>(in.y)) {}
 
-		template<typename U>
-		Vector2(const Vector3<U>& in) :
-			x(static_cast<T>(in.x)), y(static_cast<T>(in.y)) {}
+		operator Vector3<T>() { return Vector3<T>(x, y, (T)0); }
 #pragma endregion
 
-		Vector2<T> operator-(const Vector2<T>& rhs) { return Vector2<T>(-rhs.x, -rhs.y); }
-		Vector2<T>& operator+=(const Vector2<T>& a) { x += a.x; y += a.y; return *this; }
-		friend Vector2<T> operator+(Vector2<T> lhs, const Vector2<T>& rhs) { lhs += rhs; return lhs; }
-		Vector2<T>& operator-=(const Vector2<T>& a) { x -= a.x; y -= a.y; return *this; }
-		friend Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs) { lhs -= rhs; return lhs; }
+		T GetSqrMagnitude() { return x * x + y * y; }
+		T GetMagnitude() { return sqrt(GetSqrMagnitude()); }
+		Vector2<T>& Normalise() { *this / GetMagnitude(); return *this; }
+		Vector2<T> Normalised() { return *this / GetMagnitude(); }
 
-		template<typename U>
-			requires arithmetic<U>
-		Vector2<T>& operator*=(const U a) { x *= a; y *= a; return *this; }
-
-		template<typename U>
-			requires arithmetic<U>
-		friend Vector2<T> operator*(Vector2<T> v, const U a) { v *= a; return v; }
-		template<typename U>
-			requires arithmetic<U>
-		friend Vector2<T> operator*(const U a, Vector2<T> v) { v *= a; return v; }
-		
-		template<typename U>
-			requires arithmetic<U>
-		Vector2<T>& operator/=(const U a) { x /= a; y /= a; return *this; }
-		template<typename U>
-			requires arithmetic<U>
-		friend Vector2<T> operator/(Vector2<T> v, const U a) { v /= a; return v; }
+		static T Dot(const Vector2<T>& lhs, const Vector2<T>& rhs) { return lhs.x * rhs.x + lhs.y * rhs.y; }
+		static T Angle(Vector2<T>& lhs, Vector2<T>& rhs) { return acos(Dot(lhs.Normalised(), rhs.Normalised())); }
 	};
+
+	template<typename T> requires arithmetic<T>
+	Vector2<T> operator-(const Vector2<T>& rhs) { return Vector2<T>(-rhs.x, -rhs.y); }
+
+	template<typename T> requires arithmetic<T>
+	Vector2<T>& operator+=(Vector2<T>& lhs, const Vector2<T>& rhs) { lhs.x += rhs.x; lhs.y += rhs.y; return lhs; }
+
+	template<typename T> requires arithmetic<T>
+	Vector2<T> operator+(Vector2<T> lhs, const Vector2<T>& rhs) { lhs += rhs; return lhs; }
+
+	template<typename T> requires arithmetic<T>
+	Vector2<T>& operator-=(Vector2<T>& lhs, const Vector2<T>& rhs) { lhsx -= rhs.x; lhs.y -= rhs.y; return lfs; }
+
+	template<typename T> requires arithmetic<T>
+	Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs) { lhs -= rhs; return lhs; }
+
+	template<typename T, typename U> requires arithmetic<U>and arithmetic<T>
+	Vector2<T>& operator*=(Vector2<T>& v, const U a) { v.x *= a; v.y *= a; return v; }
+
+	template<typename T, typename U> requires arithmetic<U>and arithmetic<T>
+	Vector2<T> operator*(Vector2<T> v, const U a) { v *= a; return v; }
+
+	template<typename T, typename U> requires arithmetic<U>and arithmetic<T>
+	Vector2<T> operator*(const U a, Vector2<T> v) { v *= a; return v; }
+
+	template<typename T, typename U> requires arithmetic<U>and arithmetic<T>
+	Vector2<T>& operator/=(Vector2<T>& v, const U a) { v.x /= a; v.y /= a; return v; }
+
+	template<typename T, typename U> requires arithmetic<U>and arithmetic<T>
+	Vector2<T> operator/(Vector2<T> v, const U a) { v /= a; return v; }
+
+	template<typename T> requires arithmetic<T>
+	inline bool operator==(Vector2<T>& lhs, const Vector2<T>& rhs) { Vector2<T> dist = lhs - rhs; T num4 = dist.x * dist.x + dist.y * dist.y; return num4 < 9.99999944E-11f; }
+
+	template<typename T> requires arithmetic<T>
+	inline bool operator!=(Vector2<T>& lhs, const Vector2<T>& rhs) { return !(lhs == rhs); }
 
 	// Define the most common types
 	typedef Vector2<int>			Vector2i;

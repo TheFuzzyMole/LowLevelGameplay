@@ -14,7 +14,7 @@ int main()
 	sf::CircleShape shape(100.f);
 	shape.setFillColor(sf::Color::Green);
 
-	Vector2<float> vf = Vector2<float>(6.f, 8.f);
+	Vector2<float> vf = Vector2<float>::one;
 	vf = vf * 6.f;
 	while (window.isOpen())
 	{

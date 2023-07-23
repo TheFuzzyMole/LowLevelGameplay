@@ -1,18 +1,37 @@
 #pragma once
-#include <Core/Vector2.h>
+#include <math.h>
+#include <Core/arithmetic_concpet.h>
 
 namespace LLGP
 {
-	template<typename T>
+	template<typename T> requires arithmetic<T>
 	class Vector3
 	{
 	public:
+		static const Vector3 zero;
+		static const Vector3 one;
+		static const Vector3 right;
+		static const Vector3 left;
+		static const Vector3 up;
+		static const Vector3 down;
+		static const Vector3 forward;
+		static const Vector3 backward;
+
 		T x, y, z;
 
-		Vector3() = default;
+#pragma region constructors
+		Vector3() : x(0), y(0), z(0) {}
 		Vector3(const Vector3&) = default;
-		Vector3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
-		//Vector3(const Vector2& _in) : x(_in.x), y(_in.y), z(0.f) {}
+		Vector3(T X, T Y, T Z) : x(X), y(Y), z(Z) {}
 
+		template<typename U> requires arithmetic<U>
+		explicit Vector3(const Vector3<U>& in) :
+			x(static_cast<T>(in.x)), y(static_cast<T>(in.y), z(static_cast<T>(in.z)) {}
+
+#pragma endregion
 	};
+
+	typedef Vector3<int>			Vector3i;
+	typedef Vector3<unsigned int>	Vector3u;
+	typedef Vector3<double>			Vector3d;
 }
