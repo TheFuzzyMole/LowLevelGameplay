@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <Core/Vector2.h>
-#include <string>;
+#include <string>
 
 using namespace LLGP;
 

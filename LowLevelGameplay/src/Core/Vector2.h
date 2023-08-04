@@ -1,6 +1,7 @@
 #pragma once
 #include <math.h>
-#include <Core/arithmetic_concpet.h>
+#include <Core/arithmetic_concept.h>
+#include <Core/Vector3.h>
 
 namespace LLGP
 {
@@ -11,12 +12,6 @@ namespace LLGP
 	class Vector2
 	{
 	public:
-		static const Vector2 zero;
-		static const Vector2 one;
-		static const Vector2 right;
-		static const Vector2 left;
-		static const Vector2 up;
-		static const Vector2 down;
 
 		T x, y;
 
@@ -32,13 +27,20 @@ namespace LLGP
 		operator Vector3<T>() { return Vector3<T>(x, y, (T)0); }
 #pragma endregion
 
-		T GetSqrMagnitude() { return x * x + y * y; }
-		T GetMagnitude() { return sqrt(GetSqrMagnitude()); }
+		float GetSqrMagnitude() { return x * x + y * y; }
+		float GetMagnitude() { return sqrt(GetSqrMagnitude()); }
 		Vector2<T>& Normalise() { *this / GetMagnitude(); return *this; }
 		Vector2<T> Normalised() { return *this / GetMagnitude(); }
 
-		static T Dot(const Vector2<T>& lhs, const Vector2<T>& rhs) { return lhs.x * rhs.x + lhs.y * rhs.y; }
-		static T Angle(Vector2<T>& lhs, Vector2<T>& rhs) { return acos(Dot(lhs.Normalised(), rhs.Normalised())); }
+		static float Dot(const Vector2<T>& lhs, const Vector2<T>& rhs) { return (float)(lhs.x * rhs.x + lhs.y * rhs.y); }
+		static float Angle(Vector2<T>& lhs, Vector2<T>& rhs) { return acos(Dot(lhs.Normalised(), rhs.Normalised())); }
+		
+		static const Vector2 zero;
+		static const Vector2 one;
+		static const Vector2 right;
+		static const Vector2 left;
+		static const Vector2 up;
+		static const Vector2 down;
 	};
 
 	template<typename T> requires arithmetic<T>
@@ -48,34 +50,52 @@ namespace LLGP
 	Vector2<T>& operator+=(Vector2<T>& lhs, const Vector2<T>& rhs) { lhs.x += rhs.x; lhs.y += rhs.y; return lhs; }
 
 	template<typename T> requires arithmetic<T>
-	Vector2<T> operator+(Vector2<T> lhs, const Vector2<T>& rhs) { lhs += rhs; return lhs; }
+	Vector2<T> operator+(Vector2<T> lhs, const Vector2<T>& rhs) { return lhs += rhs; }
 
 	template<typename T> requires arithmetic<T>
-	Vector2<T>& operator-=(Vector2<T>& lhs, const Vector2<T>& rhs) { lhsx -= rhs.x; lhs.y -= rhs.y; return lfs; }
+	Vector2<T>& operator-=(Vector2<T>& lhs, const Vector2<T>& rhs) { lhs -= rhs.x; lhs.y -= rhs.y; return lhs; }
 
 	template<typename T> requires arithmetic<T>
-	Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs) { lhs -= rhs; return lhs; }
+	Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs) { return lhs -= rhs; }
 
 	template<typename T, typename U> requires arithmetic<U>and arithmetic<T>
 	Vector2<T>& operator*=(Vector2<T>& v, const U a) { v.x *= a; v.y *= a; return v; }
 
 	template<typename T, typename U> requires arithmetic<U>and arithmetic<T>
-	Vector2<T> operator*(Vector2<T> v, const U a) { v *= a; return v; }
+	Vector2<T> operator*(Vector2<T> v, const U a) { return v *= a; }
 
 	template<typename T, typename U> requires arithmetic<U>and arithmetic<T>
-	Vector2<T> operator*(const U a, Vector2<T> v) { v *= a; return v; }
+	Vector2<T> operator*(const U a, Vector2<T> v) { return v *= a; }
 
 	template<typename T, typename U> requires arithmetic<U>and arithmetic<T>
 	Vector2<T>& operator/=(Vector2<T>& v, const U a) { v.x /= a; v.y /= a; return v; }
 
 	template<typename T, typename U> requires arithmetic<U>and arithmetic<T>
-	Vector2<T> operator/(Vector2<T> v, const U a) { v /= a; return v; }
+	Vector2<T> operator/(Vector2<T> v, const U a) { return v /= a; }
 
 	template<typename T> requires arithmetic<T>
-	inline bool operator==(Vector2<T>& lhs, const Vector2<T>& rhs) { Vector2<T> dist = lhs - rhs; T num4 = dist.x * dist.x + dist.y * dist.y; return num4 < 9.99999944E-11f; }
+	inline bool operator==(Vector2<T>& lhs, const Vector2<T>& rhs) { Vector2<T> dist = lhs - rhs; float num4 = dist.x * dist.x + dist.y * dist.y; return num4 < 9.99999944E-11f; }
 
 	template<typename T> requires arithmetic<T>
 	inline bool operator!=(Vector2<T>& lhs, const Vector2<T>& rhs) { return !(lhs == rhs); }
+
+	template<typename T> requires arithmetic<T>
+	const Vector2<T> Vector2<T>::zero(static_cast<T>(0), static_cast<T>(0));
+
+	template<typename T> requires arithmetic<T>
+	const Vector2<T> Vector2<T>::one(static_cast<T>(1), static_cast<T>(1));
+
+	template<typename T> requires arithmetic<T>
+	const Vector2<T> Vector2<T>::right(static_cast<T>(1), static_cast<T>(0));
+
+	template<typename T> requires arithmetic<T>
+	const Vector2<T> Vector2<T>::left(-static_cast<T>(1), static_cast<T>(0));
+
+	template<typename T> requires arithmetic<T>
+	const Vector2<T> Vector2<T>::up(static_cast<T>(0), static_cast<T>(1));
+
+	template<typename T> requires arithmetic<T>
+	const Vector2<T> Vector2<T>::down(static_cast<T>(0), -static_cast<T>(1));
 
 	// Define the most common types
 	typedef Vector2<int>			Vector2i;
