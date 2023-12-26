@@ -6,10 +6,10 @@
 namespace LLGP
 {
 	template<typename T> requires arithmetic<T>
-	class Vector3;
+	struct Vector3;
 
 	template<typename T> requires arithmetic<T>
-	class Vector2
+	struct Vector2
 	{
 	public:
 

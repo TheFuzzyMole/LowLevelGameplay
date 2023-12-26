@@ -1,15 +1,12 @@
 #pragma once
 #include <math.h>
 
-namespace LLGP::Maths
+namespace LLGP
 {
-#define PI = 3.1415926535
-#define EPSILON = 1.401298E-45f
+#define PI 3.1415926535
+#define EPSILON 1.401298E-45f
+#define RAD2DEG 57.295779513
+#define DEG2RAD 0.01745329252
 
-	class Maths
-	{
-	public:
-		static const double Rad2Deg;
-		static const double Deg2Rad;
-	};
+	static const double dmod(double x, double y) { return x - (int)(x / y) * y; }
 }
