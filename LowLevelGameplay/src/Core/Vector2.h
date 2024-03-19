@@ -2,6 +2,7 @@
 #include <math.h>
 #include <Core/arithmetic_concept.h>
 #include <Core/Vector3.h>
+#include <SFML/Graphics.hpp>
 
 namespace LLGP
 {
@@ -24,12 +25,19 @@ namespace LLGP
 		explicit Vector2(const Vector2<U>& in) :
 			x(static_cast<T>(in.x)), y(static_cast<T>(in.y)) {}
 
+		template<typename U> requires arithmetic<U>
+		explicit Vector2(const sf::Vector2<U>& in) :
+			x(static_cast<T>(in.x)), y(static_cast<T>(in.y)) {}
+
+		template<typename U> requires arithmetic<U>
+		operator sf::Vector2<U>() { return sf::Vector2<U>(static_cast<U>(x), static_cast<U>(y)); }
+
 		operator Vector3<T>() { return Vector3<T>(x, y, (T)0); }
 #pragma endregion
 
 		float GetSqrMagnitude() { return x * x + y * y; }
 		float GetMagnitude() { return sqrt(GetSqrMagnitude()); }
-		Vector2<T>& Normalise() { *this / GetMagnitude(); return *this; }
+		Vector2<T>& Normalise() { *this /= GetMagnitude(); return *this; }
 		Vector2<T> Normalised() { return *this / GetMagnitude(); }
 
 		static float Dot(const Vector2<T>& lhs, const Vector2<T>& rhs) { return (float)(lhs.x * rhs.x + lhs.y * rhs.y); }
