@@ -19,16 +19,49 @@ void thing(int a, int b)
 	std::cout << a << " and " << b << std::endl;
 }
 
+class Thang
+{
+public:
+	Event<int> OnSomething;
+
+	void BroadcastOnSomething(int arg1)
+	{
+		OnSomething(arg1);
+	}
+};
+
+class Theng
+{
+private:
+	Thang* other;
+public:
+	Theng(Thang* _other) : other(_other) { other->OnSomething += std::bind(&Theng::Handle_ThangSomething, this, std::placeholders::_1); }
+
+	void Handle_ThangSomething(int in)
+	{
+		std::cout << in << std::endl;
+		other->OnSomething -= std::bind(&Theng::Handle_ThangSomething, this, std::placeholders::_1);
+	}
+	
+};
+
 int main()
 {
+	Thang a;
+	Theng b(&a);
+
+	a.OnSomething(85);
+	a.OnSomething(84);
+
 	Event<int, int>eventTest;
 
-	eventTest.AddListener(&thing);
-	eventTest.AddListener(&thing);
+	eventTest += &thing;
 	eventTest.PrintListenerCount();
-	eventTest.Invoke(5, 6);
-	
-	eventTest.RemoveListener(&thing);
+	eventTest += &thing;
+	eventTest.PrintListenerCount();
+	eventTest(5, 6);
+	eventTest -= &thing;
+
 	eventTest.PrintListenerCount();
 
 
