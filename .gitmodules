@@ -1,3 +1,0 @@
-[submodule "LowLevelGameplay/vendor/Box2D"]
-	path = LowLevelGameplay/vendor/Box2D
-	url = https://github.com/tomolivergamedev/box2d

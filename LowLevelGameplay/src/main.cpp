@@ -35,7 +35,7 @@ int main()
 	//Initialisation
 	LLGP::GameObject* player = new GameObject();
 	LLGP::Renderer* playerRenderer = player->AddComponent<LLGP::Renderer>();
-	playerRenderer->SetupQuad(LLGP::Vector2f(100.f, 100.f));
+	playerRenderer->SetupQuad(LLGP::Vector2f(500.f, 500.f));
 	playerRenderer->SetupTexture("Textures/tux.png", LLGP::Vector2u(8, 9));
 	playerRenderer->SetupSpriteUV(LLGP::Vector2u(0, 5));
 	LLGP::Transform* playerTransform = player->GetComponent<LLGP::Transform>();
