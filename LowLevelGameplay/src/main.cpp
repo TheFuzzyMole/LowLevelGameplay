@@ -3,6 +3,8 @@
 #include <Core/Event.h>
 #include <Core/Physics.h>
 #include <Core/Commons.h>
+#include <Core/GameObject.h>
+#include <Core/Renderer.h>
 #include <functional>
 #include <string>
 #include <iostream>
@@ -18,7 +20,7 @@ int main()
 	float timeSincePhysicsStep = 0.f;
 
 	sf::RenderWindow window(sf::VideoMode(1800, 900), "SFML Works!");
-	Vector2<float> rectSize = Vector2<float>::one * 100;
+	/*Vector2<float> rectSize = Vector2<float>::one * 100;
 	Vector2<float> rectPos = Vector2<float>(900, 450);
 	sf::Texture rectTex; rectTex.loadFromFile("Textures/tux.png");
 	Vector2i spritesInTex(8, 9);
@@ -28,7 +30,18 @@ int main()
 	shape.setTexture(&rectTex);
 	shape.setTextureRect(rectTexUV);
 	shape.setOrigin(rectSize / 2);
-	shape.setPosition(rectPos);
+	shape.setPosition(rectPos);*/
+
+	//Initialisation
+	LLGP::GameObject* player = new GameObject();
+	LLGP::Renderer* playerRenderer = player->AddComponent<LLGP::Renderer>();
+	playerRenderer->SetupQuad(LLGP::Vector2f(100.f, 100.f));
+	playerRenderer->SetupTexture("Textures/tux.png", LLGP::Vector2u(8, 9));
+	playerRenderer->SetupSpriteUV(LLGP::Vector2u(0, 5));
+	LLGP::Transform* playerTransform = player->GetComponent<LLGP::Transform>();
+	playerTransform->SetPosition(LLGP::Vector2f(900.f, 450.f));
+	float timer = 0;
+	int animIndex = 0;
 
 	while (window.isOpen())
 	{
@@ -45,8 +58,6 @@ int main()
 			}
 		}
 
-		//run update
-
 		timeSincePhysicsStep += deltaTime;
 		while (timeSincePhysicsStep > FIXED_FRAMERATE)
 		{
@@ -56,9 +67,19 @@ int main()
 			timeSincePhysicsStep -= FIXED_FRAMERATE;
 		}
 
+		//run update
+		timer += deltaTime;
+		if (timer >= 0.3f)
+		{
+			animIndex = ++animIndex % 3;
+			playerRenderer->SetupSpriteUV(LLGP::Vector2u(animIndex, 5));
+			timer -= 0.3f;
+		}
+		
 
 		window.clear();
-		window.draw(shape);
+		//window.draw(shape);
+		LLGP::Renderer::OnRenderLayer(window, RenderLayers::DEFAULT);
 		window.display();
 	}
 

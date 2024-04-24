@@ -1,7 +1,7 @@
 #pragma once
 #include <math.h>
 #include <Core/arithmetic_concept.h>
-#include <SFML/Graphics.hpp>
+#include <SFML/System/Vector2.hpp>
 
 namespace LLGP
 {
@@ -31,7 +31,7 @@ namespace LLGP
 #pragma endregion
 
 		float GetSqrMagnitude() { return x * x + y * y; }
-		float GetMagnitude() { return sqrt(GetSqrMagnitude()); }
+		float GetMagnitude() { return (float)sqrt(GetSqrMagnitude()); }
 		Vector2<T>& Normalise() { *this /= GetMagnitude(); return *this; }
 		Vector2<T> Normalised() { return *this / GetMagnitude(); }
 

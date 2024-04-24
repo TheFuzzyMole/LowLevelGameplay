@@ -20,13 +20,15 @@ namespace LLGP
 		Vector2<float> normal;
 		Vector2<float> impulse;
 
-		bool operator==(Collision* b) { return (this->collider->uuid == b->collider->uuid) && (this->otherCollider->uuid == b->otherCollider->uuid); }
-		bool operator!=(Collision* b) { return !(this == b); }
+		bool operator==(Collision* b); 
+		bool operator!=(Collision* b);
 	};
 
-	static class Physics
+	class Physics
 	{
 	public:
+		Physics() = delete;
+
 		static LLGP::Vector2f Gravity;
 
 		static LLGP::Event<> OnStepPhysics;

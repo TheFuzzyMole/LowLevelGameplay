@@ -15,6 +15,9 @@ namespace LLGP
 	std::vector<Collision*> Physics::_Collisions;
 	std::vector<Collision*> Physics::_OldCollisions;
 
+	bool Collision::operator==(Collision* b) { return (*(this->collider) == *(b->collider)) && (*(this->otherCollider) == *(b->otherCollider)); }
+	bool Collision::operator!=(Collision* b) { return !(this == b); }
+
 	bool Physics::RegisterCollider(Collider* c)
 	{
 		if (std::find_if(_Colliders.begin(), _Colliders.end(), [c](Collider* check) {return *check == *c; }) == _Colliders.end())
@@ -56,10 +59,10 @@ namespace LLGP
 
 	void Physics::DispatchCollisions()
 	{
-		for (int newCol = _Collisions.size()-1; newCol >= 0; newCol--)
+		for (int newCol = (int)_Collisions.size() - 1; newCol >= 0; newCol--)
 		{
 			bool newCollision = true;
-			for (int oldCol = _OldCollisions.size()-1; oldCol >= 0; oldCol--)
+			for (int oldCol = (int)_OldCollisions.size() - 1; oldCol >= 0; oldCol--)
 			{
 				if (_Collisions[newCol] == _OldCollisions[oldCol])
 				{

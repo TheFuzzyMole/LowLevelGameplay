@@ -47,7 +47,7 @@ namespace LLGP
 	}
 	int Transform::GetChildCount()
 	{
-		return m_Children.size();
+		return (int)m_Children.size();
 	}
 	/// <summary>
 	/// Returns the index of the child in the parent transforms child vector. Returns -1 if child is not found;
@@ -125,7 +125,7 @@ namespace LLGP
 	{
 		m_Position = newPosition;
 
-		m_LocalPosition = m_Position - m_Parent->GetPosition();
+		m_LocalPosition = m_Position - (m_Parent ? m_Parent->GetPosition(): LLGP::Vector2f::zero);
 		
 		for (Transform* child : m_Children)
 		{
