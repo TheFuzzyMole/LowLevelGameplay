@@ -1,12 +1,12 @@
 #pragma once
-#include "UUID.h"
+#include <Core/UUID.h>
 
-namespace LLGP::Core
+namespace LLGP
 {
 	class Object
 	{
 	public:
-		Object();
+		Object() : uuid() {}
 		Object(const Object&) = default;
 
 		UUID uuid;
@@ -15,3 +15,4 @@ namespace LLGP::Core
 		inline bool operator!=(const Object& rhs) { return !(*this == rhs); }
 	};
 }
+

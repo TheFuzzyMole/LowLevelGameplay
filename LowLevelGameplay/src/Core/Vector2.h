@@ -1,14 +1,10 @@
 #pragma once
 #include <math.h>
 #include <Core/arithmetic_concept.h>
-#include <Core/Vector3.h>
 #include <SFML/Graphics.hpp>
 
 namespace LLGP
 {
-	template<typename T> requires arithmetic<T>
-	struct Vector3;
-
 	template<typename T> requires arithmetic<T>
 	struct Vector2
 	{
@@ -32,7 +28,6 @@ namespace LLGP
 		template<typename U> requires arithmetic<U>
 		operator sf::Vector2<U>() { return sf::Vector2<U>(static_cast<U>(x), static_cast<U>(y)); }
 
-		operator Vector3<T>() { return Vector3<T>(x, y, (T)0); }
 #pragma endregion
 
 		float GetSqrMagnitude() { return x * x + y * y; }
@@ -61,7 +56,7 @@ namespace LLGP
 	Vector2<T> operator+(Vector2<T> lhs, const Vector2<T>& rhs) { return lhs += rhs; }
 
 	template<typename T> requires arithmetic<T>
-	Vector2<T>& operator-=(Vector2<T>& lhs, const Vector2<T>& rhs) { lhs -= rhs.x; lhs.y -= rhs.y; return lhs; }
+	Vector2<T>& operator-=(Vector2<T>& lhs, const Vector2<T>& rhs) { lhs.x -= rhs.x; lhs.y -= rhs.y; return lhs; }
 
 	template<typename T> requires arithmetic<T>
 	Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs) { return lhs -= rhs; }
@@ -109,4 +104,5 @@ namespace LLGP
 	typedef Vector2<int>			Vector2i;
 	typedef Vector2<unsigned int>	Vector2u;
 	typedef Vector2<double>			Vector2d;
+	typedef Vector2<float>			Vector2f;
 }

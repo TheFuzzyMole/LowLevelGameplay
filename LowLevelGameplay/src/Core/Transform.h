@@ -1,11 +1,11 @@
 #pragma once
 
 #include <Core\Component.h>
-#include <Core\Vector3.h>
+#include <Core\Vector2.h>
 #include <string>
 #include <vector>
 
-namespace LLGP::Core
+namespace LLGP
 {
 	class Transform : public Component
 	{
@@ -14,9 +14,8 @@ namespace LLGP::Core
 
 		static void CleanUpDirtyList();
 
-		Transform(GameObject* owner, Transform* parent = nullptr,
-			Vector3d inPos = Vector3d::zero, double inRot = 0.0, Vector2d inScale = Vector2d::zero);
-		virtual ~Transform();
+		Transform(GameObject* owner, Transform* parent = nullptr, Vector2f inPos = Vector2f::zero);
+		~Transform() = default;
 
 		Transform* GetChild(int index);
 		Transform* GetChild(std::string name);
@@ -34,30 +33,15 @@ namespace LLGP::Core
 
 		void SetParent(Transform* parent, bool worldTransformStays = true);
 
-		LLGP::Vector3d GetPosition();
-		LLGP::Vector3d GetLocalPosition();
-		LLGP::Vector2d GetScale();
-		LLGP::Vector2d GetLocalScale();
-		double GetRotation();
-		double GetLocalRotation();
+		LLGP::Vector2f GetPosition();
+		LLGP::Vector2f GetLocalPosition();
 
-		void SetPosition(LLGP::Vector3d newPosition);
-		void ChangePosition(LLGP::Vector3d changeInPosition);
-		void SetLocalPosition(LLGP::Vector3d newLocalPosition);
-		void ChangeLocalPosition(LLGP::Vector3d changeInLocalPosition);
-		void SetScale(LLGP::Vector2d newScale);
-		void ChangeScale(LLGP::Vector2d changeInScale);
-		void SetLocalScale(LLGP::Vector2d newLocalScale);
-		void ChangeLocalScale(LLGP::Vector2d changeInLocalScale);
-		void SetRotation(double newRotation);
-		void ChangeRotation(double changeInRotation);
-		void SetLocalRotation(double newLocalRotation);
-		void ChangeLocalRotation(double changeInLocalRotation);
+		void SetPosition(LLGP::Vector2f newPosition);
+		void ChangePosition(LLGP::Vector2f changeInPosition);
+		void SetLocalPosition(LLGP::Vector2f newLocalPosition);
+		void ChangeLocalPosition(LLGP::Vector2f changeInLocalPosition);
 
 		virtual void OwnerActiveChanged(bool newActive);
-
-		Vector3d GetUpVector();
-		Vector3d GetRightVector();
 
 		void CleanTransform();
 		void SetAsDirty();
@@ -69,12 +53,7 @@ namespace LLGP::Core
 		Transform* m_Parent;
 		std::vector<Transform*> m_Children;
 
-		LLGP::Vector3d m_Position;
-		LLGP::Vector2d m_Scale;
-		double m_Rotation;
-
-		LLGP::Vector3d m_LocalPosition;
-		LLGP::Vector2d m_LocalScale;
-		double m_LocalRotation;
+		LLGP::Vector2f m_Position;
+		LLGP::Vector2f m_LocalPosition;
 	};
 }

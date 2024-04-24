@@ -24,7 +24,8 @@ namespace LLGP
 		explicit Vector3(const Vector3<U>& in) :
 			x(static_cast<T>(in.x)), y(static_cast<T>(in.y)), z(static_cast<T>(in.z)) {}
 
-		operator Vector2<T>() { return Vector2<T>(x, y); }
+		template<typename U> requires arithmetic<U>
+		operator Vector2<U>() { return Vector2<U>(static_cast<U>(x), static_cast<U>(y)); }
 #pragma endregion
 
 		float GetSqrMagnitude() { return x * x + y * y + z * z; }

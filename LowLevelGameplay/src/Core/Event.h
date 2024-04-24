@@ -17,7 +17,7 @@ namespace LLGP
 		Binding(std::function<void(T...)> func) : hash(func.target_type().hash_code()), listener(std::move(func)) {}
 		bool operator==(const Binding<T...>& rhs) { return hash == rhs.hash; }
 		bool operator!=(const Binding<T...>& rhs) { return hash != rhs.hash; }
-		constexpr size_t hash_code() const throw() { return hash; }
+		constexpr size_t hash_code() const noexcept { return hash; }
 		Binding<T...>& Invoke(T... args) { listener(static_cast<T&&>(args)...); return (*this); }
 		void operator()(T... args) { listener(static_cast<T&&>(args)...); }
 	};

@@ -1,21 +1,30 @@
 #pragma once
 
-#include "Object.h"
+#include <Core/Object.h>
 
-namespace LLGP::Core { class GameObject; }
-
-namespace LLGP::Core
+namespace LLGP
 {
+	class GameObject;
+	struct Collision;
+
 	class Component : public Object
 	{
 	public:
-		Component(GameObject* owner) : _GameObject(owner) {}
-		virtual ~Component() {}
+		Component(GameObject* owner);
+		~Component();
 
 		GameObject* GetGameObject() { return _GameObject; }
 		
 		virtual void OwnerActiveChange(bool newActive) {}
+
+		virtual void OnCollisionEnter(Collision* collision) {}
+		virtual void OnCollisionStay(Collision* collision) {}
+		virtual void OnCollisionExit(Collision* collision) {}
+
 	protected:
 		GameObject* _GameObject;
+
 	};
 }
+
+
