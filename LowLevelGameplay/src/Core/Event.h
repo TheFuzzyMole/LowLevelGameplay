@@ -11,13 +11,19 @@ namespace LLGP
 	struct Binding
 	{
 	protected:
-		size_t hash;
+		void* contextObj;
 		std::function<void(T...)> listener;
+
 	public:
-		Binding(std::function<void(T...)> func) : hash(func.target_type().hash_code()), listener(std::move(func)) {}
-		bool operator==(const Binding<T...>& rhs) { return hash == rhs.hash; }
-		bool operator!=(const Binding<T...>& rhs) { return hash != rhs.hash; }
-		constexpr size_t hash_code() const noexcept { return hash; }
+		Binding() = default;
+		Binding(std::function<void(T...)> func, void* _contextObj)
+		{
+			contextObj = _contextObj;
+			listener = std::move(func);
+		}
+		bool operator==(const Binding<T...>& rhs) { return contextObj == rhs.contextObj; }
+		bool operator!=(const Binding<T...>& rhs) { return !(this == rhs); }
+		constexpr size_t hash_code() const noexcept { return listener.target_type().hash_code(); }
 		Binding<T...>& Invoke(T... args) { listener(static_cast<T&&>(args)...); return (*this); }
 		void operator()(T... args) { listener(static_cast<T&&>(args)...); }
 	};
@@ -31,20 +37,26 @@ namespace LLGP
 	public:
 
 		Event<T...>& Invoke(T... args) { for (Binding<T...> l : listeners) l.Invoke(static_cast<T&&>(args)...); return (*this); }
-		void AddListener(const Binding<T...> listener)
+		
+		void AddListener(void* contextObj, const std::function<void(T...)> inFunc)
 		{
-			if (std::find_if(listeners.begin(), listeners.end(), [listener](Binding<T...> b) {return listener.hash_code() == b.hash_code(); }) == listeners.end())
+			Binding<T...> listener = Binding<T...>(inFunc, contextObj);
+
+			if (std::find_if(listeners.begin(), listeners.end(), [listener](Binding<T...> b) {
+				return listener.hash_code() == b.hash_code() && listener == b; 
+				}) == listeners.end())
 			{
 				listeners.push_back(listener);
 			}
 		}
-		void RemoveListener(const Binding<T...> listener) { std::erase_if(listeners, [listener](Binding<T...> b) {return listener.hash_code() == b.hash_code(); }); }
+		void RemoveListener(void* contextObj, const std::function<void(T...)> inFunc)
+		{
+			Binding<T...> listener = Binding<T...>(inFunc, contextObj);
+
+			std::erase_if(listeners, [listener](Binding<T...> b) {return listener.hash_code() == b.hash_code() && listener == b; });
+		}
 		void Empty() { listeners.clear(); }
 
 		Event<T...>& operator()(T... args) { Invoke(args...); return (*this); }
-		Event<T...>& operator+=(const Binding<T...> listener) { AddListener(listener); return (*this); }
-		Event<T...>& operator+=(const std::function<void(T...)> func) { Binding<T...> b(func); *this += b; return (*this); }
-		Event<T...>& operator-=(const Binding<T...> listener) { RemoveListener(listener); return (*this); }
-		Event<T...>& operator-=(const std::function<void(T...)> func) { Binding<T...> b(func); *this -= b; return (*this); }
 	};
 }

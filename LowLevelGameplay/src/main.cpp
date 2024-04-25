@@ -43,6 +43,14 @@ int main()
 	float timer = 0;
 	int animIndex = 0;
 
+	LLGP::GameObject* notPlayer = new GameObject();
+	LLGP::Renderer* notplayerRenderer = notPlayer->AddComponent<LLGP::Renderer>();
+	notplayerRenderer->SetupQuad(LLGP::Vector2f(500.f, 500.f));
+	notplayerRenderer->SetupTexture("Textures/tux.png", LLGP::Vector2u(8, 9));
+	notplayerRenderer->SetupSpriteUV(LLGP::Vector2u(0, 5));
+	LLGP::Transform* notplayerTransform = notPlayer->GetComponent<LLGP::Transform>();
+	notplayerTransform->SetPosition(LLGP::Vector2f(450.f, 225.f));
+
 	while (window.isOpen())
 	{
 		std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
@@ -80,6 +88,7 @@ int main()
 		window.clear();
 		//window.draw(shape);
 		LLGP::Renderer::OnRenderLayer(window, RenderLayers::DEFAULT);
+		LLGP::Renderer::OnRenderLayer(window, RenderLayers::BACKGROUND);
 		window.display();
 	}
 

@@ -12,13 +12,14 @@ namespace LLGP
 	Renderer::Renderer(GameObject* owner) : Component(owner)
 	{
 		m_RenderLayer = RenderLayers::DEFAULT;
-
-		OnRenderLayer += std::bind(&Renderer::Handle_Render, this, std::placeholders::_1, std::placeholders::_2);
+		using namespace std::placeholders;
+		OnRenderLayer.AddListener(this, std::bind(&Renderer::Handle_Render, this, _1, _2));
 	}
 
 	Renderer::~Renderer()
 	{
-		OnRenderLayer -= std::bind(&Renderer::Handle_Render, this, std::placeholders::_1, std::placeholders::_2);
+		using namespace std::placeholders;
+		OnRenderLayer.RemoveListener(this, std::bind(&Renderer::Handle_Render, this, _1, _2));
 	}
 
 	void Renderer::SetupTexture(std::string filePath, LLGP::Vector2u spritesInTex)

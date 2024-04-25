@@ -12,12 +12,12 @@ namespace LLGP
 		Mass = 0.f;
 		m_AccumulatedForce = LLGP::Vector2f::zero;
 
-		Physics::OnStepPhysics += std::bind(&Rigidbody::ApplyAccumulatedForce, this);
+		//FIX: Physics::OnStepPhysics += std::bind(&Rigidbody::ApplyAccumulatedForce, this);
 	}
 
 	Rigidbody::~Rigidbody()
 	{
-		Physics::OnStepPhysics -= std::bind(&Rigidbody::ApplyAccumulatedForce, this);
+		//FIX: Physics::OnStepPhysics -= std::bind(&Rigidbody::ApplyAccumulatedForce, this);
 	}
 
 	void Rigidbody::AddForce(LLGP::Vector2f force, LLGP::ForceMode mode)

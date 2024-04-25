@@ -18,8 +18,7 @@ project "LowLevelGameplay"
 	includedirs
 	{
 		"src",
-		"%{prj.location}/vendor/SFML-2.6.0/include",
-		"%{IncludeDir.Box2D}"
+		"%{prj.location}/vendor/SFML-2.6.0/include"
 	}
 
 	libdirs
@@ -38,8 +37,7 @@ project "LowLevelGameplay"
 		"vorbisfile",
 		"vorbis",
 		"ogg",
-		"ws2_32",
-		"Box2D"
+		"ws2_32"
 	}
 
 	filter "system:windows"

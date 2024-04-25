@@ -64,7 +64,7 @@ namespace LLGP
 		{
 			//std::unique_ptr<Component> newComp = std::make_unique<T>(this);
 			m_Components.push_back(std::make_unique<T>(this));
-			return static_cast<T*>(m_Components[m_Components.size()-1].get());
+			return dynamic_cast<T*>(m_Components[m_Components.size()-1].get());
 		}
 		template<class T> requires isComponent<T>
 		bool RemoveComponent(T* comp)
