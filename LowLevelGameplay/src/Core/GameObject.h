@@ -24,12 +24,25 @@ namespace LLGP
 		LLGP::Event<Collision*> OnCollisionStay;
 		LLGP::Event<Collision*> OnCollisionExit;
 
+		static std::vector<GameObject*> s_PendingKillList;
+
+		bool _IsPendingKill;
+
+		static LLGP::Event<> OnUpdate;
+		static LLGP::Event<> OnFixedUpdate;
+
 		inline void SetName(std::string newName) { m_Name = newName; }
 		inline std::string GetName() { return m_Name; }
 		void SetActive(bool newActive);
 		inline bool GetActive() { return m_Active; }
 		inline void SetTag(std::string newTag) { m_Tag = newTag; }
 		inline bool CompareTag(std::string comp) { return m_Tag == comp; }
+
+		void StartComponents();
+		void UpdateComponents();
+		void FixedUpdateComponents();
+
+		void Destroy();
 
 		template<class T> requires isComponent<T>
 		T* GetComponent()

@@ -20,6 +20,8 @@ namespace LLGP
 
 		LLGP::Vector2f Velocity;
 		float Mass;
+		bool IsKinematic;
+		bool HasGravity;
 
 		void AddForce(LLGP::Vector2f force, LLGP::ForceMode mode = LLGP::ForceMode::Force);
 

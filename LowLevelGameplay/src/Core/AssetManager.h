@@ -35,6 +35,4 @@ namespace LLGP
 	private:
 		static std::unordered_map<std::string, std::weak_ptr<Asset>> map;
 	};
-
-	std::unordered_map<std::string, std::weak_ptr<Asset>> AssetManager::map;
 }

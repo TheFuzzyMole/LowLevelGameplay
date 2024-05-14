@@ -11,13 +11,15 @@ namespace LLGP
 		Velocity = LLGP::Vector2f::zero;
 		Mass = 0.f;
 		m_AccumulatedForce = LLGP::Vector2f::zero;
+		IsKinematic = false;
+		HasGravity = true;
 
-		//FIX: Physics::OnStepPhysics += std::bind(&Rigidbody::ApplyAccumulatedForce, this);
+		Physics::OnStepPhysics.AddListener(this, std::bind(&Rigidbody::ApplyAccumulatedForce, this));
 	}
 
 	Rigidbody::~Rigidbody()
 	{
-		//FIX: Physics::OnStepPhysics -= std::bind(&Rigidbody::ApplyAccumulatedForce, this);
+		Physics::OnStepPhysics.RemoveListener(this, std::bind(&Rigidbody::ApplyAccumulatedForce, this));
 	}
 
 	void Rigidbody::AddForce(LLGP::Vector2f force, LLGP::ForceMode mode)
@@ -41,7 +43,10 @@ namespace LLGP
 
 	void Rigidbody::ApplyAccumulatedForce()
 	{
+		if (IsKinematic) { m_AccumulatedForce = LLGP::Vector2f::zero; return; }
+		if (HasGravity) { m_AccumulatedForce += Physics::Gravity * FIXED_FRAMERATE; }
 		Velocity += m_AccumulatedForce;
-		_GameObject->transform->ChangePosition(Velocity * FIXED_FRAMERATE);
+		_GameObject->transform->ChangePosition(Velocity * FIXED_FRAMERATE * UNIT_SCALEFACTOR);
+		m_AccumulatedForce = LLGP::Vector2f::zero;
 	}
 }

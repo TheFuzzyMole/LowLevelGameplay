@@ -21,6 +21,10 @@ namespace LLGP
 		virtual void OnCollisionStay(Collision* collision) {}
 		virtual void OnCollisionExit(Collision* collision) {}
 
+		virtual void Start() {}
+		virtual void Update() {}
+		virtual void FixedUpdate() {}
+
 	protected:
 		GameObject* _GameObject;
 

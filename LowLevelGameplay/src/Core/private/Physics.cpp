@@ -88,6 +88,7 @@ namespace LLGP
 		}
 		_OldCollisions.clear();
 		_OldCollisions = _Collisions;
+		_Collisions.clear();
 	}
 
 	LLGP::Collision* Physics::Collision_CircleCircle(CircleCollider* a, CircleCollider* b)

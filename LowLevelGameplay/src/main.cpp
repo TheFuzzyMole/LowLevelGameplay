@@ -3,60 +3,75 @@
 #include <Core/Event.h>
 #include <Core/Physics.h>
 #include <Core/Commons.h>
+#include <Core/Time.h>
 #include <Core/GameObject.h>
 #include <Core/Renderer.h>
+#include <Core/Rigidbody.h>
+#include <Core/InputManager.h>
+#include <App/PlayerMovement.h>
 #include <functional>
 #include <string>
 #include <iostream>
 #include <chrono>
+#include <Core/Animator.h>
 
 using namespace LLGP;
 
+std::condition_variable_any EndOfFrame;
+std::condition_variable_any NextUpdate;
+std::condition_variable_any NextFixedUpdate;
 
 int main()
 {
 	std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
-	float deltaTime = 0.f;
+	Time::deltaTime = 0.f;
 	float timeSincePhysicsStep = 0.f;
 
 	sf::RenderWindow window(sf::VideoMode(1800, 900), "SFML Works!");
-	/*Vector2<float> rectSize = Vector2<float>::one * 100;
-	Vector2<float> rectPos = Vector2<float>(900, 450);
-	sf::Texture rectTex; rectTex.loadFromFile("Textures/tux.png");
-	Vector2i spritesInTex(8, 9);
-	Vector2i rectTexSize(rectTex.getSize());
-	sf::IntRect rectTexUV(0, (rectTexSize.y / spritesInTex.y) * 5, rectTexSize.x/spritesInTex.x, rectTexSize.y/spritesInTex.y);
-	sf::RectangleShape shape(rectSize);
-	shape.setTexture(&rectTex);
-	shape.setTextureRect(rectTexUV);
-	shape.setOrigin(rectSize / 2);
-	shape.setPosition(rectPos);*/
 
-	//Initialisation
+#pragma region Input Initialisation
+	LLGP::InputAction* moveAction = LLGP::InputManager::AddAction("Move", LLGP::ActionType::Vector);
+	moveAction->AddBinding(new LLGP::InputBinding_Vector(
+			LLGP::CompositeButtonVector(sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::A, sf::Keyboard::D),
+			1.f));
+#pragma endregion
+
+#pragma region level load
 	LLGP::GameObject* player = new GameObject();
 	LLGP::Renderer* playerRenderer = player->AddComponent<LLGP::Renderer>();
-	playerRenderer->SetupQuad(LLGP::Vector2f(500.f, 500.f));
+	player->transform->SetPosition(LLGP::Vector2f(900.f, 450.f));
+	playerRenderer->SetupQuad(LLGP::Vector2f(250.f, 250.f));
 	playerRenderer->SetupTexture("Textures/tux.png", LLGP::Vector2u(8, 9));
 	playerRenderer->SetupSpriteUV(LLGP::Vector2u(0, 5));
-	LLGP::Transform* playerTransform = player->GetComponent<LLGP::Transform>();
-	playerTransform->SetPosition(LLGP::Vector2f(900.f, 450.f));
+	LLGP::Rigidbody* playerRB = player->AddComponent<LLGP::Rigidbody>();
+	playerRB->Mass = 10.f;
+	playerRB->HasGravity = false;
+	TEST::PlayerMovement* playerMove = player->AddComponent<TEST::PlayerMovement>();
+	playerMove->SetSpeed(100.f);
+	LLGP::Animator* playerAnim = player->AddComponent<LLGP::Animator>();
+	playerAnim->SetAnimation("Animations/tuxWave.anim");
+
+	player->StartComponents();
+
 	float timer = 0;
 	int animIndex = 0;
 
 	LLGP::GameObject* notPlayer = new GameObject();
+	notPlayer->transform->SetPosition(LLGP::Vector2f(450.f, 225.f));
 	LLGP::Renderer* notplayerRenderer = notPlayer->AddComponent<LLGP::Renderer>();
-	notplayerRenderer->SetupQuad(LLGP::Vector2f(500.f, 500.f));
+	notplayerRenderer->SetupQuad(LLGP::Vector2f(250.f, 250.f));
 	notplayerRenderer->SetupTexture("Textures/tux.png", LLGP::Vector2u(8, 9));
 	notplayerRenderer->SetupSpriteUV(LLGP::Vector2u(0, 5));
-	LLGP::Transform* notplayerTransform = notPlayer->GetComponent<LLGP::Transform>();
-	notplayerTransform->SetPosition(LLGP::Vector2f(450.f, 225.f));
+	notPlayer->StartComponents();
+#pragma endregion
 
 	while (window.isOpen())
 	{
 		std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-		deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(now - lastTime).count() / 1000000.f;
+		Time::deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(now - lastTime).count() / 1000000.f;
 		lastTime = now;
 
+#pragma region window events
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -65,31 +80,55 @@ int main()
 				window.close();
 			}
 		}
+#pragma endregion
 
-		timeSincePhysicsStep += deltaTime;
+		
+#pragma region Fixed Update
+		timeSincePhysicsStep += Time::deltaTime;
 		while (timeSincePhysicsStep > FIXED_FRAMERATE)
 		{
+			NextFixedUpdate.notify_all();
 			Physics::StepPhysics();
 			Physics::CollectCollisions();
 			Physics::DispatchCollisions();
 			timeSincePhysicsStep -= FIXED_FRAMERATE;
 		}
+#pragma endregion
 
-		//run update
-		timer += deltaTime;
+#pragma region Input Processing
+		LLGP::InputManager::ProcessInput();
+#pragma endregion
+
+#pragma region Update
+		std::cout << "MainThread delta: " << LLGP::Time::deltaTime << std::endl;
+		LLGP::Time::coroutineDeltaTime.store(LLGP::Time::deltaTime);
+		NextUpdate.notify_all();
+
+		LLGP::GameObject::OnUpdate();
+
+		/*timer += Time::deltaTime;
 		if (timer >= 0.3f)
 		{
 			animIndex = ++animIndex % 3;
 			playerRenderer->SetupSpriteUV(LLGP::Vector2u(animIndex, 5));
 			timer -= 0.3f;
-		}
-		
+		}*/
+#pragma endregion
 
+#pragma region rendering
 		window.clear();
-		//window.draw(shape);
 		LLGP::Renderer::OnRenderLayer(window, RenderLayers::DEFAULT);
 		LLGP::Renderer::OnRenderLayer(window, RenderLayers::BACKGROUND);
 		window.display();
+#pragma endregion
+
+		for (LLGP::GameObject* forDeath : LLGP::GameObject::s_PendingKillList)
+		{
+			delete(forDeath);
+		}
+		LLGP::GameObject::s_PendingKillList.clear();
+
+		EndOfFrame.notify_all();
 	}
 
 	return 0;

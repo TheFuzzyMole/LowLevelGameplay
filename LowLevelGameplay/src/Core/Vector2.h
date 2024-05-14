@@ -35,8 +35,10 @@ namespace LLGP
 		Vector2<T>& Normalise() { *this /= GetMagnitude(); return *this; }
 		Vector2<T> Normalised() { return *this / GetMagnitude(); }
 
-		static float Dot(const Vector2<T>& lhs, const Vector2<T>& rhs) { return (float)(lhs.x * rhs.x + lhs.y * rhs.y); }
-		static float Angle(Vector2<T>& lhs, Vector2<T>& rhs) { return acos(Dot(lhs.Normalised(), rhs.Normalised())); }
+		static float Dot(const Vector2<T>& lhs, const Vector2<T>& rhs)
+			{ return (float)(lhs.x * rhs.x + lhs.y * rhs.y); }
+		static float Angle(Vector2<T>& lhs, Vector2<T>& rhs)
+			{ return acos(Dot(lhs.Normalised(), rhs.Normalised())); }
 		
 		static const Vector2 zero;
 		static const Vector2 one;
@@ -77,10 +79,12 @@ namespace LLGP
 	Vector2<T> operator/(Vector2<T> v, const U a) { return v /= a; }
 
 	template<typename T> requires arithmetic<T>
-	inline bool operator==(Vector2<T>& lhs, const Vector2<T>& rhs) { Vector2<T> dist = lhs - rhs; float num4 = dist.x * dist.x + dist.y * dist.y; return num4 < 9.99999944E-11f; }
+	inline bool operator==(const Vector2<T>& lhs, const Vector2<T>& rhs) noexcept { Vector2<T> dist = lhs - rhs; float num4 = dist.x * dist.x + dist.y * dist.y; return num4 < 9.99999944E-11f; }
 
-	template<typename T> requires arithmetic<T>
-	inline bool operator!=(Vector2<T>& lhs, const Vector2<T>& rhs) { return !(lhs == rhs); }
+#if !_HAS_CXX20
+	//template<typename T> requires arithmetic<T>
+	//inline bool operator!=(Vector2<T>& lhs, const Vector2<T>& rhs) { return !(lhs == rhs); }
+#endif
 
 	template<typename T> requires arithmetic<T>
 	const Vector2<T> Vector2<T>::zero(static_cast<T>(0), static_cast<T>(0));
