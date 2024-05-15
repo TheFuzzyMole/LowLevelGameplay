@@ -12,6 +12,7 @@ namespace LLGP
 	{
 	public:
 		Collider(GameObject* owner);
+		Collider(GameObject* owner, YAML::Node inData);
 		~Collider();
 
 		Vector2<float> GetCenter() { return m_Center; }

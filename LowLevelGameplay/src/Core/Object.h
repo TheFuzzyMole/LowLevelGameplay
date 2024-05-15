@@ -7,6 +7,7 @@ namespace LLGP
 	{
 	public:
 		Object() : uuid() {}
+		Object(uint64_t _uuid) : uuid(_uuid) {}
 		Object(const Object&) = default;
 
 		UUID uuid;

@@ -3,6 +3,7 @@
 #include "Utils\Maths.h"
 #include <cstdlib>
 #include <algorithm>
+#include <iostream>
 
 namespace LLGP
 {
@@ -23,6 +24,11 @@ namespace LLGP
 		if (parent != nullptr) { SetAsDirty(); return; }
 		m_Position = inPos;
 	}
+
+    Transform::Transform(GameObject* owner, YAML::Node inData) : Component(owner, inData)
+    {
+		if (!Deserialize(inData)) { std::cout << "Error Deserializing Transform: " << uuid << std::endl; }
+    }
 
 	Transform* Transform::GetChild(int index)
 	{
@@ -185,5 +191,30 @@ namespace LLGP
 		{
 			child->SetAsDirty();
 		}
+	}
+    void Transform::Serialize(YAML::Emitter& out)
+    {
+		out << YAML::Key << "Transform";
+
+		out << YAML::BeginMap; //Transform
+
+		out << YAML::Key << "UUID" << YAML::Value << uuid;
+
+		out << YAML::Key << "Position" << YAML::Value << GetLocalPosition();
+		if (m_Parent)
+		{
+			out << YAML::Key << "Parent" << YAML::Value << m_Parent->_GameObject->uuid;
+		}
+
+		out << YAML::EndMap; //Transform
+    }
+	bool Transform::Deserialize(YAML::Node node)
+	{
+		if (!node["Position"]) { return false; }
+		m_LocalPosition = node["Position"].as<LLGP::Vector2f>();
+
+		if (node["Parent"]) {}
+		//TODO: deal with parenting via uuid
+		return true;
 	}
 }

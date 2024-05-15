@@ -1,0 +1,36 @@
+Scene: Testing
+GameObjects:
+  - GameObject: 839792675517514434
+    Name: player
+    Active: true
+    Tag: ""
+    Components:
+      - Transform: 13162254851443026615
+        Position: [900, 450]
+      - Renderer: 8602148588259902152
+        TextureFilePath: Textures/tux.png
+        QuadSize: [250, 250]
+        SpritesInTex: [8, 9]
+        CurrentSpriteIndex: [0, 0]
+        RenderLayer: 0
+      - Rigidbody: 1658666318106223090
+        Mass: 10
+        IsKinematice: false
+        HasGravity: false
+      - PlayerMovement: 14468888931219014364
+        Speed: 100
+      - Animator: 9989484409266399147
+        AnimationPath: Animations/tuxWave.anim
+  - GameObject: 12846807784694020180
+    Name: notPlayer
+    Active: true
+    Tag: ""
+    Components:
+      - Transform: 14730033821363199304
+        Position: [450, 225]
+      - Renderer: 12185167675165212888
+        TextureFilePath: Textures/tux.png
+        QuadSize: [250, 250]
+        SpritesInTex: [8, 9]
+        CurrentSpriteIndex: [0, 0]
+        RenderLayer: 0

@@ -33,6 +33,9 @@ namespace LLGP
 		void SetupSpriteUV(LLGP::Vector2u inIndex);
 		void SetupRenderLayer(LLGP::RenderLayers layer);
 
+		void Serialize(YAML::Emitter& out) override;
+		bool Deserialize(YAML::Node& node) override;
+
 	private:
 		sf::RectangleShape m_Quad;
 		LLGP::Vector2u m_SpritesInTex;

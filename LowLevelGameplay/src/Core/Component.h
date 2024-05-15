@@ -1,16 +1,18 @@
 #pragma once
 
 #include <Core/Object.h>
+#include <Core/ISerializable.h>
 
 namespace LLGP
 {
 	class GameObject;
 	struct Collision;
 
-	class Component : public Object
+	class Component : public Object, public ISerializable
 	{
 	public:
 		Component(GameObject* owner);
+		Component(GameObject* owner, YAML::Node inData);
 		~Component();
 
 		GameObject* GetGameObject() { return _GameObject; }
@@ -24,10 +26,14 @@ namespace LLGP
 		virtual void Start() {}
 		virtual void Update() {}
 		virtual void FixedUpdate() {}
+		virtual void Destroy() {}
 
+		// Inherited via ISerializable
+		void Serialize(YAML::Emitter& out) override = 0;
+		bool Deserialize(YAML::Node node) override = 0;
+	
 	protected:
 		GameObject* _GameObject;
-
 	};
 }
 

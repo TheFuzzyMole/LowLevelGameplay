@@ -25,6 +25,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 group "Dependencies"
 	include "vendor/premake"
+	include "LowLevelGameplay/vendor/yaml-cpp"
 group""
 
 include "LowLevelGameplay"

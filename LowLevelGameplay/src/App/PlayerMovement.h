@@ -19,6 +19,9 @@ namespace TEST
 
 		void SetSpeed(float _speed);
 
+		// Inherited via Component
+		void Serialize(YAML::Emitter& out) override;
+		bool Deserialize(YAML::Node& node) override;
 
 	private:
 		float m_Speed;
@@ -31,5 +34,6 @@ namespace TEST
 		void Handle_MovePerformed(std::variant<bool, float, LLGP::Vector2f> context);
 		void Handle_MoveCancelled(std::variant<bool, float, LLGP::Vector2f> context);
 		void C_MoveUpdate(std::stop_token token);
+
 	};
 }

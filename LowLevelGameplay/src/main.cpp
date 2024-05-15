@@ -1,19 +1,17 @@
 #include <SFML/Graphics.hpp>
 #include <Core/Vector2.h>
+#include <Core/Commons.h>
+#include <Core/Scene.h>
+#include <Core/GameObject.h>
+#include <Core/InputManager.h>
 #include <Core/Event.h>
 #include <Core/Physics.h>
-#include <Core/Commons.h>
 #include <Core/Time.h>
-#include <Core/GameObject.h>
-#include <Core/Renderer.h>
-#include <Core/Rigidbody.h>
-#include <Core/InputManager.h>
-#include <App/PlayerMovement.h>
+#include <Core/Components.h>
 #include <functional>
 #include <string>
 #include <iostream>
 #include <chrono>
-#include <Core/Animator.h>
 
 using namespace LLGP;
 
@@ -37,7 +35,9 @@ int main()
 #pragma endregion
 
 #pragma region level load
-	LLGP::GameObject* player = new GameObject();
+
+	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene", "Testing");
+	LLGP::GameObject* player = _GameScene->Instantiate("player");
 	LLGP::Renderer* playerRenderer = player->AddComponent<LLGP::Renderer>();
 	player->transform->SetPosition(LLGP::Vector2f(900.f, 450.f));
 	playerRenderer->SetupQuad(LLGP::Vector2f(250.f, 250.f));
@@ -51,18 +51,19 @@ int main()
 	LLGP::Animator* playerAnim = player->AddComponent<LLGP::Animator>();
 	playerAnim->SetAnimation("Animations/tuxWave.anim");
 
-	player->StartComponents();
+	player->OnStart();
 
 	float timer = 0;
 	int animIndex = 0;
 
-	LLGP::GameObject* notPlayer = new GameObject();
+	LLGP::GameObject* notPlayer = _GameScene->Instantiate("notPlayer");
 	notPlayer->transform->SetPosition(LLGP::Vector2f(450.f, 225.f));
 	LLGP::Renderer* notplayerRenderer = notPlayer->AddComponent<LLGP::Renderer>();
 	notplayerRenderer->SetupQuad(LLGP::Vector2f(250.f, 250.f));
 	notplayerRenderer->SetupTexture("Textures/tux.png", LLGP::Vector2u(8, 9));
 	notplayerRenderer->SetupSpriteUV(LLGP::Vector2u(0, 5));
-	notPlayer->StartComponents();
+
+	notPlayer->OnStart();
 #pragma endregion
 
 	while (window.isOpen())
@@ -100,11 +101,11 @@ int main()
 #pragma endregion
 
 #pragma region Update
-		std::cout << "MainThread delta: " << LLGP::Time::deltaTime << std::endl;
+		//std::cout << "MainThread delta: " << LLGP::Time::deltaTime << std::endl;
 		LLGP::Time::coroutineDeltaTime.store(LLGP::Time::deltaTime);
 		NextUpdate.notify_all();
 
-		LLGP::GameObject::OnUpdate();
+		LLGP::GameObject::OnWorldUpdate();
 
 		/*timer += Time::deltaTime;
 		if (timer >= 0.3f)
@@ -122,14 +123,15 @@ int main()
 		window.display();
 #pragma endregion
 
-		for (LLGP::GameObject* forDeath : LLGP::GameObject::s_PendingKillList)
+		/*or (LLGP::GameObject* forDeath : LLGP::GameObject::s_PendingKillList)
 		{
 			delete(forDeath);
 		}
-		LLGP::GameObject::s_PendingKillList.clear();
+		LLGP::GameObject::s_PendingKillList.clear();*/
 
 		EndOfFrame.notify_all();
 	}
 
+	delete _GameScene;
 	return 0;
 }

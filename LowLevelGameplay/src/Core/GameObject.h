@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/Object.h>
+#include <Core/ISerializable.h>
 #include <vector>
 #include <memory>
 #include <string>
@@ -12,45 +13,55 @@ namespace LLGP
 {
 	class Transform;
 
-	class GameObject : public Object
+	class GameObject : public Object, public ISerializable
 	{
 	public:
-		GameObject();
+		GameObject(const std::string& name = "");
+		GameObject(YAML::Node inData);
 		GameObject(const GameObject&) = default;
 		~GameObject();
 
-		Transform* transform;
+#pragma region static events
+		static LLGP::Event<> OnWorldUpdate;
+		static LLGP::Event<> OnWorldFixedUpdate;
+#pragma endregion
+
+#pragma region instanced events
+		//these exist as functions would just be a passthrough anyway
+		//and this lets the handlers in components be protected to block manual calling
 		LLGP::Event<Collision*> OnCollisionEnter;
 		LLGP::Event<Collision*> OnCollisionStay;
 		LLGP::Event<Collision*> OnCollisionExit;
 
-		static std::vector<GameObject*> s_PendingKillList;
+		LLGP::Event<> OnStart;
+		LLGP::Event<> OnUpdate;
+		LLGP::Event<> OnFixedUpdate;
+		LLGP::Event<> OnDestroy;
+#pragma endregion
 
 		bool _IsPendingKill;
+		Transform* transform;
 
-		static LLGP::Event<> OnUpdate;
-		static LLGP::Event<> OnFixedUpdate;
-
+#pragma region getters + setters
 		inline void SetName(std::string newName) { m_Name = newName; }
 		inline std::string GetName() { return m_Name; }
 		void SetActive(bool newActive);
 		inline bool GetActive() { return m_Active; }
 		inline void SetTag(std::string newTag) { m_Tag = newTag; }
 		inline bool CompareTag(std::string comp) { return m_Tag == comp; }
-
-		void StartComponents();
-		void UpdateComponents();
-		void FixedUpdateComponents();
+		inline std::string GetTag() { return m_Tag; }
+#pragma endregion
 
 		void Destroy();
 
+#pragma region component utilities
 		template<class T> requires isComponent<T>
 		T* GetComponent()
 		{
 			T* returnComp = nullptr;
 			for (int i = 0; i < m_Components.size(); i++)
 			{
-				if(returnComp = dynamic_cast<T*>(m_Components[i].get()))
+				if (returnComp = dynamic_cast<T*>(m_Components[i].get()))
 				{
 					return returnComp;
 				}
@@ -75,9 +86,8 @@ namespace LLGP
 		template<class T> requires isComponent<T>
 		T* AddComponent()
 		{
-			//std::unique_ptr<Component> newComp = std::make_unique<T>(this);
 			m_Components.push_back(std::make_unique<T>(this));
-			return dynamic_cast<T*>(m_Components[m_Components.size()-1].get());
+			return dynamic_cast<T*>(m_Components[m_Components.size() - 1].get());
 		}
 		template<class T> requires isComponent<T>
 		bool RemoveComponent(T* comp)
@@ -97,7 +107,22 @@ namespace LLGP
 			}
 			return false;
 		}
-	
+		template<class T> requires isComponent<T>
+		bool HasComponent()
+		{
+			return std::find_if(m_Components.begin(), m_Components.end(),
+				[](std::unique_ptr<LLGP::Component>& comp)
+				{
+					return dynamic_cast<T*>(comp.get());
+				})
+				!= m_Components.end();
+		}
+#pragma endregion
+
+		// Inherited via ISerializable
+		void Serialize(YAML::Emitter& out) override;
+		bool Deserialize(YAML::Node node) override;
+
 	private:
 		std::string m_Name;
 		bool m_Active;

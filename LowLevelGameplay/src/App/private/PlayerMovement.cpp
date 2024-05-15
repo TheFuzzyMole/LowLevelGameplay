@@ -45,8 +45,21 @@ namespace TEST
 			m_RB->AddForce(m_InMoveVector * m_Speed, LLGP::ForceMode::Force);
 			std::shared_lock lock(m_CRm);
 			NextFixedUpdate.wait(lock);
-			std::cout << "Released: " << std::this_thread::get_id() << " with delta: " << LLGP::Time::coroutineDeltaTime << std::endl;
+			//std::cout << "Released: " << std::this_thread::get_id() << " with delta: " << LLGP::Time::coroutineDeltaTime << std::endl;
 		}
 		m_IsMoving = false;
 	}
+    void PlayerMovement::Serialize(YAML::Emitter& out)
+    {
+		out << YAML::BeginMap; // PlayerMovement
+		out << YAML::Key << "PlayerMovement" << YAML::Value << uuid;
+
+		out << YAML::Key << "Speed" << YAML::Value << m_Speed;
+
+		out << YAML::EndMap; //PlayerMovement
+    }
+    bool PlayerMovement::Deserialize(YAML::Node& node)
+    {
+        return false;
+    }
 }

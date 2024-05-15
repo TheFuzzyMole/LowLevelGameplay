@@ -6,16 +6,18 @@
 namespace LLGP
 {
 	Rigidbody::Rigidbody(GameObject* owner)
-		: Component(owner)
+		: Component(owner), Velocity(LLGP::Vector2f::zero), m_AccumulatedForce(LLGP::Vector2f::zero),
+		Mass(1.f), IsKinematic(false), HasGravity(true)
 	{
-		Velocity = LLGP::Vector2f::zero;
-		Mass = 0.f;
-		m_AccumulatedForce = LLGP::Vector2f::zero;
-		IsKinematic = false;
-		HasGravity = true;
-
 		Physics::OnStepPhysics.AddListener(this, std::bind(&Rigidbody::ApplyAccumulatedForce, this));
 	}
+
+    Rigidbody::Rigidbody(GameObject* owner, YAML::Node inData)
+		: Component(owner, inData), Velocity(LLGP::Vector2f::zero), m_AccumulatedForce(LLGP::Vector2f::zero)
+    {
+		if (!Deserialize(inData)) { std::cout << "Error Deserializing Rigidbody: " << uuid << std::endl; }
+		Physics::OnStepPhysics.AddListener(this, std::bind(&Rigidbody::ApplyAccumulatedForce, this));
+    }
 
 	Rigidbody::~Rigidbody()
 	{
@@ -39,6 +41,28 @@ namespace LLGP
 			m_AccumulatedForce += force;
 			break;
 		}
+	}
+
+	void Rigidbody::Serialize(YAML::Emitter& out)
+	{
+		out << YAML::Key << "Rigidbody";
+		out << YAML::BeginMap; //Rigidbody
+		out << YAML::Key << "UUID" << YAML::Value << uuid;
+
+		out << YAML::Key << "Mass" << YAML::Value << Mass;
+		out << YAML::Key << "IsKinematice" << YAML::Value << IsKinematic;
+		out << YAML::Key << "HasGravity" << YAML::Value << HasGravity;
+
+		out << YAML::EndMap; //Rigidbody
+	}
+
+	bool Rigidbody::Deserialize(YAML::Node node)
+	{
+		if (!node["Mass"] || !node["IsKinematic"] || !node["HasGravity"]) { return false; }
+		Mass = node["Mass"].as<float>();
+		IsKinematic = node["IsKinematic"].as<bool>();
+		HasGravity = node["HasGravity"].as<bool>();
+		return true;
 	}
 
 	void Rigidbody::ApplyAccumulatedForce()

@@ -13,6 +13,7 @@ namespace LLGP
 	{
 	public:
 		Animator(GameObject* owner);
+		Animator(GameObject* owner, YAML::Node inData);
 
 		LLGP::Event<> OnAnimationFinished;
 
@@ -22,6 +23,8 @@ namespace LLGP
 		void SetAnimation(std::string path);
 		void SetAnimation(std::shared_ptr<LLGP::Animation> assetRef);
 
+		void Serialize(YAML::Emitter& out) override;
+		bool Deserialize(YAML::Node node) override;
 	private:
 		float m_Progress;
 		float m_NextTime;

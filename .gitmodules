@@ -1,0 +1,3 @@
+[submodule "LowLevelGameplay/vendor/yaml-cpp"]
+	path = LowLevelGameplay/vendor/yaml-cpp
+	url = https://github.com/thecherno/yaml-cpp

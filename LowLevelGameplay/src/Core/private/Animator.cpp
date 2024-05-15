@@ -13,6 +13,12 @@ namespace LLGP
 		m_Renderer = _GameObject->GetComponent<LLGP::Renderer>();
 	}
 
+    Animator::Animator(GameObject* owner, YAML::Node inData) : Component(owner, inData)
+    {
+		m_Renderer = _GameObject->GetComponent<LLGP::Renderer>();
+		if (!Deserialize(inData)) { std::cout << "Error Deserializing Animator: " << uuid << std::endl; }
+    }
+
 	void Animator::Start()
 	{
 		if (m_Renderer == nullptr) { m_Renderer = _GameObject->GetComponent<LLGP::Renderer>(); }
@@ -51,5 +57,23 @@ namespace LLGP
 		m_Progress = 0.f;
 		m_NextTime = m_CurAnimation->GetNextKeyFrame(m_Progress).Time;
 		m_Renderer->SetupSpriteUV(m_CurAnimation->GetPreviousKeyFrame(m_Progress).SpriteIndex);
+	}
+
+    void Animator::Serialize(YAML::Emitter& out)
+    {
+		out << YAML::Key << "Animator";
+		out << YAML::BeginMap; //Animator
+		out << YAML::Key << "UUID" << YAML::Value << uuid;
+
+		out << YAML::Key << "AnimationPath" << YAML::Value << m_CurAnimation->GetAssetPath();
+
+		out << YAML::EndMap; //Animator
+    }
+
+	bool Animator::Deserialize(YAML::Node node)
+	{
+		if (!node["AnimationPath"]) { return false; }
+		SetAnimation(node["AnimationPath"].as<std::string>());
+		return false;
 	}
 }

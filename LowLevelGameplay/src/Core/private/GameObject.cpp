@@ -5,22 +5,30 @@
 
 namespace LLGP
 {
-	std::vector<GameObject*> GameObject::s_PendingKillList;
-	LLGP::Event<> GameObject::OnUpdate;
-	LLGP::Event<> GameObject::OnFixedUpdate;
+	LLGP::Event<> GameObject::OnWorldUpdate;
+	LLGP::Event<> GameObject::OnWorldFixedUpdate;
 
-	GameObject::GameObject() : Object()
+	GameObject::GameObject(const std::string& name) : m_Name(name)
 	{
 		transform = this->AddComponent<Transform>();
 		_IsPendingKill = false;
-		OnUpdate.AddListener(this, std::bind(&GameObject::UpdateComponents, this));
-		OnFixedUpdate.AddListener(this, std::bind(&GameObject::FixedUpdateComponents, this));
+		OnWorldUpdate.AddListener(this, [&]() { OnUpdate(); });
+		OnWorldFixedUpdate.AddListener(this, [&]() { OnFixedUpdate(); });
+	}
+
+	GameObject::GameObject(YAML::Node inData) : Object(inData["GameObject"].as<uint64_t>())
+	{
+		if (!Deserialize(inData)) { std::cout << "Error Deserialising GameObject: " << m_Name << std::endl; }
+
+		_IsPendingKill = false;
+		OnWorldUpdate.AddListener(this, [&]() { OnUpdate(); });
+		OnWorldFixedUpdate.AddListener(this, [&]() { OnFixedUpdate(); });
 	}
 
 	GameObject::~GameObject()
 	{
-		OnUpdate.RemoveListener(this, std::bind(&GameObject::UpdateComponents, this));
-		OnFixedUpdate.RemoveListener(this, std::bind(&GameObject::FixedUpdateComponents, this));
+		OnWorldUpdate.RemoveListener(this, [&]() { OnUpdate(); });
+		OnWorldFixedUpdate.RemoveListener(this, [&]() { OnFixedUpdate(); });
 	}
 
 	void GameObject::SetActive(bool newActive)
@@ -34,36 +42,76 @@ namespace LLGP
 		}
 	}
 
-	void GameObject::StartComponents()
-	{
-		for (std::unique_ptr<LLGP::Component>& c : m_Components)
-		{
-			c.get()->Start();
-		}
-	}
-
-	void GameObject::UpdateComponents()
-	{
-		for (std::unique_ptr<LLGP::Component>& c : m_Components)
-		{
-			c.get()->Update();
-		}
-	}
-
-	void GameObject::FixedUpdateComponents()
-	{
-		for (std::unique_ptr<LLGP::Component>& c : m_Components)
-		{
-			c.get()->FixedUpdate();
-		}
-	}
 	void GameObject::Destroy()
 	{
 		_IsPendingKill = true;
-		if (std::find_if(s_PendingKillList.begin(), s_PendingKillList.end(),
-			[this](GameObject* go) {return go == this; }) == s_PendingKillList.end())
+		OnDestroy();
+	}
+	void GameObject::Serialize(YAML::Emitter& out)
+	{
+		out << YAML::BeginMap; //GameObject
+		out << YAML::Key << "GameObject" << YAML::Value << uuid;
+		out << YAML::Key << "Name" << YAML::Value << m_Name;
+		out << YAML::Key << "Active" << YAML::Value << m_Active;
+		out << YAML::Key << "Tag" << YAML::Value << m_Tag;
+
+		out << YAML::Key << "Components" << YAML::Value << YAML::BeginSeq;
+
+		for (std::unique_ptr<Component>& c : m_Components)
 		{
-			s_PendingKillList.push_back(this);
+			c->Serialize(out);
 		}
+
+		out << YAML::EndSeq; //Components
+
+		out << YAML::EndMap; //GameObject
+	}
+	bool GameObject::Deserialize(YAML::Node node)
+	{
+		m_Name = node["Name"].as<std::string>();
+		m_Active = node["Active"].as<bool>();
+		m_Tag = node["Tag"].as<std::string>();
+
+		if (YAML::Node components = node["Components"])
+		{
+			for (YAML::Node compNode : components)
+			{
+				if (YAML::Node tData = compNode["Transform"])
+				{
+					m_Components.push_back(std::make_unique<LLGP::Transform>(this, tData));
+				}
+
+				if (YAML::Node rbData = compNode["Rigidbody"])
+				{
+					m_Components.push_back(std::make_unique<LLGP::Rigidbody>(this, rbData));
+				}
+
+				if (YAML::Node ccData = compNode["CircleCollider"])
+				{
+
+				}
+
+				if (YAML::Node bcData = compNode["BoxCollider"])
+				{
+
+				}
+
+				if (YAML::Node aData = compNode["Animator"])
+				{
+
+				}
+
+				if (YAML::Node rData = compNode["Renderer"])
+				{
+
+				}
+
+				if (YAML::Node pmData = compNode["PlayerMovement"])
+				{
+
+				}
+			}
+		}
+		return false;
 	}
 }

@@ -56,4 +56,23 @@ namespace LLGP
 		m_Quad.setPosition(_GameObject->transform->GetPosition());
 		window.draw(m_Quad);
 	}
+
+    void Renderer::Serialize(YAML::Emitter& out)
+    {
+		out << YAML::BeginMap; //Renderer
+		out << YAML::Key << "Renderer" << YAML::Value << uuid;
+
+		out << YAML::Key << "TextureFilePath" << YAML::Value << m_Texture->GetAssetPath();
+		out << YAML::Key << "QuadSize" << YAML::Value << (LLGP::Vector2f)m_Quad.getSize();
+		out << YAML::Key << "SpritesInTex" << YAML::Value << m_SpritesInTex;
+		out << YAML::Key << "CurrentSpriteIndex" << YAML::Value << m_SpriteIndex;
+		out << YAML::Key << "RenderLayer" << YAML::Value << (int)m_RenderLayer;
+
+		out << YAML::EndMap; //Renderer
+    }
+
+    bool Renderer::Deserialize(YAML::Node& node)
+    {
+        return false;
+    }
 }

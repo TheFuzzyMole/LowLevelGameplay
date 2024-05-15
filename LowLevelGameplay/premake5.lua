@@ -13,17 +13,19 @@ project "LowLevelGameplay"
 		"src/**.cpp"
 	}
 
-	defines { "SFML_STATIC", "_CONSOLE" }
+	defines { "YAML_CPP_STATIC_DEFINE", "SFML_STATIC", "_CONSOLE" }
 
 	includedirs
 	{
 		"src",
-		"%{prj.location}/vendor/SFML-2.6.0/include"
+		"%{prj.location}/vendor/SFML-2.6.0/include",
+		"%{prj.location}/vendor/yaml-cpp/include"
 	}
 
 	libdirs
 	{
-		"%{prj.location}/vendor/SFML-2.6.0/lib"
+		"%{prj.location}/vendor/SFML-2.6.0/lib",
+		"%{prj.location}/vendor/yaml-cpp/bin/Debug-windows-x86_64/yaml-cpp"
 	}
 
 	links
@@ -37,7 +39,8 @@ project "LowLevelGameplay"
 		"vorbisfile",
 		"vorbis",
 		"ogg",
-		"ws2_32"
+		"ws2_32",
+		"yaml-cpp"
 	}
 
 	filter "system:windows"

@@ -16,6 +16,7 @@ namespace LLGP
 	{
 	public:
 		Rigidbody(GameObject* owner);
+		Rigidbody(GameObject* owner, YAML::Node inData);
 		~Rigidbody();
 
 		LLGP::Vector2f Velocity;
@@ -25,6 +26,8 @@ namespace LLGP
 
 		void AddForce(LLGP::Vector2f force, LLGP::ForceMode mode = LLGP::ForceMode::Force);
 
+		void Serialize(YAML::Emitter& out) override;
+		bool Deserialize(YAML::Node node) override;
 	private:
 		LLGP::Vector2f m_AccumulatedForce;
 
