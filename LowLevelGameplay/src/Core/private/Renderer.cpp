@@ -16,6 +16,14 @@ namespace LLGP
 		OnRenderLayer.AddListener(this, std::bind(&Renderer::Handle_Render, this, _1, _2));
 	}
 
+    Renderer::Renderer(GameObject* owner, YAML::Node inData) : Component(owner, inData)
+    {
+		if (!Deserialize(inData)) { std::cout << "Error Deserializing Renderer: " << uuid << std::endl; }
+
+		using namespace std::placeholders;
+		OnRenderLayer.AddListener(this, std::bind(&Renderer::Handle_Render, this, _1, _2));
+    }
+
 	Renderer::~Renderer()
 	{
 		using namespace std::placeholders;
@@ -71,8 +79,13 @@ namespace LLGP
 		out << YAML::EndMap; //Renderer
     }
 
-    bool Renderer::Deserialize(YAML::Node& node)
+    bool Renderer::Deserialize(YAML::Node node)
     {
-        return false;
+		if (!node["TextureFilePath"] || !node["QuadSize"] || !node["SpritesInTex"] || !node["CurrentSpriteIndex"] || !node["RenderLayer"]) { return false; }
+		SetupQuad(node["QuadSize"].as<LLGP::Vector2f>());
+		SetupTexture(node["TextureFilePath"].as<std::string>(), node["SpritesInTex"].as<LLGP::Vector2u>());
+		SetupSpriteUV(node["CurrentSpriteIndex"].as<LLGP::Vector2u>());
+		m_RenderLayer = (LLGP::RenderLayers)node["RenderLayer"].as<int>();
+		return true;
     }
 }

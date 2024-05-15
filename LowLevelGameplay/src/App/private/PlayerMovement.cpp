@@ -14,6 +14,16 @@ namespace TEST
 		LLGP::InputManager::FindAction("Move")->OnCancelled.AddListener(this, std::bind(&PlayerMovement::Handle_MoveCancelled, this, std::placeholders::_1));
 	}
 
+    PlayerMovement::PlayerMovement(LLGP::GameObject* owner, YAML::Node inData) :
+		LLGP::Component(owner, inData), m_InMoveVector(LLGP::Vector2f::zero), m_IsMoving(false)
+    {
+		if (!Deserialize(inData)) { std::cout << "Error Deserializing PlayerMovement: " << uuid << std::endl; }
+
+		m_RB = _GameObject->GetComponent<LLGP::Rigidbody>();
+		LLGP::InputManager::FindAction("Move")->OnHeld.AddListener(this, std::bind(&PlayerMovement::Handle_MovePerformed, this, std::placeholders::_1));
+		LLGP::InputManager::FindAction("Move")->OnCancelled.AddListener(this, std::bind(&PlayerMovement::Handle_MoveCancelled, this, std::placeholders::_1));
+    }
+
 	void PlayerMovement::SetSpeed(float _speed)
 	{
 		m_Speed = _speed;
@@ -51,15 +61,18 @@ namespace TEST
 	}
     void PlayerMovement::Serialize(YAML::Emitter& out)
     {
+		out << YAML::Key << "PlayerMovement";
 		out << YAML::BeginMap; // PlayerMovement
-		out << YAML::Key << "PlayerMovement" << YAML::Value << uuid;
+		out << YAML::Key << "UUID" << YAML::Value << uuid;
 
 		out << YAML::Key << "Speed" << YAML::Value << m_Speed;
 
 		out << YAML::EndMap; //PlayerMovement
     }
-    bool PlayerMovement::Deserialize(YAML::Node& node)
+    bool PlayerMovement::Deserialize(YAML::Node node)
     {
-        return false;
+		if (!node["Speed"]) { return false; }
+		m_Speed = node["Speed"].as<float>();
+		return true;
     }
 }

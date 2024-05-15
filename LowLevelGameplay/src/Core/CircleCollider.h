@@ -24,8 +24,9 @@ namespace LLGP
 
 		void Serialize(YAML::Emitter& out) override
 		{
+			out << YAML::Key << "CircleCollider";
 			out << YAML::BeginMap; //CircleCollider
-			out << YAML::Key << "CircleCollider" << YAML::Value << uuid;
+			out << YAML::Key << "UUID" << YAML::Value << uuid;
 
 			out << YAML::Key << "Center" << YAML::Value << m_Center;
 			out << YAML::Key << "Radius" << YAML::Value << m_Radius;
