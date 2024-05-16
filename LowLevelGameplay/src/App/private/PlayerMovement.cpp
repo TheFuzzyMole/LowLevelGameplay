@@ -61,8 +61,7 @@ namespace TEST
 	}
     void PlayerMovement::Serialize(YAML::Emitter& out)
     {
-		out << YAML::Key << "PlayerMovement";
-		out << YAML::BeginMap; // PlayerMovement
+		out << YAML::Key << "PlayerMovement" << YAML::Value << YAML::BeginMap; // PlayerMovement
 		out << YAML::Key << "UUID" << YAML::Value << uuid;
 
 		out << YAML::Key << "Speed" << YAML::Value << m_Speed;

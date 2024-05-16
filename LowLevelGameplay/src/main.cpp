@@ -37,7 +37,7 @@ int main()
 #pragma region level load
 
 	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene", "Testing");
-	LLGP::GameObject* player = _GameScene->Instantiate("player");
+	/*LLGP::GameObject* player = _GameScene->Instantiate("player");
 	LLGP::Renderer* playerRenderer = player->AddComponent<LLGP::Renderer>();
 	player->transform->SetPosition(LLGP::Vector2f(900.f, 450.f));
 	playerRenderer->SetupQuad(LLGP::Vector2f(250.f, 250.f));
@@ -63,7 +63,7 @@ int main()
 	notplayerRenderer->SetupTexture("Textures/tux.png", LLGP::Vector2u(8, 9));
 	notplayerRenderer->SetupSpriteUV(LLGP::Vector2u(0, 5));
 
-	notPlayer->OnStart();
+	notPlayer->OnStart();*/
 #pragma endregion
 
 	while (window.isOpen())

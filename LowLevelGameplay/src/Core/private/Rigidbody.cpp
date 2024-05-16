@@ -50,7 +50,7 @@ namespace LLGP
 		out << YAML::Key << "UUID" << YAML::Value << uuid;
 
 		out << YAML::Key << "Mass" << YAML::Value << Mass;
-		out << YAML::Key << "IsKinematice" << YAML::Value << IsKinematic;
+		out << YAML::Key << "IsKinematic" << YAML::Value << IsKinematic;
 		out << YAML::Key << "HasGravity" << YAML::Value << HasGravity;
 
 		out << YAML::EndMap; //Rigidbody

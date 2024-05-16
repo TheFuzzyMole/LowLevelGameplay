@@ -18,9 +18,9 @@ namespace LLGP
 		out << YAML::BeginMap;
 		out << YAML::Key << "Scene" << YAML::Value << m_Scene->m_Name;
 		out << YAML::Key << "GameObjects" << YAML::Value << YAML::BeginSeq;
-		for (std::unique_ptr<LLGP::GameObject>& go : m_Scene->m_SceneObjects)
+		for (std::pair<const uint64_t, std::unique_ptr<LLGP::GameObject>>& go : m_Scene->m_SceneObjects)
 		{
-			go->Serialize(out);
+			go.second->Serialize(out);
 		}
 		out << YAML::EndSeq;
 		out << YAML::EndMap;
@@ -39,31 +39,15 @@ namespace LLGP
 		if(!data["Scene"])
 			return false;
 
-		m_Scene->m_Name = data["Scene"].as<std::string>();
+		std::string newName = data["Scene"].as<std::string>();
+		if (m_Scene->m_Name != newName) { std::cout << "Error Deserializing Scene: " << newName << ". Already has different name: " << m_Scene->m_Name << std::endl; return false; }
 		if (YAML::Node GameObjects = data["GameObjects"])
 		{
 			for (YAML::Node goData : GameObjects)
 			{
-				m_Scene->m_SceneObjects.emplace_back(std::make_unique<GameObject>(goData));
-
-				
-
-				if (YAML::Node components = goData["Components"])
-				{
-					YAML::Node tData = components["Transform"];
-					LLGP::Transform* t = go->AddComponent<LLGP::Transform>(components["Transform"].as<uint64_t>());
-					t->SetLocalPosition(tData["Position"].as<LLGP::Vector2f>());
-
-
-					for (YAML::Node compData : components)
-					{
-						if (YAML::Node rbData = compData["Rigidbody"])
-						{
-
-						}
-					}
-				}
+				m_Scene->m_SceneObjects.insert_or_assign(goData["GameObject"].as<uint64_t>(), std::make_unique<GameObject>(*m_Scene, goData));
 			}
 		}
+		return true;
 	}
 }

@@ -1,36 +1,43 @@
 Scene: Testing
 GameObjects:
-  - GameObject: 839792675517514434
+  - GameObject: 5029747128538283146
     Name: player
     Active: true
     Tag: ""
     Components:
-      - Transform: 13162254851443026615
-        Position: [900, 450]
-      - Renderer: 8602148588259902152
-        TextureFilePath: Textures/tux.png
-        QuadSize: [250, 250]
-        SpritesInTex: [8, 9]
-        CurrentSpriteIndex: [0, 0]
-        RenderLayer: 0
-      - Rigidbody: 1658666318106223090
-        Mass: 10
-        IsKinematice: false
-        HasGravity: false
-      - PlayerMovement: 14468888931219014364
-        Speed: 100
-      - Animator: 9989484409266399147
-        AnimationPath: Animations/tuxWave.anim
-  - GameObject: 12846807784694020180
+      - Transform:
+          UUID: 14545487389883833472
+          Position: [435.198669, 450]
+      - Renderer:
+          UUID: 12762021528280859579
+          TextureFilePath: Textures/tux.png
+          QuadSize: [250, 250]
+          SpritesInTex: [8, 9]
+          CurrentSpriteIndex: [2, 5]
+          RenderLayer: 0
+      - Rigidbody:
+          UUID: 772568406388459121
+          Mass: 10
+          IsKinematic: false
+          HasGravity: false
+      - PlayerMovement:
+          UUID: 15673361676651734676
+          Speed: 100
+      - Animator:
+          UUID: 1501931473157467472
+          AnimationPath: Animations/tuxWave.anim
+  - GameObject: 8668426444400969108
     Name: notPlayer
     Active: true
     Tag: ""
     Components:
-      - Transform: 14730033821363199304
-        Position: [450, 225]
-      - Renderer: 12185167675165212888
-        TextureFilePath: Textures/tux.png
-        QuadSize: [250, 250]
-        SpritesInTex: [8, 9]
-        CurrentSpriteIndex: [0, 0]
-        RenderLayer: 0
+      - Transform:
+          UUID: 13064544353478309395
+          Position: [450, 225]
+      - Renderer:
+          UUID: 17100609393476175657
+          TextureFilePath: Textures/tux.png
+          QuadSize: [250, 250]
+          SpritesInTex: [8, 9]
+          CurrentSpriteIndex: [0, 5]
+          RenderLayer: 0

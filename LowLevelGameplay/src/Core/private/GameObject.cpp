@@ -1,14 +1,15 @@
 #include <Core/GameObject.h>
 
 #include <Core/Component.h>
-#include <Core/Transform.h>
+#include <Core/Components.h>
+#include <Core/Scene.h>
 
 namespace LLGP
 {
 	LLGP::Event<> GameObject::OnWorldUpdate;
 	LLGP::Event<> GameObject::OnWorldFixedUpdate;
 
-	GameObject::GameObject(const std::string& name) : m_Name(name)
+	GameObject::GameObject(LLGP::Scene& _owningScene, const std::string& name) : m_Name(name), OwningScene(&_owningScene)
 	{
 		transform = this->AddComponent<Transform>();
 		_IsPendingKill = false;
@@ -16,7 +17,7 @@ namespace LLGP
 		OnWorldFixedUpdate.AddListener(this, [&]() { OnFixedUpdate(); });
 	}
 
-	GameObject::GameObject(YAML::Node inData) : Object(inData["GameObject"].as<uint64_t>())
+	GameObject::GameObject(LLGP::Scene& _owningScene, YAML::Node inData) : Object(inData["GameObject"].as<uint64_t>()), OwningScene(&_owningScene)
 	{
 		if (!Deserialize(inData)) { std::cout << "Error Deserialising GameObject: " << m_Name << std::endl; }
 
@@ -59,7 +60,9 @@ namespace LLGP
 
 		for (std::unique_ptr<Component>& c : m_Components)
 		{
+			out << YAML::BeginMap;
 			c->Serialize(out);
+			out << YAML::EndMap;
 		}
 
 		out << YAML::EndSeq; //Components
@@ -79,6 +82,7 @@ namespace LLGP
 				if (YAML::Node tData = compNode["Transform"])
 				{
 					m_Components.push_back(std::make_unique<LLGP::Transform>(this, tData));
+					transform = static_cast<LLGP::Transform*>(m_Components[m_Components.size() - 1].get());
 				}
 
 				if (YAML::Node rbData = compNode["Rigidbody"])
@@ -88,29 +92,32 @@ namespace LLGP
 
 				if (YAML::Node ccData = compNode["CircleCollider"])
 				{
-
+					m_Components.push_back(std::make_unique<LLGP::CircleCollider>(this, ccData));
 				}
 
 				if (YAML::Node bcData = compNode["BoxCollider"])
 				{
-
+					m_Components.push_back(std::make_unique<LLGP::BoxCollider>(this, bcData));
 				}
 
 				if (YAML::Node aData = compNode["Animator"])
 				{
-
+					m_Components.push_back(std::make_unique<LLGP::Animator>(this, aData));
 				}
 
 				if (YAML::Node rData = compNode["Renderer"])
 				{
-
+					m_Components.push_back(std::make_unique<LLGP::Renderer>(this, rData));
 				}
 
 				if (YAML::Node pmData = compNode["PlayerMovement"])
 				{
-
+					m_Components.push_back(std::make_unique<TEST::PlayerMovement>(this, pmData));
 				}
 			}
+
+			OnStart();
+			return true;
 		}
 		return false;
 	}

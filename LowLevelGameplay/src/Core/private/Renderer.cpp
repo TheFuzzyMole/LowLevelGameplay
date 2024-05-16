@@ -45,6 +45,7 @@ namespace LLGP
 
 	void Renderer::SetupSpriteUV(LLGP::Vector2u inIndex)
 	{
+		m_SpriteIndex = inIndex;
 		inIndex = LLGP::Vector2u(std::min(inIndex.x, m_SpritesInTex.x - 1), std::min(inIndex.y, m_SpritesInTex.y - 1));
 		LLGP::Vector2u spriteSize = (LLGP::Vector2u)m_Texture->_tex->getSize();
 		spriteSize = LLGP::Vector2u(spriteSize.x / m_SpritesInTex.x, spriteSize.y / m_SpritesInTex.y);
@@ -67,15 +68,14 @@ namespace LLGP
 
     void Renderer::Serialize(YAML::Emitter& out)
     {
-		out << YAML::BeginMap; //Renderer
-		out << YAML::Key << "Renderer" << YAML::Value << uuid;
+		out << YAML::Key << "Renderer" << YAML::Value << YAML::BeginMap; //Renderer
+		out << YAML::Key << "UUID" << YAML::Value << uuid;
 
 		out << YAML::Key << "TextureFilePath" << YAML::Value << m_Texture->GetAssetPath();
 		out << YAML::Key << "QuadSize" << YAML::Value << (LLGP::Vector2f)m_Quad.getSize();
 		out << YAML::Key << "SpritesInTex" << YAML::Value << m_SpritesInTex;
 		out << YAML::Key << "CurrentSpriteIndex" << YAML::Value << m_SpriteIndex;
 		out << YAML::Key << "RenderLayer" << YAML::Value << (int)m_RenderLayer;
-
 		out << YAML::EndMap; //Renderer
     }
 

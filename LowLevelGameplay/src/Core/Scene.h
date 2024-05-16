@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <map>
 #include <vector>
 #include <string>
 
@@ -23,10 +24,12 @@ namespace LLGP
 		GameObject* Instantiate(GameObject* toCopy);
 		void Destroy(GameObject* obj);
 
+		LLGP::GameObject* FindGameObjectByUUID(uint64_t _uuid);
+
 	private:
 		std::string m_Name;
 		std::string m_SceneAssetPath;
-		std::vector<std::unique_ptr<GameObject>> m_SceneObjects;
+		std::map<uint64_t, std::unique_ptr<GameObject>> m_SceneObjects;
 
 		friend class SceneSerializer;
 	};
