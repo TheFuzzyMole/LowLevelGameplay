@@ -17,8 +17,9 @@ namespace LLGP
 		Vector2<float> GetExtents() { return m_Extents; }
 		void SetExtents(Vector2<float> newExtents) { m_Extents = Vector2<float>(abs(newExtents.x), abs(newExtents.y)); }
 		//the other and this arguments are the 'wrong' way round becasue in double dispatch we are now looking at the collision from the other side
-		Collision* IsColliding(BoxCollider* other) { return Physics::Collision_AABBAABB(other, this); }
-		Collision* IsColliding(CircleCollider* other) { return Physics::Collision_AABBCircle(other, this); }
+		Collision* IsColliding(Collider* other) override { return other->IsColliding(this); }
+		Collision* IsColliding(BoxCollider* other) override { return Physics::Collision_AABBAABB(other, this); }
+		Collision* IsColliding(CircleCollider* other) override { return Physics::Collision_AABBCircle(other, this); }
 		
 		void Serialize(YAML::Emitter& out) override
 		{

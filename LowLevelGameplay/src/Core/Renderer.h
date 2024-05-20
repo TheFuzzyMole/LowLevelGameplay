@@ -17,7 +17,8 @@ namespace LLGP
 	enum RenderLayers
 	{
 		DEFAULT,
-		BACKGROUND
+		BACKGROUND,
+		DEBUG
 	};
 
 	class Renderer : public Component

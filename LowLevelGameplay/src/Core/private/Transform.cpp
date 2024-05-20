@@ -215,6 +215,7 @@ namespace LLGP
 		if (node["Parent"])
 		{
 			m_Parent = _GameObject->OwningScene->FindGameObjectByUUID(node["Parent"].as<uint64_t>())->transform;
+			m_Parent->SetNewChild(this);
 		}
 		else
 		{

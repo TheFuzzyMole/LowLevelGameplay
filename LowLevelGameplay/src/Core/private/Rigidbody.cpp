@@ -9,6 +9,7 @@ namespace LLGP
 		: Component(owner), Velocity(LLGP::Vector2f::zero), m_AccumulatedForce(LLGP::Vector2f::zero),
 		Mass(1.f), IsKinematic(false), HasGravity(true)
 	{
+		Physics::RegisterRigidbody(this);
 		Physics::OnStepPhysics.AddListener(this, std::bind(&Rigidbody::ApplyAccumulatedForce, this));
 	}
 
@@ -16,11 +17,13 @@ namespace LLGP
 		: Component(owner, inData), Velocity(LLGP::Vector2f::zero), m_AccumulatedForce(LLGP::Vector2f::zero)
     {
 		if (!Deserialize(inData)) { std::cout << "Error Deserializing Rigidbody: " << uuid << std::endl; }
+		Physics::RegisterRigidbody(this);
 		Physics::OnStepPhysics.AddListener(this, std::bind(&Rigidbody::ApplyAccumulatedForce, this));
     }
 
 	Rigidbody::~Rigidbody()
 	{
+		Physics::RemoveRigidbody(this);
 		Physics::OnStepPhysics.RemoveListener(this, std::bind(&Rigidbody::ApplyAccumulatedForce, this));
 	}
 
@@ -68,9 +71,9 @@ namespace LLGP
 	void Rigidbody::ApplyAccumulatedForce()
 	{
 		if (IsKinematic) { m_AccumulatedForce = LLGP::Vector2f::zero; return; }
-		if (HasGravity) { m_AccumulatedForce += Physics::Gravity * FIXED_FRAMERATE; }
+		if (HasGravity) { m_AccumulatedForce += Physics::Gravity * FIXED_FRAMERATE / PHYSICS_SOLVER_ITERATIONS; }
 		Velocity += m_AccumulatedForce;
-		_GameObject->transform->ChangePosition(Velocity * FIXED_FRAMERATE * UNIT_SCALEFACTOR);
+		_GameObject->transform->ChangePosition(Velocity * FIXED_FRAMERATE / PHYSICS_SOLVER_ITERATIONS);
 		m_AccumulatedForce = LLGP::Vector2f::zero;
 	}
 }

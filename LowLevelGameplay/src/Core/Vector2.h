@@ -32,8 +32,8 @@ namespace LLGP
 
 		float GetSqrMagnitude() { return x * x + y * y; }
 		float GetMagnitude() { return (float)sqrt(GetSqrMagnitude()); }
-		Vector2<T>& Normalise() { *this /= GetMagnitude(); return *this; }
-		Vector2<T> Normalised() { return *this / GetMagnitude(); }
+		Vector2<T>& Normalise() { if(GetSqrMagnitude() != 0.f) { *this /= GetMagnitude(); } return *this; }
+		Vector2<T> Normalised() { if (GetSqrMagnitude() != 0.f) { return *this / GetMagnitude(); } return *this; }
 
 		static float Dot(const Vector2<T>& lhs, const Vector2<T>& rhs)
 			{ return (float)(lhs.x * rhs.x + lhs.y * rhs.y); }

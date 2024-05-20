@@ -7,13 +7,13 @@ GameObjects:
     Components:
       - Transform:
           UUID: 14545487389883833472
-          Position: [435.198669, 450]
+          Position: [599.079712, 346.546997]
       - Renderer:
           UUID: 12762021528280859579
           TextureFilePath: Textures/tux.png
           QuadSize: [250, 250]
           SpritesInTex: [8, 9]
-          CurrentSpriteIndex: [2, 5]
+          CurrentSpriteIndex: [1, 5]
           RenderLayer: 0
       - Rigidbody:
           UUID: 772568406388459121
@@ -26,6 +26,10 @@ GameObjects:
       - Animator:
           UUID: 1501931473157467472
           AnimationPath: Animations/tuxWave.anim
+      - BoxCollider:
+          UUID: 1454548738988383344
+          Center: [0, 0]
+          Extents: [50, 90]
   - GameObject: 8668426444400969108
     Name: notPlayer
     Active: true
@@ -41,3 +45,39 @@ GameObjects:
           SpritesInTex: [8, 9]
           CurrentSpriteIndex: [0, 5]
           RenderLayer: 0
+      - BoxCollider:
+          UUID: 13064544353478309396
+          Center: [0, 0]
+          Extents: [50, 90]
+  - GameObject: 8668426444400969110
+    Name: debugSquare2
+    Active: true
+    Tag: ""
+    Components:
+      - Transform:
+          UUID: 8668426444400969112
+          Position: [0, 0]
+          Parent: 8668426444400969108
+      - Renderer:
+          UUID: 8668426444400962342
+          TextureFilePath: Textures/Debug.png
+          QuadSize: [100, 180]
+          SpritesInTex: [1, 1]
+          CurrentSpriteIndex: [0, 0]
+          RenderLayer: 2
+  - GameObject: 8668426444400969150
+    Name: debugSquarePlayer
+    Active: true
+    Tag: ""
+    Components:
+      - Transform:
+          UUID: 8668426444400969152
+          Position: [0, 0]
+          Parent: 5029747128538283146
+      - Renderer:
+          UUID: 8668426444400962372
+          TextureFilePath: Textures/Debug.png
+          QuadSize: [100, 180]
+          SpritesInTex: [1, 1]
+          CurrentSpriteIndex: [0, 0]
+          RenderLayer: 2

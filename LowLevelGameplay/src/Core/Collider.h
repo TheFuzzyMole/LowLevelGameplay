@@ -6,6 +6,8 @@
 namespace LLGP
 {
 	class GameObject;
+	class CircleCollider;
+	class BoxCollider;
 	struct Collision;
 
 	class Collider : public Component
@@ -20,7 +22,9 @@ namespace LLGP
 		//TODO: make this TransformPosition instead
 		Vector2<float> GetPosition();
 
-		virtual Collision* IsColliding(Collider* other) { return other->IsColliding(this); }
+		virtual Collision* IsColliding(Collider* other) = 0;
+		virtual Collision* IsColliding(CircleCollider* other) = 0;
+		virtual Collision* IsColliding(BoxCollider* other) = 0;
 
 	protected:
 		Vector2<float> m_Center;
