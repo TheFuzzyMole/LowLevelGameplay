@@ -7,13 +7,13 @@ GameObjects:
     Components:
       - Transform:
           UUID: 14545487389883833472
-          Position: [599.079712, 346.546997]
+          Position: [712.549744, 136.75061]
       - Renderer:
           UUID: 12762021528280859579
           TextureFilePath: Textures/tux.png
           QuadSize: [250, 250]
           SpritesInTex: [8, 9]
-          CurrentSpriteIndex: [1, 5]
+          CurrentSpriteIndex: [0, 5]
           RenderLayer: 0
       - Rigidbody:
           UUID: 772568406388459121

@@ -192,12 +192,14 @@ namespace LLGP
 		if((abs(diff.x) >= (ext.x + rad) || abs(diff.y) >= (ext.y + rad)) ||
 			((diff - LLGP::Vector2f(dir.x * ext.x, dir.y * ext.y)).GetSqrMagnitude() >= rad * rad)) return nullptr;
 		
+		dir = diff - LLGP::Vector2f(copysignf(ext.x, diff.x), copysignf(ext.y, diff.y));
 		LLGP::Collision* toReturn = new LLGP::Collision();
 		toReturn->collider = a;
 		toReturn->otherCollider = b;
 		toReturn->otherHasRB = toReturn->otherCollider->GetGameObject()->GetComponent<Rigidbody>();
-		toReturn->normal = diff.Normalised();
-		toReturn->overlap = LLGP::Vector2f(ext.x + rad - diff.x,ext.y + rad - diff.y).GetMagnitude();
+		float xMult = abs(diff.x) / (ext.x + rad); float yMult = abs(diff.y) / (ext.y + rad);
+		toReturn->normal = LLGP::Vector2f(copysignf((xMult >= yMult && xMult >= 1.f) ? 1.f : (yMult < 1.f ? dir.x : 0.f), diff.x), copysignf((yMult >= xMult && yMult >= 1.f) ? 1.f : (xMult < 1.f ? dir.y : 0.f), diff.y));
+		toReturn->overlap = LLGP::Vector2f((ext.x + rad - abs(diff.x)) * toReturn->normal.x , (ext.y + rad - abs(diff.y)) * toReturn->normal.y).GetMagnitude();
 		toReturn->point = b->GetPosition() - (toReturn->normal * rad);
 		toReturn->impulse = LLGP::Vector2f::zero;
 		return toReturn;
