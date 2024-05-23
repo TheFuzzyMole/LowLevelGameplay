@@ -7,22 +7,22 @@ GameObjects:
     Components:
       - Transform:
           UUID: 14545487389883833472
-          Position: [712.549744, 136.75061]
+          Position: [831.43396, 568.274109]
       - Renderer:
           UUID: 12762021528280859579
           TextureFilePath: Textures/tux.png
           QuadSize: [250, 250]
           SpritesInTex: [8, 9]
-          CurrentSpriteIndex: [0, 5]
+          CurrentSpriteIndex: [2, 5]
           RenderLayer: 0
       - Rigidbody:
           UUID: 772568406388459121
-          Mass: 10
+          Mass: 1
           IsKinematic: false
           HasGravity: false
       - PlayerMovement:
           UUID: 15673361676651734676
-          Speed: 100
+          Speed: 1000
       - Animator:
           UUID: 1501931473157467472
           AnimationPath: Animations/tuxWave.anim
@@ -30,6 +30,30 @@ GameObjects:
           UUID: 1454548738988383344
           Center: [0, 0]
           Extents: [50, 90]
+  - GameObject: 7192605057723483103
+    Name: BouncyBall
+    Active: true
+    Tag: ""
+    Components:
+      - Transform:
+          UUID: 6906200926298103102
+          Position: [506.273254, 512.794312]
+      - Renderer:
+          UUID: 4525059200395802130
+          TextureFilePath: Textures/Debug.png
+          QuadSize: [100, 100]
+          SpritesInTex: [1, 1]
+          CurrentSpriteIndex: [0, 0]
+          RenderLayer: 0
+      - Rigidbody:
+          UUID: 9397091136095947464
+          Mass: 1000S
+          IsKinematic: false
+          HasGravity: false
+      - CircleCollider:
+          UUID: 3264522985429696484
+          Center: [0, 0]
+          Radius: 50
   - GameObject: 8668426444400969108
     Name: notPlayer
     Active: true

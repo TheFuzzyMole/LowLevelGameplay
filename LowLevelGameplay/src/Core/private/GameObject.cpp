@@ -6,6 +6,11 @@
 
 namespace LLGP
 {
+#define DeserializeComponent(__TYPE, __NAME) if (YAML::Node data = compNode[__NAME]) { m_Components.push_back(std::make_unique<__TYPE>(this, data)); }
+#define DeserializeComponentType(__TYPE) { \
+	std::string __name = #__TYPE; __name.substr(6, -1); \
+	DeserializeComponent(__TYPE, __name)}
+
 	LLGP::Event<> GameObject::OnWorldUpdate;
 	LLGP::Event<> GameObject::OnWorldFixedUpdate;
 
@@ -13,8 +18,8 @@ namespace LLGP
 	{
 		transform = this->AddComponent<Transform>();
 		_IsPendingKill = false;
-		OnWorldUpdate.AddListener(this, [&]() { OnUpdate(); });
-		OnWorldFixedUpdate.AddListener(this, [&]() { OnFixedUpdate(); });
+		OnWorldUpdate.AddListener(this, [&]() { this->OnUpdate(); });
+		OnWorldFixedUpdate.AddListener(this, [&]() { this->OnFixedUpdate(); });
 	}
 
 	GameObject::GameObject(LLGP::Scene& _owningScene, YAML::Node inData) : Object(inData["GameObject"].as<uint64_t>()), OwningScene(&_owningScene)
@@ -22,14 +27,14 @@ namespace LLGP
 		if (!Deserialize(inData)) { std::cout << "Error Deserialising GameObject: " << m_Name << std::endl; }
 
 		_IsPendingKill = false;
-		OnWorldUpdate.AddListener(this, [&]() { OnUpdate(); });
-		OnWorldFixedUpdate.AddListener(this, [&]() { OnFixedUpdate(); });
+		OnWorldUpdate.AddListener(this, [&]() { this->OnUpdate(); });
+		OnWorldFixedUpdate.AddListener(this, [&]() { this->OnFixedUpdate(); });
 	}
 
 	GameObject::~GameObject()
 	{
-		OnWorldUpdate.RemoveListener(this, [&]() { OnUpdate(); });
-		OnWorldFixedUpdate.RemoveListener(this, [&]() { OnFixedUpdate(); });
+		OnWorldUpdate.RemoveListener(this, [&]() { this->OnUpdate(); });
+		OnWorldFixedUpdate.RemoveListener(this, [&]() { this->OnFixedUpdate(); });
 	}
 
 	void GameObject::SetActive(bool newActive)
@@ -79,42 +84,15 @@ namespace LLGP
 		{
 			for (YAML::Node compNode : components)
 			{
-				if (YAML::Node tData = compNode["Transform"])
-				{
-					m_Components.push_back(std::make_unique<LLGP::Transform>(this, tData));
-					transform = static_cast<LLGP::Transform*>(m_Components[m_Components.size() - 1].get());
-				}
-
-				if (YAML::Node rbData = compNode["Rigidbody"])
-				{
-					m_Components.push_back(std::make_unique<LLGP::Rigidbody>(this, rbData));
-				}
-
-				if (YAML::Node ccData = compNode["CircleCollider"])
-				{
-					m_Components.push_back(std::make_unique<LLGP::CircleCollider>(this, ccData));
-				}
-
-				if (YAML::Node bcData = compNode["BoxCollider"])
-				{
-					m_Components.push_back(std::make_unique<LLGP::BoxCollider>(this, bcData));
-				}
-
-				if (YAML::Node aData = compNode["Animator"])
-				{
-					m_Components.push_back(std::make_unique<LLGP::Animator>(this, aData));
-				}
-
-				if (YAML::Node rData = compNode["Renderer"])
-				{
-					m_Components.push_back(std::make_unique<LLGP::Renderer>(this, rData));
-				}
-
-				if (YAML::Node pmData = compNode["PlayerMovement"])
-				{
-					m_Components.push_back(std::make_unique<TEST::PlayerMovement>(this, pmData));
-				}
+				DeserializeComponent(LLGP::Transform, "Transform")
+				DeserializeComponent(LLGP::Rigidbody, "Rigidbody")
+				DeserializeComponent(LLGP::CircleCollider, "CircleCollider")
+				DeserializeComponent(LLGP::BoxCollider, "BoxCollider")
+				DeserializeComponent(LLGP::Animator, "Animator")
+				DeserializeComponent(LLGP::Renderer, "Renderer")
+				DeserializeComponent(TEST::PlayerMovement, "PlayerMovement")
 			}
+			transform = static_cast<LLGP::Transform*>(GetComponent<LLGP::Transform>());
 
 			OnStart();
 			return true;

@@ -29,8 +29,9 @@ namespace LLGP
 	GameObject* Scene::Instantiate(const std::string& name)
 	{
 		std::unique_ptr<GameObject> tempGo = std::make_unique<GameObject>(*this, name);
-		m_SceneObjects.insert_or_assign(tempGo->uuid, std::move(tempGo));
-		return std::prev(m_SceneObjects.end())->second.get();
+		uint64_t tempUUID = tempGo->uuid;
+		m_SceneObjects.insert_or_assign(tempUUID, std::move(tempGo));
+		return m_SceneObjects[tempUUID].get();
 	}
 
 	GameObject* Scene::Instantiate(GameObject* toCopy)
@@ -44,6 +45,7 @@ namespace LLGP
 	void Scene::Destroy(GameObject* obj)
 	{
 	}
+
 	LLGP::GameObject* Scene::FindGameObjectByUUID(uint64_t _uuid)
 	{
 		if (!m_SceneObjects.contains(_uuid)) { return nullptr; }

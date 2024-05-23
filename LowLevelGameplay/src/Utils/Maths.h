@@ -9,4 +9,5 @@ namespace LLGP
 #define DEG2RAD 0.01745329252
 
 	static const double dmod(double x, double y) { return x - (int)(x / y) * y; }
+	static float clamp(float value, float min, float max) { return std::fmaxf(min, std::fminf(max, value)); }
 }

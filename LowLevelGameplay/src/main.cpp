@@ -38,6 +38,17 @@ int main()
 #pragma region level load
 
 	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene", "Testing");
+	/*LLGP::GameObject* ball = _GameScene->Instantiate("BouncyBall");
+	LLGP::Renderer* ballRenderer = ball->AddComponent<LLGP::Renderer>();
+	ball->transform->SetPosition({ 900, 450 });
+	ballRenderer->SetupQuad({ 100, 100 });
+	ballRenderer->SetupTexture("Textures/Debug.png", { 1, 1 });
+	ballRenderer->SetupSpriteUV({ 0, 0 });
+	LLGP::Rigidbody* ballRB = ball->AddComponent<LLGP::Rigidbody>();
+	ballRB->Mass = 100.f;
+	ballRB->HasGravity = false;
+	LLGP::CircleCollider* ballCol = ball->AddComponent<LLGP::CircleCollider>();
+	ballCol->SetRadius(50.f);*/
 	/*LLGP::GameObject* player = _GameScene->Instantiate("player");
 	LLGP::Renderer* playerRenderer = player->AddComponent<LLGP::Renderer>();
 	player->transform->SetPosition(LLGP::Vector2f(900.f, 450.f));
