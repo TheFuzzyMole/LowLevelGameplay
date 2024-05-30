@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <Core/Vector2.h>
 #include <Core/Commons.h>
 #include <Core/Scene.h>
@@ -37,7 +38,18 @@ int main()
 #pragma region level load
 
 	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene", "Testing");
-	LLGP::GameObject* player = _GameScene->Instantiate("player");
+	/*LLGP::GameObject* ball = _GameScene->Instantiate("BouncyBall");
+	LLGP::Renderer* ballRenderer = ball->AddComponent<LLGP::Renderer>();
+	ball->transform->SetPosition({ 900, 450 });
+	ballRenderer->SetupQuad({ 100, 100 });
+	ballRenderer->SetupTexture("Textures/Debug.png", { 1, 1 });
+	ballRenderer->SetupSpriteUV({ 0, 0 });
+	LLGP::Rigidbody* ballRB = ball->AddComponent<LLGP::Rigidbody>();
+	ballRB->Mass = 100.f;
+	ballRB->HasGravity = false;
+	LLGP::CircleCollider* ballCol = ball->AddComponent<LLGP::CircleCollider>();
+	ballCol->SetRadius(50.f);*/
+	/*LLGP::GameObject* player = _GameScene->Instantiate("player");
 	LLGP::Renderer* playerRenderer = player->AddComponent<LLGP::Renderer>();
 	player->transform->SetPosition(LLGP::Vector2f(900.f, 450.f));
 	playerRenderer->SetupQuad(LLGP::Vector2f(250.f, 250.f));
@@ -63,7 +75,7 @@ int main()
 	notplayerRenderer->SetupTexture("Textures/tux.png", LLGP::Vector2u(8, 9));
 	notplayerRenderer->SetupSpriteUV(LLGP::Vector2u(0, 5));
 
-	notPlayer->OnStart();
+	notPlayer->OnStart();*/
 #pragma endregion
 
 	while (window.isOpen())
@@ -83,14 +95,17 @@ int main()
 		}
 #pragma endregion
 
-		
 #pragma region Fixed Update
 		timeSincePhysicsStep += Time::deltaTime;
 		while (timeSincePhysicsStep > FIXED_FRAMERATE)
 		{
 			NextFixedUpdate.notify_all();
-			Physics::StepPhysics();
-			Physics::CollectCollisions();
+			for (int iteration = 0; iteration < PHYSICS_SOLVER_ITERATIONS; iteration++)
+			{
+				Physics::StepPhysics();
+				Physics::CollectCollisions();
+				Physics::ResolveOverlaps();
+			}
 			Physics::DispatchCollisions();
 			timeSincePhysicsStep -= FIXED_FRAMERATE;
 		}
@@ -107,27 +122,18 @@ int main()
 
 		LLGP::GameObject::OnWorldUpdate();
 
-		/*timer += Time::deltaTime;
-		if (timer >= 0.3f)
-		{
-			animIndex = ++animIndex % 3;
-			playerRenderer->SetupSpriteUV(LLGP::Vector2u(animIndex, 5));
-			timer -= 0.3f;
-		}*/
 #pragma endregion
 
 #pragma region rendering
 		window.clear();
 		LLGP::Renderer::OnRenderLayer(window, RenderLayers::DEFAULT);
 		LLGP::Renderer::OnRenderLayer(window, RenderLayers::BACKGROUND);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+		{
+			LLGP::Renderer::OnRenderLayer(window, RenderLayers::DEBUG);
+		}
 		window.display();
 #pragma endregion
-
-		/*or (LLGP::GameObject* forDeath : LLGP::GameObject::s_PendingKillList)
-		{
-			delete(forDeath);
-		}
-		LLGP::GameObject::s_PendingKillList.clear();*/
 
 		EndOfFrame.notify_all();
 	}

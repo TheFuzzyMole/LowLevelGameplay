@@ -13,6 +13,12 @@ project "LowLevelGameplay"
 		"src/**.cpp"
 	}
 
+	vpaths
+	{
+		["Headers/*"] = { "src/**.h", "src/**.hpp"},
+		["Sources/*"] = { "src/**.c", "src/**.cpp"}
+	}
+
 	defines { "YAML_CPP_STATIC_DEFINE", "SFML_STATIC", "_CONSOLE" }
 
 	includedirs
@@ -31,6 +37,7 @@ project "LowLevelGameplay"
 	links
 	{
 		"opengl32",
+		"openal32",
 		"freetype",
 		"winmm",
 		"gdi32",

@@ -12,12 +12,13 @@
 namespace LLGP
 {
 	class Transform;
+	class Scene;
 
 	class GameObject : public Object, public ISerializable
 	{
 	public:
-		GameObject(const std::string& name = "");
-		GameObject(YAML::Node inData);
+		GameObject(LLGP::Scene& _owningScene, const std::string& name = "");
+		GameObject(LLGP::Scene& _owningScene, YAML::Node inData);
 		GameObject(const GameObject&) = default;
 		~GameObject();
 
@@ -40,7 +41,8 @@ namespace LLGP
 #pragma endregion
 
 		bool _IsPendingKill;
-		Transform* transform;
+		LLGP::Transform* transform;
+		LLGP::Scene* OwningScene;
 
 #pragma region getters + setters
 		inline void SetName(std::string newName) { m_Name = newName; }

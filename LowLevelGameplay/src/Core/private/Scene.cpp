@@ -8,12 +8,14 @@ namespace LLGP
 	Scene::Scene(const std::string& scenePath, const std::string& name) : m_SceneAssetPath(scenePath), m_Name(name)
 	{
 		//TODO:: load from here and deserialize the YAML
+		SceneSerializer serializer(*this);
+		if (!serializer.Deserialize(scenePath)) { std::cout << "Error Deserializing Scene: " << m_Name << std::endl; }
 	}
 
 	Scene::~Scene()
 	{
-		//SceneSerializer serializer(*this);
-		//serializer.Serialize(m_SceneAssetPath);
+		SceneSerializer serializer(*this);
+		serializer.Serialize(m_SceneAssetPath);
 	}
 
 	void Scene::Update()
@@ -26,8 +28,10 @@ namespace LLGP
 
 	GameObject* Scene::Instantiate(const std::string& name)
 	{
-		m_SceneObjects.emplace_back(std::make_unique<GameObject>(name));
-		return m_SceneObjects.back().get();
+		std::unique_ptr<GameObject> tempGo = std::make_unique<GameObject>(*this, name);
+		uint64_t tempUUID = tempGo->uuid;
+		m_SceneObjects.insert_or_assign(tempUUID, std::move(tempGo));
+		return m_SceneObjects[tempUUID].get();
 	}
 
 	GameObject* Scene::Instantiate(GameObject* toCopy)
@@ -40,5 +44,12 @@ namespace LLGP
 
 	void Scene::Destroy(GameObject* obj)
 	{
+	}
+
+	LLGP::GameObject* Scene::FindGameObjectByUUID(uint64_t _uuid)
+	{
+		if (!m_SceneObjects.contains(_uuid)) { return nullptr; }
+
+		return m_SceneObjects[_uuid].get();
 	}
 }

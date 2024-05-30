@@ -5,6 +5,7 @@
 
 namespace LLGP
 {
+
 	class GameObject;
 	struct Collision;
 

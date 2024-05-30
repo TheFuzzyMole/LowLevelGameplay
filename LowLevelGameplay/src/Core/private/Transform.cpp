@@ -1,6 +1,7 @@
-#include "Core\Transform.h"
-#include "Core\GameObject.h"
-#include "Utils\Maths.h"
+#include <Core/Transform.h>
+#include <Core/GameObject.h>
+#include <Core/Scene.h>
+#include <Utils/Maths.h>
 #include <cstdlib>
 #include <algorithm>
 #include <iostream>
@@ -25,7 +26,7 @@ namespace LLGP
 		m_Position = inPos;
 	}
 
-    Transform::Transform(GameObject* owner, YAML::Node inData) : Component(owner, inData)
+    Transform::Transform(GameObject* owner, YAML::Node inData) : Component(owner, inData), m_IsDirty(false)
     {
 		if (!Deserialize(inData)) { std::cout << "Error Deserializing Transform: " << uuid << std::endl; }
     }
@@ -194,9 +195,7 @@ namespace LLGP
 	}
     void Transform::Serialize(YAML::Emitter& out)
     {
-		out << YAML::Key << "Transform";
-
-		out << YAML::BeginMap; //Transform
+		out << YAML::Key << "Transform" << YAML::Value << YAML::BeginMap; //Transform
 
 		out << YAML::Key << "UUID" << YAML::Value << uuid;
 
@@ -213,8 +212,16 @@ namespace LLGP
 		if (!node["Position"]) { return false; }
 		m_LocalPosition = node["Position"].as<LLGP::Vector2f>();
 
-		if (node["Parent"]) {}
-		//TODO: deal with parenting via uuid
+		if (node["Parent"])
+		{
+			m_Parent = _GameObject->OwningScene->FindGameObjectByUUID(node["Parent"].as<uint64_t>())->transform;
+			m_Parent->SetNewChild(this);
+		}
+		else
+		{
+			m_Parent = nullptr;
+		}
+		SetAsDirty();
 		return true;
 	}
 }

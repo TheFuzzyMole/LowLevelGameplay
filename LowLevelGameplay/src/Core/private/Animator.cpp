@@ -61,8 +61,7 @@ namespace LLGP
 
     void Animator::Serialize(YAML::Emitter& out)
     {
-		out << YAML::Key << "Animator";
-		out << YAML::BeginMap; //Animator
+		out << YAML::Key << "Animator" << YAML::Value << YAML::BeginMap; //Animator
 		out << YAML::Key << "UUID" << YAML::Value << uuid;
 
 		out << YAML::Key << "AnimationPath" << YAML::Value << m_CurAnimation->GetAssetPath();
@@ -74,6 +73,6 @@ namespace LLGP
 	{
 		if (!node["AnimationPath"]) { return false; }
 		SetAnimation(node["AnimationPath"].as<std::string>());
-		return false;
+		return true;
 	}
 }

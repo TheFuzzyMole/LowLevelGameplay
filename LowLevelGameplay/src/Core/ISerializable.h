@@ -9,31 +9,18 @@ namespace YAML
 	{
 		static Node encode(const LLGP::Vector2f rhs);
 		
-		static bool decode(const Node node, LLGP::Vector2f rhs);
+		static bool decode(const Node node, LLGP::Vector2f& rhs);
 		
 	};
 
-	/*template <>
+	template <>
 	struct convert<LLGP::Vector2u>
 	{
-		static Node encode(const LLGP::Vector2u rhs)
-		{
-			Node node;
-			node.push_back(rhs.x);
-			node.push_back(rhs.y);
-			node.SetStyle(EmitterStyle::Flow);
-			return node;
-		}
-		static bool decode(const Node* node, LLGP::Vector2u rhs)
-		{
-			if (!node->IsSequence() || node->size() != 2)
-				return false;
-
-			rhs.x = node[0].as<unsigned int>();
-			rhs.y = node[1].as<unsigned int>();
-			return true;
-		}
-	};*/
+		static Node encode(const LLGP::Vector2u rhs);
+		
+		static bool decode(const Node node, LLGP::Vector2u& rhs);
+		
+	};
 }
 
 namespace LLGP
