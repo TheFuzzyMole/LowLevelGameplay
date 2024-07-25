@@ -16,13 +16,14 @@ namespace TEST
 	{
 	public:
 		PlayerMovement(LLGP::GameObject* owner);
-		PlayerMovement(LLGP::GameObject* owner, YAML::Node inData);
+
+		void Start() override;
 
 		void SetSpeed(float _speed);
 
 		// Inherited via Component
 		void Serialize(YAML::Emitter& out) override;
-		bool Deserialize(YAML::Node node) override;
+		bool Deserialize(YAML::Node node, std::vector<LLGP::LinkRequest>& linkRequests) override;
 
 	private:
 		float m_Speed;

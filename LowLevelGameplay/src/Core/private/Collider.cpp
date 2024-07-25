@@ -8,11 +8,6 @@ namespace LLGP
 		Physics::RegisterCollider(this);
 	}
 
-    Collider::Collider(GameObject* owner, YAML::Node inData) : Component(owner, inData)
-    {
-		Physics::RegisterCollider(this);
-    }
-
 	Collider::~Collider()
 	{
 		Physics::RemoveCollider(this);

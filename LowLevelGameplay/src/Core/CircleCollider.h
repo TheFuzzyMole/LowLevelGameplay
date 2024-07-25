@@ -10,10 +10,7 @@ namespace LLGP
 	{
 	public:
 		CircleCollider(GameObject* owner) : Collider(owner), m_Radius(1.f) {}
-		CircleCollider(GameObject* owner, YAML::Node inData) : Collider(owner, inData)
-		{
-			if (!Deserialize(inData)) { std::cout << "Error Deserializing CircleCollider: " << uuid << std::endl; }
-		}
+		
 		~CircleCollider() = default;
 
 		float GetRadius() { return m_Radius; }
@@ -30,15 +27,17 @@ namespace LLGP
 
 			out << YAML::Key << "Center" << YAML::Value << m_Center;
 			out << YAML::Key << "Radius" << YAML::Value << m_Radius;
+			out << YAML::Key << "Restitution" << YAML::Value << m_Restitution;
 
 			out << YAML::EndMap; //CircleCollider
 		}
 
-		bool Deserialize(YAML::Node node) override
+		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override
 		{
-			if (!node["Center"] || !node["Radius"]) { return false; }
+			if (!node["Center"] || !node["Radius"] || !node["Restitution"]) { return false; }
 			m_Center = node["Center"].as<LLGP::Vector2f>();
 			m_Radius = node["Radius"].as<float>();
+			m_Restitution = node["Restitution"].as<float>();
 			return true;
 		}
 	private:

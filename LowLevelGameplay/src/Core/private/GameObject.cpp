@@ -22,15 +22,6 @@ namespace LLGP
 		OnWorldFixedUpdate.AddListener(this, [&]() { this->OnFixedUpdate(); });
 	}
 
-	GameObject::GameObject(LLGP::Scene& _owningScene, YAML::Node inData) : Object(inData["GameObject"].as<uint64_t>()), OwningScene(&_owningScene)
-	{
-		if (!Deserialize(inData)) { std::cout << "Error Deserialising GameObject: " << m_Name << std::endl; }
-
-		_IsPendingKill = false;
-		OnWorldUpdate.AddListener(this, [&]() { this->OnUpdate(); });
-		OnWorldFixedUpdate.AddListener(this, [&]() { this->OnFixedUpdate(); });
-	}
-
 	GameObject::~GameObject()
 	{
 		OnWorldUpdate.RemoveListener(this, [&]() { this->OnUpdate(); });
@@ -53,7 +44,7 @@ namespace LLGP
 		_IsPendingKill = true;
 		OnDestroy();
 	}
-	void GameObject::Serialize(YAML::Emitter& out)
+	/*void GameObject::Serialize(YAML::Emitter& out)
 	{
 		out << YAML::BeginMap; //GameObject
 		out << YAML::Key << "GameObject" << YAML::Value << uuid;
@@ -98,5 +89,5 @@ namespace LLGP
 			return true;
 		}
 		return false;
-	}
+	}*/
 }

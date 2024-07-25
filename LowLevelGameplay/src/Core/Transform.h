@@ -15,7 +15,6 @@ namespace LLGP
 		static void CleanUpDirtyList();
 
 		Transform(GameObject* owner, Transform* parent = nullptr, Vector2f inPos = Vector2f::zero);
-		Transform(GameObject* owner, YAML::Node inData);
 		~Transform() = default;
 
 		Transform* GetChild(int index);
@@ -48,7 +47,7 @@ namespace LLGP
 		void SetAsDirty();
 
 		void Serialize(YAML::Emitter& out) override;
-		bool Deserialize(YAML::Node node) override;
+		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;
 
 	private:
 		bool m_IsDirty;

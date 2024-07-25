@@ -13,6 +13,7 @@
 #include <string>
 #include <iostream>
 #include <chrono>
+#include <Core/Matrix3x3.h>
 
 using namespace LLGP;
 
@@ -34,10 +35,13 @@ int main()
 			LLGP::CompositeButtonVector(sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::A, sf::Keyboard::D),
 			1.f));
 #pragma endregion
+	LLGP::Mat3f testMat = LLGP::Mat3f::FromPRS(LLGP::Vector2f{900, 450}, 0.785398f, LLGP::Vector2u{ 3, 6 });
+	LLGP::Vector2f pos; float rot{ 0 }; LLGP::Vector2u scale;
+	LLGP::Mat3f::Decompose(testMat, pos, rot, scale);
 
 #pragma region level load
 
-	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene", "Testing");
+	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene");
 	/*LLGP::GameObject* ball = _GameScene->Instantiate("BouncyBall");
 	LLGP::Renderer* ballRenderer = ball->AddComponent<LLGP::Renderer>();
 	ball->transform->SetPosition({ 900, 450 });

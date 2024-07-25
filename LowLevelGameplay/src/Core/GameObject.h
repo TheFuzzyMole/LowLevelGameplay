@@ -14,11 +14,10 @@ namespace LLGP
 	class Transform;
 	class Scene;
 
-	class GameObject : public Object, public ISerializable
+	class GameObject : public Object
 	{
 	public:
 		GameObject(LLGP::Scene& _owningScene, const std::string& name = "");
-		GameObject(LLGP::Scene& _owningScene, YAML::Node inData);
 		GameObject(const GameObject&) = default;
 		~GameObject();
 
@@ -89,7 +88,7 @@ namespace LLGP
 		T* AddComponent()
 		{
 			m_Components.push_back(std::make_unique<T>(this));
-			return dynamic_cast<T*>(m_Components[m_Components.size() - 1].get());
+			return dynamic_cast<T*>(m_Components.back().get());
 		}
 		template<class T> requires isComponent<T>
 		bool RemoveComponent(T* comp)
@@ -97,7 +96,7 @@ namespace LLGP
 			T* castedType = nullptr;
 			for (int i = 0; i < m_Components.size(); i++)
 			{
-				if (castedType = dynamic_cast<T*>(m_Components[i].get()))
+				if (castedType = dynamic_cast<T>(m_Components[i].get()))
 				{
 					if (*castedType == *comp)
 					{
@@ -121,14 +120,12 @@ namespace LLGP
 		}
 #pragma endregion
 
-		// Inherited via ISerializable
-		void Serialize(YAML::Emitter& out) override;
-		bool Deserialize(YAML::Node node) override;
-
 	private:
 		std::string m_Name;
 		bool m_Active;
 		std::string m_Tag;
 		std::vector<std::unique_ptr<Component>> m_Components;
+
+		friend class SceneSerializer;
 	};
 }

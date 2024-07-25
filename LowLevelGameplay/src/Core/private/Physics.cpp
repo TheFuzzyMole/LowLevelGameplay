@@ -88,8 +88,8 @@ namespace LLGP
 	{
 		for (Collision* collision : _Collisions)
 		{
-			Rigidbody* aRB = collision->collider->GetGameObject()->GetComponent<Rigidbody>();
-			Rigidbody* bRB = collision->otherCollider->GetGameObject()->GetComponent<Rigidbody>();
+			LLGP::Rigidbody* aRB = collision->collider->GetGameObject()->GetComponent<Rigidbody>();
+			LLGP::Rigidbody* bRB = collision->otherCollider->GetGameObject()->GetComponent<Rigidbody>();
 			float aMass = aRB ? aRB->Mass : 0.f;
 			float bMass = bRB ? bRB->Mass : 0.f;
 			if (!bRB) { bMass = aMass; aMass = 0.f; }
@@ -97,8 +97,8 @@ namespace LLGP
 			collision->collider->GetGameObject()->transform->ChangePosition(collision->normal * (collision->overlap * (-bMass / (aMass + bMass))));
 			collision->otherCollider->GetGameObject()->transform->ChangePosition(collision->normal * (collision->overlap * (aMass / (aMass + bMass))));
 
-			aRB->AddForce(collision->normal * (collision->totalForce * (-bMass / (aMass + bMass))), LLGP::ForceMode::Impulse);
-			if (bRB) { bRB->AddForce(collision->normal * (collision->totalForce * (aMass / (aMass + bMass))), LLGP::ForceMode::Impulse); }
+			aRB->AddForce(collision->normal * -abs(collision->impulseMagnitude), LLGP::ForceMode::Impulse);
+			if (bRB) { bRB->AddForce(collision->normal * abs(collision->impulseMagnitude), LLGP::ForceMode::Impulse); }
 		}
 	}
 
@@ -150,8 +150,9 @@ namespace LLGP
 		float radiusSum = a->GetRadius() + b->GetRadius();
 		if (radiusSum * radiusSum > diff.GetSqrMagnitude()) return nullptr;
 
-		LLGP::Rigidbody* aRB = a->GetGameObject()->GetComponent<LLGP::Rigidbody>();
-		LLGP::Rigidbody* bRB = b->GetGameObject()->GetComponent<LLGP::Rigidbody>();
+		LLGP::Rigidbody* aRB = a->GetGameObject()->GetComponent<Rigidbody>();
+		LLGP::Rigidbody* bRB = b->GetGameObject()->GetComponent<Rigidbody>();
+
 
 		LLGP::Collision* toReturn = new LLGP::Collision();
 		toReturn->collider = a;
@@ -160,7 +161,9 @@ namespace LLGP
 		toReturn->normal = diff.Normalised();
 		toReturn->overlap = radiusSum - diff.GetMagnitude();
 		toReturn->point = a->GetPosition() + (toReturn->normal * a->GetRadius());
-		toReturn->totalForce = LLGP::Vector2f::Dot(aRB->Velocity, toReturn->normal) * aRB->Mass + (bRB ? LLGP::Vector2f::Dot(bRB->Velocity, -toReturn->normal) * bRB->Mass : 0.f);
+		float restitution = fminf(a->GetRestitution(), b->GetRestitution());
+		toReturn->impulseMagnitude = (-(1 + restitution) * LLGP::Vector2f::Dot((bRB ? bRB->Velocity : Vector2f::zero) - aRB->Velocity, toReturn->normal)) / ((1 / aRB->Mass) + (bRB ? 1 / bRB->Mass : 0));
+		//toReturn->impulseMagnitude = LLGP::Vector2f::Dot(aRB->Velocity, toReturn->normal) * aRB->Mass + (bRB != nullptr ? LLGP::Vector2f::Dot(bRB->Velocity, -toReturn->normal) * bRB->Mass : 0.f);
 		return toReturn;
 	}
 	LLGP::Collision* Physics::Collision_AABBAABB(BoxCollider* a, BoxCollider* b)
@@ -175,8 +178,8 @@ namespace LLGP
 		bMin = b->GetPosition() - bExt;
 		if (aMin.x >= bMax.x || aMax.x <= bMin.x || aMin.y >= bMax.y || aMax.y <= bMin.y) return nullptr;
 
-		LLGP::Rigidbody* aRB = a->GetGameObject()->GetComponent<LLGP::Rigidbody>();
-		LLGP::Rigidbody* bRB = b->GetGameObject()->GetComponent<LLGP::Rigidbody>();
+		LLGP::Rigidbody* aRB = a->GetGameObject()->GetComponent<Rigidbody>();
+		LLGP::Rigidbody* bRB = b->GetGameObject()->GetComponent<Rigidbody>();
 
 		LLGP::Vector2f diff = b->GetPosition() - a->GetPosition();
 		LLGP::Vector2f dir = diff.Normalised();
@@ -189,7 +192,9 @@ namespace LLGP
 		toReturn->normal = LLGP::Vector2f(copysign((xMult >= yMult ? 1.f : 0.f), diff.x), copysignf(floor(yMult >= xMult ? 1.f : 0.f), diff.y));
 		toReturn->overlap = LLGP::Vector2f((aExt.x + bExt.x - abs(diff.x)) * toReturn->normal.x, (aExt.y + bExt.y - abs(diff.y)) * toReturn->normal.y).GetMagnitude();
 		toReturn->point = LLGP::Vector2f(fmaxf(dir.x, toReturn->normal.x), fmaxf(dir.y, toReturn->normal.y));
-		toReturn->totalForce = LLGP::Vector2f::Dot(aRB->Velocity, toReturn->normal) + (bRB ? LLGP::Vector2f::Dot(bRB->Velocity, -toReturn->normal) : 0.f);
+		float restitution = fminf(a->GetRestitution(), b->GetRestitution());
+		toReturn->impulseMagnitude = (-(1 + restitution) * LLGP::Vector2f::Dot((bRB ? bRB->Velocity : Vector2f::zero) - aRB->Velocity, toReturn->normal)) / ((1 / aRB->Mass) + (bRB ? 1 / bRB->Mass : 0));
+		//toReturn->impulseMagnitude = LLGP::Vector2f::Dot(aRB->Velocity, toReturn->normal) + (bRB != nullptr ? LLGP::Vector2f::Dot(bRB->Velocity, -toReturn->normal) : 0.f);
 		return toReturn;
 	}
 	LLGP::Collision* Physics::Collision_AABBCircle(BoxCollider* a, CircleCollider* b)
@@ -208,12 +213,14 @@ namespace LLGP
 		LLGP::Collision* toReturn = new LLGP::Collision();
 		toReturn->collider = a;
 		toReturn->otherCollider = b;
-		toReturn->otherHasRB = b != nullptr;
+		toReturn->otherHasRB = bRB != nullptr;
 
 		toReturn->normal = diff.Normalised();
 		toReturn->overlap = rad - diff.GetMagnitude();
 		toReturn->point = b->GetPosition() - diff;
-		toReturn->totalForce = LLGP::Vector2f::Dot(aRB->Velocity, toReturn->normal) + (bRB ? LLGP::Vector2f::Dot(bRB->Velocity, -toReturn->normal) : 0.f);
+		float restitution = fminf(a->GetRestitution(), b->GetRestitution());
+		toReturn->impulseMagnitude = (-(1 + restitution) * LLGP::Vector2f::Dot((bRB ? bRB->Velocity : Vector2f::zero) - aRB->Velocity, toReturn->normal)) / ((1/aRB->Mass) + (bRB ? 1/bRB->Mass : 0));
+		//toReturn->impulseMagnitude = LLGP::Vector2f::Dot(aRB->Velocity, toReturn->normal) + (bRB != nullptr ? LLGP::Vector2f::Dot(bRB->Velocity, -toReturn->normal) : 0.f);
 		return toReturn;
 	}
 	LLGP::Collision* Physics::Collision_AABBCircle(CircleCollider* a, BoxCollider* b)
@@ -223,7 +230,7 @@ namespace LLGP
 		Collider* temp = toReturn->collider;
 		toReturn->collider = toReturn->otherCollider;
 		toReturn->otherCollider = temp;
-		toReturn->otherHasRB = toReturn->otherCollider->GetGameObject()->GetComponent<Rigidbody>();
+		toReturn->otherHasRB = toReturn->otherCollider->GetGameObject()->HasComponent<Rigidbody>();
 		toReturn->normal = -toReturn->normal;
 		return toReturn;
 	}

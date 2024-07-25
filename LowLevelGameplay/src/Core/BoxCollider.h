@@ -8,10 +8,7 @@ namespace LLGP
 	{
 	public:
 		BoxCollider(GameObject* owner) : Collider(owner), m_Extents(Vector2<float>::one) {}
-		BoxCollider(GameObject* owner, YAML::Node inData) : Collider(owner, inData)
-		{
-			if (!Deserialize(inData)) { std::cout << "Error Deserializing BoxCollider: " << uuid << std::endl; }
-		}
+		
 		~BoxCollider() = default;
 
 		Vector2<float> GetExtents() { return m_Extents; }
@@ -28,16 +25,18 @@ namespace LLGP
 
 			out << YAML::Key << "Center" << YAML::Value << m_Center;
 			out << YAML::Key << "Extents" << YAML::Value << m_Extents;
+			out << YAML::Key << "Restitution" << YAML::Value << m_Restitution;
 
 			out << YAML::EndMap; //BoxCollider
 		}
 
-		bool Deserialize(YAML::Node node) override
+		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override
 		{
-			if (!node["Center"] || !node["Extents"]) { return false; }
+			if (!node["Center"] || !node["Extents"] || !node["Restitution"]) { return false; }
 			m_Center = node["Center"].as<LLGP::Vector2f>();
 			m_Extents = node["Extents"].as<LLGP::Vector2f>();
-			return false;
+			m_Restitution = node["Restitution"].as<float>();
+			return true;
 		}
 	private:
 		Vector2<float> m_Extents;

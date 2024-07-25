@@ -26,11 +26,6 @@ namespace LLGP
 		m_Position = inPos;
 	}
 
-    Transform::Transform(GameObject* owner, YAML::Node inData) : Component(owner, inData), m_IsDirty(false)
-    {
-		if (!Deserialize(inData)) { std::cout << "Error Deserializing Transform: " << uuid << std::endl; }
-    }
-
 	Transform* Transform::GetChild(int index)
 	{
 		if (index < 0 || index >= m_Children.size()) return nullptr;
@@ -202,20 +197,23 @@ namespace LLGP
 		out << YAML::Key << "Position" << YAML::Value << GetLocalPosition();
 		if (m_Parent)
 		{
-			out << YAML::Key << "Parent" << YAML::Value << m_Parent->_GameObject->uuid;
+			out << YAML::Key << "Parent" << YAML::Value << m_Parent->uuid;
 		}
 
 		out << YAML::EndMap; //Transform
     }
-	bool Transform::Deserialize(YAML::Node node)
+	bool Transform::Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests)
 	{
 		if (!node["Position"]) { return false; }
 		m_LocalPosition = node["Position"].as<LLGP::Vector2f>();
 
 		if (node["Parent"])
 		{
-			m_Parent = _GameObject->OwningScene->FindGameObjectByUUID(node["Parent"].as<uint64_t>())->transform;
-			m_Parent->SetNewChild(this);
+			linkRequests.emplace_back(std::bind(
+				[](LLGP::Transform* context, LLGP::Component* parent)
+					{context->SetParent(dynamic_cast<LLGP::Transform*>(parent), false); },
+					this, std::placeholders::_1),
+				node["Parent"].as<uint64_t>());
 		}
 		else
 		{

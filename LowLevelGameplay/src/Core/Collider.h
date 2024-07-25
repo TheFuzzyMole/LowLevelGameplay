@@ -14,11 +14,12 @@ namespace LLGP
 	{
 	public:
 		Collider(GameObject* owner);
-		Collider(GameObject* owner, YAML::Node inData);
 		~Collider();
 
 		Vector2<float> GetCenter() { return m_Center; }
 		void SetCenter(Vector2<float> newCenter) { m_Center = newCenter; }
+		float GetRestitution() { return m_Restitution; }
+		void SetRestitution(float _restitution) { m_Restitution = _restitution; }
 		//TODO: make this TransformPosition instead
 		Vector2<float> GetPosition();
 
@@ -28,5 +29,6 @@ namespace LLGP
 
 	protected:
 		Vector2<float> m_Center;
+		float m_Restitution;
 	};
 }

@@ -13,12 +13,6 @@ namespace LLGP
 		m_Renderer = _GameObject->GetComponent<LLGP::Renderer>();
 	}
 
-    Animator::Animator(GameObject* owner, YAML::Node inData) : Component(owner, inData)
-    {
-		m_Renderer = _GameObject->GetComponent<LLGP::Renderer>();
-		if (!Deserialize(inData)) { std::cout << "Error Deserializing Animator: " << uuid << std::endl; }
-    }
-
 	void Animator::Start()
 	{
 		if (m_Renderer == nullptr) { m_Renderer = _GameObject->GetComponent<LLGP::Renderer>(); }
@@ -69,7 +63,7 @@ namespace LLGP
 		out << YAML::EndMap; //Animator
     }
 
-	bool Animator::Deserialize(YAML::Node node)
+	bool Animator::Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests)
 	{
 		if (!node["AnimationPath"]) { return false; }
 		SetAnimation(node["AnimationPath"].as<std::string>());

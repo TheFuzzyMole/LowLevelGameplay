@@ -20,7 +20,7 @@ namespace LLGP
 		Vector2<float> point;
 		Vector2<float> normal;
 		float overlap;
-		float totalForce;
+		float impulseMagnitude;
 
 		bool operator==(Collision* b);
 	};

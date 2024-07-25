@@ -31,7 +31,7 @@ namespace LLGP
 
 		// Inherited via ISerializable
 		void Serialize(YAML::Emitter& out) override = 0;
-		bool Deserialize(YAML::Node node) override = 0;
+		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override = 0;
 	
 	protected:
 		GameObject* _GameObject;

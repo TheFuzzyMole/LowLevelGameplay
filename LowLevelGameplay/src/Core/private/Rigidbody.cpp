@@ -13,14 +13,6 @@ namespace LLGP
 		Physics::OnStepPhysics.AddListener(this, std::bind(&Rigidbody::ApplyAccumulatedForce, this));
 	}
 
-    Rigidbody::Rigidbody(GameObject* owner, YAML::Node inData)
-		: Component(owner, inData), Velocity(LLGP::Vector2f::zero), m_AccumulatedForce(LLGP::Vector2f::zero)
-    {
-		if (!Deserialize(inData)) { std::cout << "Error Deserializing Rigidbody: " << uuid << std::endl; }
-		Physics::RegisterRigidbody(this);
-		Physics::OnStepPhysics.AddListener(this, std::bind(&Rigidbody::ApplyAccumulatedForce, this));
-    }
-
 	Rigidbody::~Rigidbody()
 	{
 		Physics::RemoveRigidbody(this);
@@ -35,10 +27,10 @@ namespace LLGP
 			m_AccumulatedForce += (force / Mass) * FIXED_FRAMERATE;
 			break;
 		case LLGP::Acceleration:
-			m_AccumulatedForce += (force / Mass);
+			m_AccumulatedForce += force * FIXED_FRAMERATE;
 			break;
 		case LLGP::Impulse:
-			m_AccumulatedForce += force * FIXED_FRAMERATE;
+			m_AccumulatedForce += (force / Mass);
 			break;
 		case LLGP::VelocityChange:
 			m_AccumulatedForce += force;
@@ -59,7 +51,7 @@ namespace LLGP
 		out << YAML::EndMap; //Rigidbody
 	}
 
-	bool Rigidbody::Deserialize(YAML::Node node)
+	bool Rigidbody::Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests)
 	{
 		if (!node["Mass"] || !node["IsKinematic"] || !node["HasGravity"]) { return false; }
 		Mass = node["Mass"].as<float>();

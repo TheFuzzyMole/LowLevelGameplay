@@ -7,11 +7,12 @@
 namespace LLGP
 {
 	class GameObject;
+	class Component;
 
 	class Scene
 	{
 	public:
-		Scene(const std::string& scenePath, const std::string& name);
+		Scene(const std::string& scenePath);
 		~Scene();
 
 		std::vector<GameObject*> s_PendingKillList;
@@ -29,7 +30,7 @@ namespace LLGP
 	private:
 		std::string m_Name;
 		std::string m_SceneAssetPath;
-		std::map<uint64_t, std::unique_ptr<GameObject>> m_SceneObjects;
+		std::map<uint64_t, std::unique_ptr<LLGP::GameObject>> m_SceneObjects;
 
 		friend class SceneSerializer;
 	};

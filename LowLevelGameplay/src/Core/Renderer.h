@@ -25,7 +25,6 @@ namespace LLGP
 	{
 	public:
 		Renderer(GameObject* owner);
-		Renderer(GameObject* owner, YAML::Node inData);
 		~Renderer();
 
 		static Event<sf::RenderWindow&, RenderLayers> OnRenderLayer;
@@ -36,7 +35,7 @@ namespace LLGP
 		void SetupRenderLayer(LLGP::RenderLayers layer);
 
 		void Serialize(YAML::Emitter& out) override;
-		bool Deserialize(YAML::Node node) override;
+		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;
 
 	private:
 		sf::RectangleShape m_Quad;

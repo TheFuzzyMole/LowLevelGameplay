@@ -1,15 +1,16 @@
 #include <Core/Scene.h>
 #include <Core/SceneSerializer.h>
 #include <Core/GameObject.h>
+#include <Core/Component.h>
 #include <Core/Scene.h>
 
 namespace LLGP
 {
-	Scene::Scene(const std::string& scenePath, const std::string& name) : m_SceneAssetPath(scenePath), m_Name(name)
+	Scene::Scene(const std::string& scenePath) : m_SceneAssetPath(scenePath), m_Name("Untitled")
 	{
 		//TODO:: load from here and deserialize the YAML
 		SceneSerializer serializer(*this);
-		if (!serializer.Deserialize(scenePath)) { std::cout << "Error Deserializing Scene: " << m_Name << std::endl; }
+		if (!serializer.DeserializeScene(scenePath)) { std::cout << "Error Deserializing Scene: " << m_Name << std::endl; }
 	}
 
 	Scene::~Scene()

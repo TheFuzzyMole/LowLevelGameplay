@@ -3,6 +3,7 @@
 #include <Core/Time.h>
 #include <Core/Rigidbody.h>
 #include <Core/Commons.h>
+#include <cassert>
 
 namespace TEST
 {
@@ -14,15 +15,11 @@ namespace TEST
 		LLGP::InputManager::FindAction("Move")->OnCancelled.AddListener(this, std::bind(&PlayerMovement::Handle_MoveCancelled, this, std::placeholders::_1));
 	}
 
-    PlayerMovement::PlayerMovement(LLGP::GameObject* owner, YAML::Node inData) :
-		LLGP::Component(owner, inData), m_InMoveVector(LLGP::Vector2f::zero), m_IsMoving(false)
-    {
-		if (!Deserialize(inData)) { std::cout << "Error Deserializing PlayerMovement: " << uuid << std::endl; }
-
-		m_RB = _GameObject->GetComponent<LLGP::Rigidbody>();
-		LLGP::InputManager::FindAction("Move")->OnHeld.AddListener(this, std::bind(&PlayerMovement::Handle_MovePerformed, this, std::placeholders::_1));
-		LLGP::InputManager::FindAction("Move")->OnCancelled.AddListener(this, std::bind(&PlayerMovement::Handle_MoveCancelled, this, std::placeholders::_1));
-    }
+	void PlayerMovement::Start()
+	{
+		if (m_RB == nullptr) { m_RB = _GameObject->GetComponent<LLGP::Rigidbody>(); }
+		assert(m_RB != nullptr);
+	}
 
 	void PlayerMovement::SetSpeed(float _speed)
 	{
@@ -68,7 +65,7 @@ namespace TEST
 
 		out << YAML::EndMap; //PlayerMovement
     }
-    bool PlayerMovement::Deserialize(YAML::Node node)
+    bool PlayerMovement::Deserialize(YAML::Node node, std::vector<LLGP::LinkRequest>& linkRequests)
     {
 		if (!node["Speed"]) { return false; }
 		m_Speed = node["Speed"].as<float>();
