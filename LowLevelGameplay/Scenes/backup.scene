@@ -1,4 +1,9 @@
 Scene: Testing
+Textures:
+  - Textures/tux.png
+  - Textures/Debug.png
+Animations:
+  - Animations/tuxWave.anim
 GameObjects:
   - GameObject: 1
     Name: player

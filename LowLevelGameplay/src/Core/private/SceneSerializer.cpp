@@ -6,6 +6,9 @@
 #include <Core/GameObject.h>
 #include <Core/Components.h>
 #include <Core/Component.h>
+#include <Core/Animation.h>
+#include <Core/Texture.h>
+#include <Core/AssetManager.h>
 
 namespace LLGP
 {
@@ -19,6 +22,21 @@ namespace LLGP
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		out << YAML::Key << "Scene" << YAML::Value << m_Scene->m_Name;
+
+		out << YAML::Key << "Textures" << YAML::Value << YAML::BeginSeq; //Textures
+		for (std::shared_ptr<LLGP::Asset>& a : m_Scene->m_SceneTextures)
+		{
+			out << a->GetAssetPath();
+		}
+		out << YAML::EndSeq; //Textures
+
+		out << YAML::Key << "Animations" << YAML::Value << YAML::BeginSeq; //Animations
+		for (std::shared_ptr<LLGP::Asset>& a : m_Scene->m_SceneAnimations)
+		{
+			out << a->GetAssetPath();
+		}
+		out << YAML::EndSeq; //Animations
+
 		out << YAML::Key << "GameObjects" << YAML::Value << YAML::BeginSeq;
 		for (std::pair<const uint64_t, std::unique_ptr<LLGP::GameObject>>& go : m_Scene->m_SceneObjects)
 		{
@@ -28,7 +46,7 @@ namespace LLGP
 			out << YAML::Key << "Active" << YAML::Value << go.second->m_Active;
 			out << YAML::Key << "Tag" << YAML::Value << go.second->m_Tag;
 
-			out << YAML::Key << "Components" << YAML::Value << YAML::BeginSeq;
+			out << YAML::Key << "Components" << YAML::Value << YAML::BeginSeq; //Components
 
 			for (std::unique_ptr<Component>& c : go.second->m_Components)
 			{
@@ -58,6 +76,22 @@ namespace LLGP
 		if (!data["Scene"]) { std::cout << "ERROR: Deserializing non-scene file as scene at: " << filePath << std::endl; return false; }
 
 		m_Scene->m_Name = data["Scene"].as<std::string>();
+
+		if (YAML::Node Textures = data["Textures"])
+		{
+			for (int texIdx = 0; texIdx < Textures.size(); texIdx++)
+			{
+				m_Scene->m_SceneTextures.push_back(LLGP::AssetManager::GetAsset<LLGP::Texture>(Textures[texIdx].as<std::string>()));
+			}
+		}
+		if (YAML::Node Animations = data["Animations"])
+		{
+			for (int animIdx = 0; animIdx < Animations.size(); animIdx++)
+			{
+				m_Scene->m_SceneAnimations.push_back(LLGP::AssetManager::GetAsset<LLGP::Animation>(Animations[animIdx].as<std::string>()));
+			}
+		}
+
 		if (YAML::Node GameObjects = data["GameObjects"])
 		{
 			if (!DeserializeGameObjects(GameObjects)) { std::cout << "ERROR: Deserializing scene : " << m_Scene->m_Name << std::endl; return false; }

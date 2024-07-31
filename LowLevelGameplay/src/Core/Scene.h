@@ -8,6 +8,7 @@ namespace LLGP
 {
 	class GameObject;
 	class Component;
+	class Asset;
 
 	class Scene
 	{
@@ -31,6 +32,8 @@ namespace LLGP
 		std::string m_Name;
 		std::string m_SceneAssetPath;
 		std::map<uint64_t, std::unique_ptr<LLGP::GameObject>> m_SceneObjects;
+		std::vector<std::shared_ptr<LLGP::Asset>> m_SceneTextures;
+		std::vector<std::shared_ptr<LLGP::Asset>> m_SceneAnimations;
 
 		friend class SceneSerializer;
 	};
