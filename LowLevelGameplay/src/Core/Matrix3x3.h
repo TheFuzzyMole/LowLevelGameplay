@@ -1,6 +1,7 @@
 #pragma once
 #include <concepts>
 #include <Core/Vector2.h>
+#include <Utils/Maths.h>
 
 namespace LLGP
 {
@@ -38,8 +39,32 @@ namespace LLGP
 		static const Matrix3x3 identity;
 	};
 
+	//seemingly the wrong way round so that the right side modifies
+	
+	/// <summary>
+	/// The input will modify the matrix being set
+	/// </summary>
 	template<typename T> requires std::is_arithmetic_v<T>
 	Matrix3x3<T>& operator*=(Matrix3x3<T>& a, const Matrix3x3<T>& b)
+	{
+		Matrix3x3<T> temp;
+		temp.x0 = b.x0 * a.x0 + b.y0 * a.x1 + b.z0 * a.x2;
+		temp.y0 = b.x0 * a.y0 + b.y0 * a.y1 + b.z0 * a.y2;
+		temp.z0 = b.x0 * a.z0 + b.y0 * a.z1 + b.z0 * a.z2;
+
+		temp.x1 = b.x1 * a.x0 + b.y1 * a.x1 + b.z1 * a.x2;
+		temp.y1 = b.x1 * a.y0 + b.y1 * a.y1 + b.z1 * a.y2;
+		temp.z1 = b.x1 * a.z0 + b.y1 * a.z1 + b.z1 * a.z2;
+
+		temp.x2 = b.x2 * a.x0 + b.y2 * a.x1 + b.z2 * a.x2;
+		temp.y2 = b.x2 * a.y0 + b.y2 * a.y1 + b.z2 * a.y2;
+		temp.z2 = b.x2 * a.z0 + b.y2 * a.z1 + b.z2 * a.z2;
+
+		return a = temp;
+	}
+
+	template<typename T> requires std::is_arithmetic_v<T>
+	Matrix3x3<T> operator*(const Matrix3x3<T>& a, const Matrix3x3<T>& b)
 	{
 		Matrix3x3<T> temp;
 		temp.x0 = a.x0 * b.x0 + a.y0 * b.x1 + a.z0 * b.x2;
@@ -54,11 +79,8 @@ namespace LLGP
 		temp.y2 = a.x2 * b.y0 + a.y2 * b.y1 + a.z2 * b.y2;
 		temp.z2 = a.x2 * b.z0 + a.y2 * b.z1 + a.z2 * b.z2;
 
-		return a = temp;
+		return temp;
 	}
-
-	template<typename T> requires std::is_arithmetic_v<T>
-	Matrix3x3<T> operator*(Matrix3x3<T> a, const Matrix3x3<T>& b) { return a *= b; }
 
 #pragma region (De)Composition
 
@@ -75,8 +97,9 @@ namespace LLGP
 	template<typename V> requires std::is_arithmetic_v<V>
 	inline Matrix3x3<T> Matrix3x3<T>::FromRot(const V& rot)
 	{
-		return Matrix3x3<T>(static_cast<T>(cos(rot)), static_cast<T>(-sin(rot)), static_cast<T>(0),
-							static_cast<T>(sin(rot)), static_cast<T>(cos(rot)), static_cast<T>(0),
+		V _rot = static_cast<V>(dmod((double)rot + (2.0 * PI), 2.0 * PI));
+		return Matrix3x3<T>(static_cast<T>(cos(_rot)), static_cast<T>(-sin(_rot)), static_cast<T>(0),
+							static_cast<T>(sin(_rot)), static_cast<T>(cos(_rot)), static_cast<T>(0),
 							static_cast<T>(0), static_cast<T>(0), static_cast<T>(1));
 	}
 

@@ -31,6 +31,7 @@ GameObjects:
           Center: [0, 0]
           Extents: [50, 90]
           Restitution: 1
+          IsTrigger: false
   - GameObject: 2
     Name: BouncyBall
     Active: true
@@ -56,6 +57,7 @@ GameObjects:
           Center: [0, 0]
           Radius: 50
           Restitution: 1
+          IsTrigger: false
   - GameObject: 3
     Name: notPlayer
     Active: true
@@ -76,6 +78,7 @@ GameObjects:
           Center: [0, 0]
           Extents: [50, 90]
           Restitution: 0
+          IsTrigger: false
   - GameObject: 4
     Name: debugSquare2
     Active: true

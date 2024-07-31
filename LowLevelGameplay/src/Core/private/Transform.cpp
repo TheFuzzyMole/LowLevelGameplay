@@ -24,6 +24,7 @@ namespace LLGP
 	{
 		if (parent != nullptr) { SetAsDirty(); return; }
 		m_Position = inPos;
+		m_L2WMatrix.FromPos(inPos);
 	}
 
 	Transform* Transform::GetChild(int index)
