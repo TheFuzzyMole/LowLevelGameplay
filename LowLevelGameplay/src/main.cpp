@@ -35,51 +35,17 @@ int main()
 			LLGP::CompositeButtonVector(sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::A, sf::Keyboard::D),
 			1.f));
 #pragma endregion
-	LLGP::Mat3f testMat = LLGP::Mat3f::FromPRS(LLGP::Vector2f{900, 450}, 0.785398f, LLGP::Vector2u{ 3, 6 });
-	LLGP::Vector2f pos; float rot{ 0 }; LLGP::Vector2u scale;
-	LLGP::Mat3f::Decompose(testMat, pos, rot, scale);
+
+	//LLGP::Mat3f testMat = LLGP::Mat3f::FromPRS(LLGP::Vector2f{900, 450}, 0.785398f, LLGP::Vector2u{ 3, 6 });
+	//LLGP::Mat3f modMat = LLGP::Mat3f::FromPos(LLGP::Vector2f{100,-300});
+	//testMat *= modMat;
+	//LLGP::Vector2f pos; float rot{ 0 }; LLGP::Vector2u scale;
+	//LLGP::Mat3f::Decompose(testMat, pos, rot, scale);
 
 #pragma region level load
 
 	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene");
-	/*LLGP::GameObject* ball = _GameScene->Instantiate("BouncyBall");
-	LLGP::Renderer* ballRenderer = ball->AddComponent<LLGP::Renderer>();
-	ball->transform->SetPosition({ 900, 450 });
-	ballRenderer->SetupQuad({ 100, 100 });
-	ballRenderer->SetupTexture("Textures/Debug.png", { 1, 1 });
-	ballRenderer->SetupSpriteUV({ 0, 0 });
-	LLGP::Rigidbody* ballRB = ball->AddComponent<LLGP::Rigidbody>();
-	ballRB->Mass = 100.f;
-	ballRB->HasGravity = false;
-	LLGP::CircleCollider* ballCol = ball->AddComponent<LLGP::CircleCollider>();
-	ballCol->SetRadius(50.f);*/
-	/*LLGP::GameObject* player = _GameScene->Instantiate("player");
-	LLGP::Renderer* playerRenderer = player->AddComponent<LLGP::Renderer>();
-	player->transform->SetPosition(LLGP::Vector2f(900.f, 450.f));
-	playerRenderer->SetupQuad(LLGP::Vector2f(250.f, 250.f));
-	playerRenderer->SetupTexture("Textures/tux.png", LLGP::Vector2u(8, 9));
-	playerRenderer->SetupSpriteUV(LLGP::Vector2u(0, 5));
-	LLGP::Rigidbody* playerRB = player->AddComponent<LLGP::Rigidbody>();
-	playerRB->Mass = 10.f;
-	playerRB->HasGravity = false;
-	TEST::PlayerMovement* playerMove = player->AddComponent<TEST::PlayerMovement>();
-	playerMove->SetSpeed(100.f);
-	LLGP::Animator* playerAnim = player->AddComponent<LLGP::Animator>();
-	playerAnim->SetAnimation("Animations/tuxWave.anim");
 
-	player->OnStart();
-
-	float timer = 0;
-	int animIndex = 0;
-
-	LLGP::GameObject* notPlayer = _GameScene->Instantiate("notPlayer");
-	notPlayer->transform->SetPosition(LLGP::Vector2f(450.f, 225.f));
-	LLGP::Renderer* notplayerRenderer = notPlayer->AddComponent<LLGP::Renderer>();
-	notplayerRenderer->SetupQuad(LLGP::Vector2f(250.f, 250.f));
-	notplayerRenderer->SetupTexture("Textures/tux.png", LLGP::Vector2u(8, 9));
-	notplayerRenderer->SetupSpriteUV(LLGP::Vector2u(0, 5));
-
-	notPlayer->OnStart();*/
 #pragma endregion
 
 	while (window.isOpen())
@@ -108,9 +74,10 @@ int main()
 			{
 				Physics::StepPhysics();
 				Physics::CollectCollisions();
-				Physics::ResolveOverlaps();
+				Physics::ResolveCollisionOverlaps();
 			}
 			Physics::DispatchCollisions();
+			Physics::DispatchOverlaps();
 			timeSincePhysicsStep -= FIXED_FRAMERATE;
 		}
 #pragma endregion

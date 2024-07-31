@@ -20,6 +20,9 @@ namespace LLGP
 		void SetCenter(Vector2<float> newCenter) { m_Center = newCenter; }
 		float GetRestitution() { return m_Restitution; }
 		void SetRestitution(float _restitution) { m_Restitution = _restitution; }
+		bool GetIsTrigger() { return m_IsTrigger; }
+		void SetIsTrigger(bool _isTrigger) { m_IsTrigger = _isTrigger; }
+		virtual LLGP::Vector2f GetBoundsExtents();
 		//TODO: make this TransformPosition instead
 		Vector2<float> GetPosition();
 
@@ -30,5 +33,9 @@ namespace LLGP
 	protected:
 		Vector2<float> m_Center;
 		float m_Restitution;
+		bool m_IsTrigger;
+
+		virtual void Serialize(YAML::Emitter& out) override;
+		virtual bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;
 	};
 }

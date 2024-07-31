@@ -11,9 +11,13 @@ namespace LLGP
 	LLGP::Event<> Physics::OnStepPhysics;
 
 	std::vector<Collider*> Physics::_Colliders;
+	std::vector<Collider*> Physics::_Triggers;
 	std::vector<Rigidbody*> Physics::_Rigidbodies;
+	std::vector<Collision*> Physics::_IterationCollisions;
 	std::vector<Collision*> Physics::_Collisions;
+	std::vector<Collision*> Physics::_Overlaps;
 	std::vector<Collision*> Physics::_OldCollisions;
+	std::vector<Collision*> Physics::_OldOverlaps;
 	std::vector<Collision*> Physics::_ReversedCollisions;
 
 	bool Collision::operator==(Collision* b) { return ((*(this->collider) == *(b->collider)) && (*(this->otherCollider) == *(b->otherCollider))
@@ -21,17 +25,35 @@ namespace LLGP
 
 	bool Physics::RegisterCollider(Collider* c)
 	{
-		if (std::find_if(_Colliders.begin(), _Colliders.end(), [c](Collider* check) {return *check == *c; }) == _Colliders.end())
+		if (c->GetIsTrigger())
 		{
-			_Colliders.push_back(c);
-			return true;
+			if (std::find_if(_Triggers.begin(), _Triggers.end(), [c](Collider* check) {return *check == *c; }) == _Triggers.end())
+			{
+				_Triggers.push_back(c);
+				return true;
+			}
+		}
+		else
+		{
+			if (std::find_if(_Colliders.begin(), _Colliders.end(), [c](Collider* check) {return *check == *c; }) == _Colliders.end())
+			{
+				_Colliders.push_back(c);
+				return true;
+			}
 		}
 		return false;
 	}
 
 	void Physics::RemoveCollider(Collider* c)
 	{
-		std::erase_if(_Colliders, [c](Collider* check) {return *check == *c; });
+		if (c->GetIsTrigger())
+		{
+			std::erase_if(_Triggers, [c](Collider* check) {return *check == *c; });
+		}
+		else
+		{
+			std::erase_if(_Colliders, [c](Collider* check) {return *check == *c; });
+		}
 	}
 
 	bool Physics::RegisterRigidbody(LLGP::Rigidbody* c)
@@ -56,7 +78,7 @@ namespace LLGP
 
 	void Physics::CollectCollisions()
 	{
-		if (_Colliders.size() < 2) { return; }
+		if (_Colliders.size() + _Triggers.size() < 2) { return; }
 
 		_Collisions.clear();
 
@@ -66,6 +88,25 @@ namespace LLGP
 			std::vector<Collider*> rbCols = _Rigidbodies[rb]->GetGameObject()->GetComponents<Collider>();
 			for (int colIndex = 0; colIndex < rbCols.size(); colIndex++)
 			{
+				if (rbCols[colIndex]->GetIsTrigger())
+				{ //overlap with trigger
+					for (int worldTrig = 0; worldTrig < _Triggers.size(); worldTrig++)
+					{
+						if (rbCols[colIndex] == _Triggers[worldTrig] || *rbCols[colIndex]->GetGameObject() == !_Triggers[worldTrig]->GetGameObject()) { continue; }
+
+						{
+							Collision testCol; testCol.collider = rbCols[colIndex]; testCol.otherCollider = _Triggers[worldTrig];
+							if (std::find_if(_Overlaps.begin(), _Overlaps.end(), [&testCol](Collision* other) {return testCol == other; }) != _Overlaps.end()) { continue; }
+						}
+
+						if (Collision* overlap = rbCols[colIndex]->IsColliding(_Triggers[worldTrig]))
+						{
+							_Overlaps.push_back(overlap);
+						}
+					}
+				}
+
+				//collision or overlap with collider
 				for (int worldCol = 0; worldCol < _Colliders.size(); worldCol++)
 				{
 					if (rbCols[colIndex] == _Colliders[worldCol] || *rbCols[colIndex]->GetGameObject() == *_Colliders[worldCol]->GetGameObject()) { continue; }
@@ -77,16 +118,24 @@ namespace LLGP
 
 					if (Collision* collision = rbCols[colIndex]->IsColliding(_Colliders[worldCol]))
 					{
-						_Collisions.push_back(collision);
+						if(rbCols[colIndex]->GetIsTrigger())
+						{
+							_Overlaps.push_back(collision);
+						}
+						else
+						{
+							_Collisions.push_back(collision);
+							_IterationCollisions.push_back(collision);
+						}
 					}
 				}
 			}
 		}
 	}
 
-	void Physics::ResolveOverlaps()
+	void Physics::ResolveCollisionOverlaps()
 	{
-		for (Collision* collision : _Collisions)
+		for (Collision* collision : _IterationCollisions)
 		{
 			LLGP::Rigidbody* aRB = collision->collider->GetGameObject()->GetComponent<Rigidbody>();
 			LLGP::Rigidbody* bRB = collision->otherCollider->GetGameObject()->GetComponent<Rigidbody>();
@@ -100,6 +149,7 @@ namespace LLGP
 			aRB->AddForce(collision->normal * -abs(collision->impulseMagnitude), LLGP::ForceMode::Impulse);
 			if (bRB) { bRB->AddForce(collision->normal * abs(collision->impulseMagnitude), LLGP::ForceMode::Impulse); }
 		}
+		_IterationCollisions.clear();
 	}
 
 	void Physics::DispatchCollisions()
@@ -139,6 +189,47 @@ namespace LLGP
 		_OldCollisions = _Collisions;
 		_Collisions.clear();
 		
+		for (Collision* c : _ReversedCollisions) { delete c; }
+		_ReversedCollisions.clear();
+	}
+
+	void Physics::DispatchOverlaps()
+	{
+		for (int newCol = (int)_Overlaps.size() - 1; newCol >= 0; newCol--)
+		{
+			bool newCollision = true;
+			for (int oldCol = (int)_OldOverlaps.size() - 1; oldCol >= 0; oldCol--)
+			{
+				if (_Overlaps[newCol] == _OldOverlaps[oldCol])
+				{
+					newCollision = false;
+					_Overlaps[newCol]->collider->GetGameObject()->OnCollisionStay(_Overlaps[newCol]);
+					if (_Overlaps[newCol]->otherHasRB) { _Overlaps[newCol]->otherCollider->GetGameObject()->OnCollisionStay(ReverseCollision(_Overlaps[newCol])); }
+
+					delete _OldOverlaps[oldCol];
+					_OldOverlaps.erase(std::next(_OldOverlaps.begin(), oldCol));
+					break;
+				}
+			}
+			if (newCollision)
+			{
+				_Overlaps[newCol]->collider->GetGameObject()->OnCollisionEnter(_Overlaps[newCol]);
+				if (_Overlaps[newCol]->otherHasRB) { _Overlaps[newCol]->otherCollider->GetGameObject()->OnCollisionEnter(ReverseCollision(_Overlaps[newCol])); }
+			}
+		}
+
+		//deal with remaining old collisions
+		for (int oldIndex = _OldOverlaps.size() - 1; oldIndex >= 0; oldIndex--)
+		{
+			_OldOverlaps[oldIndex]->collider->GetGameObject()->OnCollisionExit(_OldOverlaps[oldIndex]);
+			if (_OldOverlaps[oldIndex]->otherHasRB) { _OldOverlaps[oldIndex]->otherCollider->GetGameObject()->OnCollisionExit(ReverseCollision(_OldOverlaps[oldIndex])); }
+			delete _OldOverlaps[oldIndex];
+		}
+
+		_OldOverlaps.clear();
+		_OldOverlaps = _Collisions;
+		_Overlaps.clear();
+
 		for (Collision* c : _ReversedCollisions) { delete c; }
 		_ReversedCollisions.clear();
 	}

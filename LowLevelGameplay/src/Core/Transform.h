@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core\Component.h>
-#include <Core\Vector2.h>
+#include <Core/Component.h>
+#include <Core/Vector2.h>
 #include <string>
 #include <vector>
 
@@ -58,5 +58,7 @@ namespace LLGP
 
 		LLGP::Vector2f m_Position;
 		LLGP::Vector2f m_LocalPosition;
+
+		LLGP::Mat3f m_L2WMatrix;
 	};
 }
