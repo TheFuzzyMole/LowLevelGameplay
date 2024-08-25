@@ -36,11 +36,11 @@ int main()
 			1.f));
 #pragma endregion
 
-	//LLGP::Mat3f testMat = LLGP::Mat3f::FromPRS(LLGP::Vector2f{900, 450}, 0.785398f, LLGP::Vector2u{ 3, 6 });
-	//LLGP::Mat3f modMat = LLGP::Mat3f::FromPos(LLGP::Vector2f{100,-300});
-	//testMat *= modMat;
-	//LLGP::Vector2f pos; float rot{ 0 }; LLGP::Vector2u scale;
-	//LLGP::Mat3f::Decompose(testMat, pos, rot, scale);
+	LLGP::Mat3f l2w = LLGP::Mat3f::FromPS(LLGP::Vector2f{900, 450}, LLGP::Vector2u{ 3, 6 });
+	LLGP::Mat3f local = LLGP::Mat3f::FromPos(LLGP::Vector2f{100,-300});
+	LLGP::Mat3f world = l2w * local;
+	LLGP::Vector2f pos; float rot{ 0 }; LLGP::Vector2u scale;
+	LLGP::Mat3f::Decompose(world, pos, rot, scale);
 
 #pragma region level load
 

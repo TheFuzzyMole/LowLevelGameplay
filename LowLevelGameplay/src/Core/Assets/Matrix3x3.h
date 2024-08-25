@@ -42,7 +42,7 @@ namespace LLGP
 	//seemingly the wrong way round so that the right side modifies
 	
 	/// <summary>
-	/// The input will modify the matrix being set
+	/// The input will modify the matrix being set and "happen second" in the chain for usability
 	/// </summary>
 	template<typename T> requires std::is_arithmetic_v<T>
 	Matrix3x3<T>& operator*=(Matrix3x3<T>& a, const Matrix3x3<T>& b)
@@ -63,6 +63,7 @@ namespace LLGP
 		return a = temp;
 	}
 
+	//b is the base and a modifies
 	template<typename T> requires std::is_arithmetic_v<T>
 	Matrix3x3<T> operator*(const Matrix3x3<T>& a, const Matrix3x3<T>& b)
 	{
