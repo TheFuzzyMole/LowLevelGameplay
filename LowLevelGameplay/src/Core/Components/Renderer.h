@@ -1,5 +1,5 @@
 #pragma once
-#include <Core/Component.h>
+#include <Core/Components/Component.h>
 #include <Core/Event.h>
 #include <Core/Maths/Vector2.h>
 #include <SFML/Graphics.hpp>

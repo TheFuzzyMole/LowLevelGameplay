@@ -1,5 +1,5 @@
 #pragma once
-#include <Core/Component.h>
+#include <Core/Components/Component.h>
 #include <Core/InputManager.h>
 #include <thread>
 #include <shared_mutex>

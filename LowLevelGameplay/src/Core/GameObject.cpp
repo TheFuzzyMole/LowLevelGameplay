@@ -1,7 +1,7 @@
 #include <Core/GameObject.h>
 
-#include <Core/Component.h>
-#include <Core/Components.h>
+#include <Core/Components/Component.h>
+#include <Core/Components/Components.h>
 #include <Core/Scene.h>
 
 namespace LLGP

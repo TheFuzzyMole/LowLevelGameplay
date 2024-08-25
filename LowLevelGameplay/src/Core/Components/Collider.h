@@ -1,7 +1,7 @@
 #pragma once
-#include <Core/Component.h>
+#include <Core/Components/Component.h>
 #include <Core/Maths/Vector2.h>
-#include <Core/Transform.h>
+#include <Core/Components/Transform.h>
 
 namespace LLGP
 {

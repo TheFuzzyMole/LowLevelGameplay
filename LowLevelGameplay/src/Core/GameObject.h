@@ -6,7 +6,7 @@
 #include <string>
 #include <Core/component_concept.h>
 #include <Core/Physics.h>
-#include <Core/Collider.h>
+#include <Core/Components/Collider.h>
 #include <Core/Event.h>
 
 namespace LLGP

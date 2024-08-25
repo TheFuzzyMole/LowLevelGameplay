@@ -1,5 +1,5 @@
 #pragma once
-#include <Core/Collider.h>
+#include <Core/Components/Collider.h>
 #include <Core/Maths/Vector2.h>
 #include <Core/Physics.h>
 

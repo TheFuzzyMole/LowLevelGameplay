@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/Component.h>
+#include <Core/Components/Component.h>
 #include <Core/Maths/Vector2.h>
 #include <Core/Maths/Matrix3x3.h>
 #include <string>

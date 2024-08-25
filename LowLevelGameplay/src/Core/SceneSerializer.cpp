@@ -4,8 +4,8 @@
 #include <type_traits>
 
 #include <Core/GameObject.h>
-#include <Core/Components.h>
-#include <Core/Component.h>
+#include <Core/Components/Components.h>
+#include <Core/Components/Component.h>
 #include <Core/Assets/Animation.h>
 #include <Core/Assets/Texture.h>
 #include <Core/Assets/AssetManager.h>

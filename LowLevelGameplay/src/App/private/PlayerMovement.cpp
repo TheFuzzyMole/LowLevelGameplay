@@ -1,7 +1,7 @@
 #include <App/PlayerMovement.h>
 #include <Core/GameObject.h>
 #include <Core/Time.h>
-#include <Core/Rigidbody.h>
+#include <Core/Components/Rigidbody.h>
 #include <Core/Commons.h>
 #include <cassert>
 

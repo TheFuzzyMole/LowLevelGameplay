@@ -8,7 +8,7 @@
 #include <Core/Event.h>
 #include <Core/Physics.h>
 #include <Core/Time.h>
-#include <Core/Components.h>
+#include <Core/Components/Components.h>
 #include <functional>
 #include <string>
 #include <iostream>

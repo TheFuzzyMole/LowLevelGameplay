@@ -1,7 +1,7 @@
-#include <Core/Animator.h>
+#include <Core/Components/Animator.h>
 #include <Core/GameObject.h>
 #include <Core/Assets/Animation.h>
-#include <Core/Renderer.h>
+#include <Core/Components/Renderer.h>
 #include <Core/Time.h>
 #include <Core/Assets/AssetManager.h>
 #include <cassert>

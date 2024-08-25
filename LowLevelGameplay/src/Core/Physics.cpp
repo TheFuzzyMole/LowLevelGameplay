@@ -1,7 +1,7 @@
 #include <Core/Physics.h>
-#include <Core/CircleCollider.h>
-#include <Core/BoxCollider.h>
-#include <Core/Rigidbody.h>
+#include <Core/Components/CircleCollider.h>
+#include <Core/Components/BoxCollider.h>
+#include <Core/Components/Rigidbody.h>
 #include <Core/GameObject.h>
 #include <cmath>
 

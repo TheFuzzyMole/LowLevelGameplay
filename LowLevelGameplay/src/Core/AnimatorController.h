@@ -1,5 +1,5 @@
 #pragma once
-#include <Core/Component.h>
+#include <Core/Components/Component.h>
 #include <unordered_map>
 #include <string>
 #include <memory>

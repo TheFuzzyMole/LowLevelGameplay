@@ -1,7 +1,7 @@
 #include <Core/Scene.h>
 #include <Core/SceneSerializer.h>
 #include <Core/GameObject.h>
-#include <Core/Component.h>
+#include <Core/Components/Component.h>
 #include <Core/Scene.h>
 
 namespace LLGP
