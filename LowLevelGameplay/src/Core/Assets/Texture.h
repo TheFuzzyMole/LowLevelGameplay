@@ -1,7 +1,7 @@
 #pragma once
-#include <Core/Asset.h>
+#include <Core/Assets/Asset.h>
 #include <memory>
-#include <Core/Vector2.h>
+#include <Core/Maths/Vector2.h>
 
 namespace sf
 {

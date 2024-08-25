@@ -1,6 +1,6 @@
 #include <Core/Renderer.h>
-#include <Core/AssetManager.h>
-#include <Core/Texture.h>
+#include <Core/Assets/AssetManager.h>
+#include <Core/Assets/Texture.h>
 #include <Core/GameObject.h>
 #include <algorithm>
 

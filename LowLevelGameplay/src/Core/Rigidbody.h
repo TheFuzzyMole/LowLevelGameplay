@@ -1,6 +1,6 @@
 #pragma once
 #include <Core/Component.h>
-#include <Core/Vector2.h>
+#include <Core/Maths/Vector2.h>
 
 namespace LLGP
 {

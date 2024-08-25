@@ -1,7 +1,6 @@
 #include <Core/Transform.h>
 #include <Core/GameObject.h>
-#include <Core/Scene.h>
-#include <Utils/Maths.h>
+#include <Core/Maths/Maths.h>
 #include <cstdlib>
 #include <algorithm>
 #include <iostream>

@@ -6,9 +6,9 @@
 #include <Core/GameObject.h>
 #include <Core/Components.h>
 #include <Core/Component.h>
-#include <Core/Animation.h>
-#include <Core/Texture.h>
-#include <Core/AssetManager.h>
+#include <Core/Assets/Animation.h>
+#include <Core/Assets/Texture.h>
+#include <Core/Assets/AssetManager.h>
 
 namespace LLGP
 {

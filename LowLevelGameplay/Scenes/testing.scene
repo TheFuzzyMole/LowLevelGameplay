@@ -5,114 +5,114 @@ Textures:
 Animations:
   - Animations/tuxWave.anim
 GameObjects:
-  - GameObject: 1
+  - GameObject: 2279178445798418759
+    Name: debugSquare2
+    Active: true
+    Tag: ""
+    Components:
+      - Transform:
+          UUID: 11669519120390075547
+          Position: [0, 0]
+          Parent: 16208271731858000169
+      - Renderer:
+          UUID: 8374617497203485560
+          TextureFilePath: Textures/Debug.png
+          QuadSize: [100, 180]
+          SpritesInTex: [1, 1]
+          CurrentSpriteIndex: [0, 0]
+          RenderLayer: 2
+  - GameObject: 8209768455470300508
+    Name: debugSquarePlayer
+    Active: true
+    Tag: ""
+    Components:
+      - Transform:
+          UUID: 18221578261647116046
+          Position: [0, 0]
+          Parent: 10916434321468549992
+      - Renderer:
+          UUID: 11068917875602533858
+          TextureFilePath: Textures/Debug.png
+          QuadSize: [100, 180]
+          SpritesInTex: [1, 1]
+          CurrentSpriteIndex: [0, 0]
+          RenderLayer: 2
+  - GameObject: 8283972409953024281
     Name: player
     Active: true
     Tag: ""
     Components:
       - Transform:
-          UUID: 11
+          UUID: 10916434321468549992
           Position: [1350, 450]
       - Renderer:
-          UUID: 12
+          UUID: 16799108272004990924
           TextureFilePath: Textures/tux.png
           QuadSize: [250, 250]
           SpritesInTex: [8, 9]
-          CurrentSpriteIndex: [1, 5]
+          CurrentSpriteIndex: [2, 5]
           RenderLayer: 0
       - Rigidbody:
-          UUID: 13
+          UUID: 9313625721610690225
           Mass: 1
           IsKinematic: false
           HasGravity: false
       - PlayerMovement:
-          UUID: 14
+          UUID: 3218415236241880953
           Speed: 1000
       - Animator:
-          UUID: 15
+          UUID: 4477422790833478107
           AnimationPath: Animations/tuxWave.anim
       - BoxCollider:
-          UUID: 16
+          UUID: 671990973192393484
           Center: [0, 0]
-          Extents: [50, 90]
           Restitution: 1
           IsTrigger: false
-  - GameObject: 2
+          Extents: [50, 90]
+  - GameObject: 11666842882027489810
     Name: BouncyBall
     Active: true
     Tag: ""
     Components:
       - Transform:
-          UUID: 21
+          UUID: 4208008052309518650
           Position: [450, 450]
       - Renderer:
-          UUID: 22
+          UUID: 7781339926043049002
           TextureFilePath: Textures/Debug.png
           QuadSize: [100, 100]
           SpritesInTex: [1, 1]
           CurrentSpriteIndex: [0, 0]
           RenderLayer: 0
       - Rigidbody:
-          UUID: 23
+          UUID: 10088240346267224377
           Mass: 1
           IsKinematic: false
           HasGravity: false
       - CircleCollider:
-          UUID: 24
+          UUID: 9691125292423270370
           Center: [0, 0]
-          Radius: 50
           Restitution: 1
           IsTrigger: false
-  - GameObject: 3
+          Radius: 50
+  - GameObject: 15591659135126242008
     Name: notPlayer
     Active: true
     Tag: ""
     Components:
       - Transform:
-          UUID: 31
+          UUID: 16208271731858000169
           Position: [450, 225]
       - Renderer:
-          UUID: 32
+          UUID: 119808208666362908
           TextureFilePath: Textures/tux.png
           QuadSize: [250, 250]
           SpritesInTex: [8, 9]
           CurrentSpriteIndex: [0, 5]
           RenderLayer: 0
       - BoxCollider:
-          UUID: 33
+          UUID: 1571823022812548286
           Center: [0, 0]
-          Extents: [50, 90]
           Restitution: 0
           IsTrigger: false
-  - GameObject: 4
-    Name: debugSquare2
-    Active: true
-    Tag: ""
-    Components:
-      - Transform:
-          UUID: 41
-          Position: [0, 0]
-          Parent: 31
-      - Renderer:
-          UUID: 42
-          TextureFilePath: Textures/Debug.png
-          QuadSize: [100, 180]
-          SpritesInTex: [1, 1]
-          CurrentSpriteIndex: [0, 0]
-          RenderLayer: 2
-  - GameObject: 5
-    Name: debugSquarePlayer
-    Active: true
-    Tag: ""
-    Components:
-      - Transform:
-          UUID: 51
-          Position: [0, 0]
-          Parent: 11
-      - Renderer:
-          UUID: 52
-          TextureFilePath: Textures/Debug.png
-          QuadSize: [100, 180]
-          SpritesInTex: [1, 1]
-          CurrentSpriteIndex: [0, 0]
-          RenderLayer: 2
+          Extents: [50, 90]

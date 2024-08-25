@@ -1,6 +1,6 @@
 #pragma once
 #include <Core/Collider.h>
-#include <Core/Vector2.h>
+#include <Core/Maths/Vector2.h>
 #include <Core/Physics.h>
 
 namespace LLGP

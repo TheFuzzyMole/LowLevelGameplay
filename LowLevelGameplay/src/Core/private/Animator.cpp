@@ -1,9 +1,9 @@
 #include <Core/Animator.h>
 #include <Core/GameObject.h>
-#include <Core/Animation.h>
+#include <Core/Assets/Animation.h>
 #include <Core/Renderer.h>
 #include <Core/Time.h>
-#include <Core/AssetManager.h>
+#include <Core/Assets/AssetManager.h>
 #include <cassert>
 
 namespace LLGP

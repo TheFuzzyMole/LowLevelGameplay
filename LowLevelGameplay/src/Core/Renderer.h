@@ -1,7 +1,7 @@
 #pragma once
 #include <Core/Component.h>
 #include <Core/Event.h>
-#include <Core/Vector2.h>
+#include <Core/Maths/Vector2.h>
 #include <SFML/Graphics.hpp>
 #include <memory>
 

@@ -1,5 +1,5 @@
 #pragma once
-#include <Core/Vector2.h>
+#include <Core/Maths/Vector2.h>
 #include <yaml-cpp/yaml.h>
 #include <functional>
 

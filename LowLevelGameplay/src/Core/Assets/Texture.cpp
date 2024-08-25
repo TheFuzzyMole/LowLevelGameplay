@@ -1,4 +1,4 @@
-#include <Core/Texture.h>
+#include <Core/Assets/Texture.h>
 #include <SFML/Graphics.hpp>
 
 namespace LLGP

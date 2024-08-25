@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <Core/Vector2.h>
+#include <Core/Maths/Vector2.h>
 #include <Core/Commons.h>
 #include <Core/Scene.h>
 #include <Core/GameObject.h>
@@ -13,7 +13,7 @@
 #include <string>
 #include <iostream>
 #include <chrono>
-#include <Core/Matrix3x3.h>
+#include <Core/Maths/Matrix3x3.h>
 
 using namespace LLGP;
 
@@ -36,11 +36,11 @@ int main()
 			1.f));
 #pragma endregion
 
-	LLGP::Mat3f l2w = LLGP::Mat3f::FromPS(LLGP::Vector2f{900, 450}, LLGP::Vector2u{ 3, 6 });
-	LLGP::Mat3f local = LLGP::Mat3f::FromPos(LLGP::Vector2f{100,-300});
-	LLGP::Mat3f world = l2w * local;
-	LLGP::Vector2f pos; float rot{ 0 }; LLGP::Vector2u scale;
-	LLGP::Mat3f::Decompose(world, pos, rot, scale);
+	//LLGP::Mat3f l2w = LLGP::Mat3f::FromPS(LLGP::Vector2f{900, 450}, LLGP::Vector2u{ 3, 6 });
+	//LLGP::Mat3f local = LLGP::Mat3f::FromPos(LLGP::Vector2f{100,-300});
+	//LLGP::Mat3f world = l2w * local;
+	//LLGP::Vector2f pos; float rot{ 0 }; LLGP::Vector2u scale;
+	//LLGP::Mat3f::Decompose(world, pos, rot, scale);
 
 #pragma region level load
 

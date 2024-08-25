@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <string>
 #include <concepts>
-#include <Core/Asset.h>
+#include <Core/Assets/Asset.h>
 
 namespace LLGP
 {

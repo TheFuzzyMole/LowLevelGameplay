@@ -1,6 +1,6 @@
 #pragma once
-#include <Core/Asset.h>
-#include <Core/Vector2.h>
+#include <Core/Assets/Asset.h>
+#include <Core/Maths/Vector2.h>
 #include <vector>
 
 namespace LLGP
