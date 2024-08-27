@@ -30,9 +30,9 @@ namespace LLGP
 	public:
 		Physics() = delete;
 
-		static LLGP::Vector2f Gravity;
+		static inline LLGP::Vector2f Gravity;
 
-		static LLGP::Event<> OnStepPhysics;
+		static inline LLGP::Event<> OnStepPhysics;
 		
 		static bool RegisterCollider(LLGP::Collider* c);
 		static void RemoveCollider(LLGP::Collider* c);
@@ -54,14 +54,14 @@ namespace LLGP
 	private:
 		static Collision* ReverseCollision(Collision* in);
 
-		static std::vector<Collider*> _Colliders;
-		static std::vector<Collider*> _Triggers;
-		static std::vector<Rigidbody*> _Rigidbodies;
-		static std::vector<Collision*> _IterationCollisions;
-		static std::vector<Collision*> _Collisions;
-		static std::vector<Collision*> _Overlaps;
-		static std::vector<Collision*> _OldCollisions;
-		static std::vector<Collision*> _OldOverlaps;
-		static std::vector<Collision*> _ReversedCollisions;
+		static inline std::vector<Collider*> _Colliders;
+		static inline std::vector<Collider*> _Triggers;
+		static inline std::vector<Rigidbody*> _Rigidbodies;
+		static inline std::vector<Collision*> _IterationCollisions;
+		static inline std::vector<Collision*> _Collisions;
+		static inline std::vector<Collision*> _Overlaps;
+		static inline std::vector<Collision*> _OldCollisions;
+		static inline std::vector<Collision*> _OldOverlaps;
+		static inline std::vector<Collision*> _ReversedCollisions;
 	};
 }

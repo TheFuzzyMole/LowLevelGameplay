@@ -22,8 +22,8 @@ namespace LLGP
 		~GameObject();
 
 #pragma region static events
-		static LLGP::Event<> OnWorldUpdate;
-		static LLGP::Event<> OnWorldFixedUpdate;
+		static inline LLGP::Event<> OnWorldUpdate;
+		static inline LLGP::Event<> OnWorldFixedUpdate;
 #pragma endregion
 
 #pragma region instanced events

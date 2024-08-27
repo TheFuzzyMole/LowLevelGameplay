@@ -83,6 +83,9 @@ namespace LLGP
 		return temp;
 	}
 
+	/*template<typename T, typename U> requires std::is_arithmetic_v<T> and std::is_arithmetic_v<U>
+	Vector2<U>*/
+
 #pragma region (De)Composition
 
 	template<typename T> requires std::is_arithmetic_v<T>

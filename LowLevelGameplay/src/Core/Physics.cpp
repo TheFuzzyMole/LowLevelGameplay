@@ -7,18 +7,18 @@
 
 namespace LLGP
 {
-	LLGP::Vector2f Physics::Gravity = LLGP::Vector2f(0.f, 9.814f);
-	LLGP::Event<> Physics::OnStepPhysics;
+	//LLGP::Vector2f Physics::Gravity = LLGP::Vector2f(0.f, 9.814f);
+	//LLGP::Event<> Physics::OnStepPhysics;
 
-	std::vector<Collider*> Physics::_Colliders;
-	std::vector<Collider*> Physics::_Triggers;
-	std::vector<Rigidbody*> Physics::_Rigidbodies;
-	std::vector<Collision*> Physics::_IterationCollisions;
-	std::vector<Collision*> Physics::_Collisions;
-	std::vector<Collision*> Physics::_Overlaps;
-	std::vector<Collision*> Physics::_OldCollisions;
-	std::vector<Collision*> Physics::_OldOverlaps;
-	std::vector<Collision*> Physics::_ReversedCollisions;
+	//std::vector<Collider*> Physics::_Colliders;
+	//std::vector<Collider*> Physics::_Triggers;
+	//std::vector<Rigidbody*> Physics::_Rigidbodies;
+	//std::vector<Collision*> Physics::_IterationCollisions;
+	//std::vector<Collision*> Physics::_Collisions;
+	//std::vector<Collision*> Physics::_Overlaps;
+	//std::vector<Collision*> Physics::_OldCollisions;
+	//std::vector<Collision*> Physics::_OldOverlaps;
+	//std::vector<Collision*> Physics::_ReversedCollisions;
 
 	bool Collision::operator==(Collision* b) { return ((*(this->collider) == *(b->collider)) && (*(this->otherCollider) == *(b->otherCollider))
 													|| (*(this->collider) == *(b->otherCollider) && (*(this->otherCollider) == *(b->collider)))); }

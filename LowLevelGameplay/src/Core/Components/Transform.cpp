@@ -1,4 +1,4 @@
-#include <Core/Transform.h>
+#include <Core/Components/Transform.h>
 #include <Core/GameObject.h>
 #include <Core/Maths/Maths.h>
 #include <cstdlib>
@@ -7,7 +7,7 @@
 
 namespace LLGP
 {
-	std::vector<Transform*> Transform::s_DirtyList;
+	//std::vector<Transform*> Transform::s_DirtyList;
 
 	void Transform::CleanUpDirtyList()
 	{
@@ -116,7 +116,7 @@ namespace LLGP
 	{
 		if (m_IsDirty) CleanTransform();
 
-		return m_Position;
+		return m_Position; // LLGP::Mat3f::Decompose(m_Position;
 	}
 	LLGP::Vector2f Transform::GetLocalPosition()
 	{

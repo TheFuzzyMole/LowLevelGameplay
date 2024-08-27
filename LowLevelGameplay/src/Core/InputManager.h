@@ -285,7 +285,7 @@ namespace LLGP
 	public:
 		InputManager() = delete;
 
-		static std::unordered_map<std::string, InputAction> Actions;
+		static inline std::unordered_map<std::string, InputAction> Actions;
 
 		static void ProcessInput();
 		static InputAction* AddAction(std::string _name, ActionType _type);

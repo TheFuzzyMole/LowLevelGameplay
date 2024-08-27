@@ -11,8 +11,8 @@ namespace LLGP
 	std::string __name = #__TYPE; __name.substr(6, -1); \
 	DeserializeComponent(__TYPE, __name)}
 
-	LLGP::Event<> GameObject::OnWorldUpdate;
-	LLGP::Event<> GameObject::OnWorldFixedUpdate;
+	//LLGP::Event<> GameObject::OnWorldUpdate;
+	//LLGP::Event<> GameObject::OnWorldFixedUpdate;
 
 	GameObject::GameObject(LLGP::Scene& _owningScene, const std::string& name) : m_Name(name), OwningScene(&_owningScene)
 	{

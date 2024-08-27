@@ -105,7 +105,7 @@ namespace LLGP
 		m_Bindings.push_back(std::make_unique<InputBinding_Vector>(*_binding));
 	}
 
-	std::unordered_map<std::string, LLGP::InputAction> InputManager::Actions;
+	//std::unordered_map<std::string, LLGP::InputAction> InputManager::Actions;
 
 	void InputManager::ProcessInput()
 	{

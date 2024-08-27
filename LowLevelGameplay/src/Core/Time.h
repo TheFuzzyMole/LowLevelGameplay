@@ -9,8 +9,8 @@ namespace LLGP
 		Time() = delete;
 
 		//TODO: assess whether atomic is needed here
-		static std::atomic<float> deltaTime;
+		static inline std::atomic<float> deltaTime;
 		//TODO: replace this with a map of thread_id and delta for that thread, no need for atomic, keep main thread sync points
-		static std::atomic<float> coroutineDeltaTime;
+		static inline std::atomic<float> coroutineDeltaTime;
 	};
 }

@@ -11,7 +11,7 @@ namespace LLGP
 	class Transform : public Component
 	{
 	public:
-		static std::vector<Transform*> s_DirtyList;
+		static inline std::vector<Transform*> s_DirtyList;
 
 		static void CleanUpDirtyList();
 
