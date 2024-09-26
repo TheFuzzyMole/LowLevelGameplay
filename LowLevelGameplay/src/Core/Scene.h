@@ -21,12 +21,16 @@ namespace LLGP
 		void Update();
 		void FixedUpdate();
 
+		void SaveScene();
+
 		//TODO: Make a version that can take a prefab asset
-		GameObject* Instantiate(const std::string& name);
-		GameObject* Instantiate(GameObject* toCopy);
-		void Destroy(GameObject* obj);
+		LLGP::GameObject* Instantiate(const std::string& name);
+		LLGP::GameObject* Instantiate(LLGP::GameObject* toCopy);
+		void Destroy(LLGP::GameObject* obj);
 
 		LLGP::GameObject* FindGameObjectByUUID(uint64_t _uuid);
+		LLGP::GameObject* FindGameObjectByTag(std::string _tag);
+		LLGP::GameObject* FindGameObjectByName(std::string _name);
 
 	private:
 		std::string m_Name;

@@ -19,6 +19,7 @@ namespace LLGP
 		SceneSerializer(LLGP::Scene& const scene);
 
 		void Serialize(const std::string& filePath);
+		YAML::Node TempSerializeGameObject(LLGP::GameObject* toSerialize);
 
 		bool DeserializeScene(const std::string& filePath);
 		bool DeserializePrefab(const std::string& filePath);

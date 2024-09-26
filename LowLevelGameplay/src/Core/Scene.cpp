@@ -15,8 +15,7 @@ namespace LLGP
 
 	Scene::~Scene()
 	{
-		SceneSerializer serializer(*this);
-		serializer.Serialize(m_SceneAssetPath);
+		
 	}
 
 	void Scene::Update()
@@ -27,7 +26,13 @@ namespace LLGP
 	{
 	}
 
-	GameObject* Scene::Instantiate(const std::string& name)
+	void Scene::SaveScene()
+	{
+		SceneSerializer serializer(*this);
+		serializer.Serialize(m_SceneAssetPath);
+	}
+
+	LLGP::GameObject* Scene::Instantiate(const std::string& name)
 	{
 		std::unique_ptr<GameObject> tempGo = std::make_unique<GameObject>(*this, name);
 		uint64_t tempUUID = tempGo->uuid;
@@ -35,15 +40,17 @@ namespace LLGP
 		return m_SceneObjects[tempUUID].get();
 	}
 
-	GameObject* Scene::Instantiate(GameObject* toCopy)
+	LLGP::GameObject* Scene::Instantiate(LLGP::GameObject* toCopy)
 	{
-		//m_SceneObjects.emplace_back(std::make_unique<GameObject>(toCopy));
-		//TODO:: sort out actually making sure components are copied;
-		//return m_SceneObjects.back().get();
+		//serialize this GameObject into a YAML::Node then immediatedly use the deserielize game obejcts finction on that Node
+		// Deserializer in use elsewhere which is why its done like this
+		SceneSerializer serializer(*this);
+		serializer.DeserializeGameObjects(serializer.TempSerializeGameObject(toCopy));
+		
 		return nullptr;
 	}
 
-	void Scene::Destroy(GameObject* obj)
+	void Scene::Destroy(LLGP::GameObject* obj)
 	{
 	}
 
@@ -52,5 +59,25 @@ namespace LLGP
 		if (!m_SceneObjects.contains(_uuid)) { return nullptr; }
 
 		return m_SceneObjects[_uuid].get();
+	}
+	LLGP::GameObject* Scene::FindGameObjectByTag(std::string _tag)
+	{
+		for (int objIndex = 0; objIndex < m_SceneObjects.size(); objIndex++)
+		{
+			std::map<uint64_t, std::unique_ptr<LLGP::GameObject>>::iterator objIt = std::next(m_SceneObjects.begin(), objIndex);
+			if (!objIt->second->CompareTag(_tag)) { continue; }
+			return objIt->second.get();
+		}
+		return nullptr;
+	}
+	LLGP::GameObject* Scene::FindGameObjectByName(std::string _name)
+	{
+		for (int objIndex = 0; objIndex < m_SceneObjects.size(); objIndex++)
+		{
+			std::map<uint64_t, std::unique_ptr<LLGP::GameObject>>::iterator objIt = std::next(m_SceneObjects.begin(), objIndex);
+			if (objIt->second->GetName() != _name) { continue; }
+			return objIt->second.get();
+		}
+		return nullptr;
 	}
 }

@@ -45,6 +45,8 @@ int main()
 #pragma region level load
 
 	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene");
+	LLGP::GameObject* playerGO = _GameScene->FindGameObjectByName("player");
+	_GameScene->Instantiate(playerGO);
 
 #pragma endregion
 

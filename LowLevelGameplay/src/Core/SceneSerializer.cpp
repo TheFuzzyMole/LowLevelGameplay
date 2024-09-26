@@ -66,6 +66,45 @@ namespace LLGP
 		fout << out.c_str();
 	}
 
+	YAML::Node SceneSerializer::TempSerializeGameObject(LLGP::GameObject* toSerialize)
+	{
+		std::vector<LLGP::GameObject*> todo;
+		todo.push_back(toSerialize);
+		YAML::Emitter out;
+		out << YAML::BeginSeq; //GameObjects
+
+		while (todo.size() > 0)
+		{
+			out << YAML::BeginMap; //GameObject
+			out << YAML::Key << "GameObject" << YAML::Value << todo[0]->uuid;
+			out << YAML::Key << "Name" << YAML::Value << todo[0]->m_Name;
+			out << YAML::Key << "Active" << YAML::Value << todo[0]->m_Active;
+			out << YAML::Key << "Tag" << YAML::Value << todo[0]->m_Tag;
+
+			out << YAML::Key << "Components" << YAML::Value << YAML::BeginSeq; //Components
+
+			for (std::unique_ptr<Component>& c : todo[0]->m_Components)
+			{
+				out << YAML::BeginMap;
+				c->Serialize(out);
+				out << YAML::EndMap;
+			}
+
+			out << YAML::EndSeq; //Components
+			out << YAML::EndMap; //GameObject
+
+			for(LLGP::Transform* child : todo[0]->transform->GetChildren())
+			{
+				todo.push_back(child->GetGameObject());
+			}
+			todo.erase(todo.begin());
+		}
+
+		out << YAML::EndSeq;
+		
+		return YAML::Load(out.c_str());
+	}
+
 	bool SceneSerializer::DeserializeScene(const std::string& filePath)
 	{
 		std::ifstream stream(filePath);
@@ -118,6 +157,8 @@ namespace LLGP
 		for (YAML::Node goData : GameObjects)
 		{
 			//m_Scene->m_SceneObjects.insert_or_assign(goData["GameObject"].as<uint64_t>(), std::make_unique<GameObject>(*m_Scene, goData));
+			/*std::string name = goData["Name"].as<std::string>();
+			while (m_Scene->FindGameObjectByName(name)) { name += "0"; }*/ //not sure about this solution
 			LLGP::GameObject* newGO = m_Scene->Instantiate(goData["Name"].as<std::string>());
 			newGO->SetActive(goData["Active"].as<bool>());
 			newGO->SetTag(goData["Tag"].as<std::string>());
@@ -179,8 +220,18 @@ namespace LLGP
 
 		for (LLGP::LinkRequest& linkRequest : m_LinkRequests)
 		{
-			if (!m_Token2PtrLUT.contains(linkRequest.linkToken)) { std::cout << "ERROR: deserializing scene: " << m_Scene->m_Name << ". Unable to find local token for " << linkRequest.linkToken << std::endl; return false; }
-			linkRequest.linkDelegate(m_Token2PtrLUT[linkRequest.linkToken]);
+			if (m_Token2PtrLUT.contains(linkRequest.linkToken))
+			{
+				linkRequest.linkDelegate(m_Token2PtrLUT[linkRequest.linkToken]);
+			}
+			/*else if (m_Scene->m_SceneObjects.contains(linkRequest.linkToken)
+			{
+
+			}*/
+			else
+			{
+				std::cout << "ERROR: deserializing scene: " << m_Scene->m_Name << ". Unable to find local token for " << linkRequest.linkToken << std::endl; return false;
+			}
 		}
 		return true;
 	}

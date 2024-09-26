@@ -43,9 +43,9 @@ namespace LLGP
 		}
 		return nullptr;
 	}
-	std::vector<Transform> Transform::GetChildren()
+	std::vector<LLGP::Transform*>& Transform::GetChildren()
 	{
-		return std::vector<Transform>();
+		return m_Children;
 	}
 	int Transform::GetChildCount()
 	{

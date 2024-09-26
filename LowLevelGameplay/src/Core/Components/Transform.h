@@ -20,7 +20,7 @@ namespace LLGP
 
 		Transform* GetChild(int index);
 		Transform* GetChild(std::string name);
-		std::vector<Transform> GetChildren();
+		std::vector<LLGP::Transform*>& GetChildren();
 		int GetChildCount();
 		int GetIndexOfChild(Transform* child);
 

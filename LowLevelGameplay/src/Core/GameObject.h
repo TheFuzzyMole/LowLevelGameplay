@@ -18,7 +18,7 @@ namespace LLGP
 	{
 	public:
 		GameObject(LLGP::Scene& _owningScene, const std::string& name = "");
-		GameObject(const GameObject&) = default;
+		GameObject(const GameObject&) = delete;
 		~GameObject();
 
 #pragma region static events
