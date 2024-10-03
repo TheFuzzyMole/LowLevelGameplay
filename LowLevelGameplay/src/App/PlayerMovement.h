@@ -35,7 +35,7 @@ namespace TEST
 
 		void Handle_MovePerformed(std::variant<bool, float, LLGP::Vector2f> context);
 		void Handle_MoveCancelled(std::variant<bool, float, LLGP::Vector2f> context);
-		void C_MoveUpdate(std::stop_token token);
+		void C_MoveUpdate();
 
 	};
 }

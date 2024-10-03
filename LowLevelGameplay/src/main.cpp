@@ -45,8 +45,8 @@ int main()
 #pragma region level load
 
 	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene");
-	LLGP::GameObject* playerGO = _GameScene->FindGameObjectByName("player");
-	_GameScene->Instantiate(playerGO);
+	//LLGP::GameObject* playerRef = _GameScene->FindGameObjectByName("player");
+	//_GameScene->Instantiate(playerRef);
 
 #pragma endregion
 
@@ -71,6 +71,7 @@ int main()
 		timeSincePhysicsStep += Time::deltaTime;
 		while (timeSincePhysicsStep > FIXED_FRAMERATE)
 		{
+			LLGP::GameObject::OnWorldFixedUpdate();
 			NextFixedUpdate.notify_all();
 			for (int iteration = 0; iteration < PHYSICS_SOLVER_ITERATIONS; iteration++)
 			{

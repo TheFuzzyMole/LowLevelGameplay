@@ -32,7 +32,9 @@ namespace TEST
 		if (!m_IsMoving)
 		{
 			//start the coroutine thread
-			m_CRMoveUpdate = std::jthread(std::bind_front(&PlayerMovement::C_MoveUpdate, this));
+			_GameObject->OnWorldFixedUpdate.AddListener(this, std::bind(&PlayerMovement::C_MoveUpdate, this));
+			//m_CRMoveUpdate = std::jthread(std::bind_front(&PlayerMovement::C_MoveUpdate, this));
+			m_IsMoving = true;
 		}
 	}
 
@@ -41,20 +43,16 @@ namespace TEST
 		m_InMoveVector = std::get<2>(context);
 		if (m_IsMoving)
 		{
-			m_CRMoveUpdate.request_stop();
+			_GameObject->OnWorldFixedUpdate.RemoveListener(this, std::bind(&PlayerMovement::C_MoveUpdate, this));
+			m_IsMoving = false;
 		}
 	}
-	void PlayerMovement::C_MoveUpdate(std::stop_token token)
+	void PlayerMovement::C_MoveUpdate()
 	{
-		m_IsMoving = true;
-		while (!token.stop_requested())
-		{
-			m_RB->AddForce(m_InMoveVector * m_Speed, LLGP::ForceMode::Force);
-			std::shared_lock lock(m_CRm);
-			NextFixedUpdate.wait(lock);
-			//std::cout << "Released: " << std::this_thread::get_id() << " with delta: " << LLGP::Time::coroutineDeltaTime << std::endl;
-		}
-		m_IsMoving = false;
+		m_RB->AddForce(m_InMoveVector * m_Speed, LLGP::ForceMode::Force);
+		std::cout << "moveUpdate" << std::endl;
+		//std::shared_lock lock(m_CRm);
+		//NextFixedUpdate.wait(lock);
 	}
     void PlayerMovement::Serialize(YAML::Emitter& out)
     {
