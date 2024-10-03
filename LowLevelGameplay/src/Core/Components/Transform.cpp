@@ -22,8 +22,7 @@ namespace LLGP
 		: Component(owner), m_Parent(parent), m_LocalPosition(inPos), m_IsDirty(false)
 	{
 		if (parent != nullptr) { SetAsDirty(); return; }
-		m_Position = inPos;
-		m_L2WMatrix.FromPos(inPos);
+		m_L2WMatrix.FromPRS(inPos, 0.f, LLGP::Vector2f::one);
 	}
 
 	Transform* Transform::GetChild(int index)
@@ -103,31 +102,74 @@ namespace LLGP
 		m_Parent->SetNewChild(this);
 		if (worldTransformStays)
 		{
-			SetPosition(m_Position);
+			//TODO: divide the current matrix by the parent one to get the local offsets
+
 			m_Root = m_Parent->GetRoot();
 		}
-		else
-		{
-			SetAsDirty();
-		}
+		SetAsDirty();
 	}
 
 	LLGP::Vector2f Transform::GetPosition()
 	{
 		if (m_IsDirty) CleanTransform();
-
-		return m_Position; // LLGP::Mat3f::Decompose(m_Position;
+		LLGP::Vector2f pos, scale; float rot;
+		LLGP::Mat3f::Decompose(m_L2WMatrix, pos, rot, scale);
+		return pos;
 	}
 	LLGP::Vector2f Transform::GetLocalPosition()
 	{
 		return m_LocalPosition;
 	}
 
+	LLGP::Mat3f Transform::GetL2WMatrix()
+	{
+		return m_L2WMatrix;
+	}
+
+#pragma region TODO these
+	LLGP::Vector2f Transform::TransformDirection(LLGP::Vector2f in)
+	{
+		return LLGP::Vector2f();
+	}
+
+	LLGP::Vector2f Transform::TransformVector(LLGP::Vector2f in)
+	{
+		return LLGP::Vector2f();
+	}
+
+	LLGP::Vector2f Transform::TransformPoint(LLGP::Vector2f in)
+	{
+		return LLGP::Vector2f();
+	}
+
+	LLGP::Vector2f Transform::InverseTransformDirection(LLGP::Vector2f in)
+	{
+		return LLGP::Vector2f();
+	}
+
+	LLGP::Vector2f Transform::InverseTransformVector(LLGP::Vector2f in)
+	{
+		return LLGP::Vector2f();
+	}
+
+	LLGP::Vector2f Transform::InverseTransformPoint(LLGP::Vector2f in)
+	{
+		return LLGP::Vector2f();
+	}
+#pragma endregion
+
 	void Transform::SetPosition(LLGP::Vector2f newPosition)
 	{
-		m_Position = newPosition;
+		{
+			float rot;
+			LLGP::Vector2f pos, scale;
+			LLGP::Mat3f::Decompose(m_L2WMatrix, pos, rot, scale);
+			m_L2WMatrix = LLGP::Mat3f::FromPRS(newPosition, rot, scale);
+		}
 
-		m_LocalPosition = m_Position - (m_Parent ? m_Parent->GetPosition(): LLGP::Vector2f::zero);
+		//TODO: Correct this for rotation and scales
+		//TODO: pretty sure this isnt right anyway
+		m_LocalPosition = newPosition - (m_Parent ? m_Parent->GetPosition() : LLGP::Vector2f::zero);
 		
 		for (Transform* child : m_Children)
 		{
@@ -162,12 +204,13 @@ namespace LLGP
 		//update all world space transform component
 		if (!m_Parent)
 		{
-			m_Position = m_LocalPosition;
+			m_L2WMatrix = LLGP::Mat3f::FromPRS(m_LocalPosition, 0.f, LLGP::Vector2f::one);
 			m_Root = this;
 		}
 		else
 		{
-			m_Position = m_Parent->GetPosition() + m_LocalPosition;
+			LLGP::Mat3f localMatrix = LLGP::Mat3f::FromPRS(m_LocalPosition, 0.f, LLGP::Vector2f(1, 1));
+			m_L2WMatrix = localMatrix * m_Parent->GetL2WMatrix();
 
 			//root is a recursive call up the chain
 			m_Root = m_Parent->GetRoot();
