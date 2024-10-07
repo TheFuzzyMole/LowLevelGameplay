@@ -9,6 +9,7 @@
 #include <Core/Assets/Animation.h>
 #include <Core/Assets/Texture.h>
 #include <Core/Assets/AssetManager.h>
+#include <Core/Assets/Prefab.h>
 
 namespace LLGP
 {
@@ -130,36 +131,42 @@ namespace LLGP
 				m_Scene->m_SceneAnimations.push_back(LLGP::AssetManager::GetAsset<LLGP::Animation>(Animations[animIdx].as<std::string>()));
 			}
 		}
+		if (YAML::Node Prefabs = data["Prefabs"])
+		{
+			for (int prefabIdx = 0; prefabIdx < Prefabs.size(); prefabIdx++)
+			{
+				m_Scene->m_ScenePrefabs.push_back(LLGP::AssetManager::GetAsset<LLGP::Prefab>(Prefabs[prefabIdx].as<std::string>()));
+			}
+		}
 
 		if (YAML::Node GameObjects = data["GameObjects"])
 		{
-			if (!DeserializeGameObjects(GameObjects)) { std::cout << "ERROR: Deserializing scene : " << m_Scene->m_Name << std::endl; return false; }
+			if (DeserializeGameObjects(GameObjects) == nullptr) { std::cout << "ERROR: Deserializing scene : " << m_Scene->m_Name << std::endl; return false; }
 		}
 		return true;
 	}
-	bool SceneSerializer::DeserializePrefab(const std::string& filePath)
+	LLGP::GameObject* SceneSerializer::DeserializePrefab(const LLGP::Prefab& prefab)
 	{
-		std::ifstream stream(filePath);
-		std::stringstream strStream;
-		strStream << stream.rdbuf();
-
-		YAML::Node data = YAML::Load(strStream.str());
-		if (!data["Prefab"]) { std::cout << "ERROR: Deserializing non-prefab file as prefab at: " << filePath << std::endl; return false; }
-
-		if (YAML::Node GameObjects = data["GameObjects"])
+		if (YAML::Node GameObjects = prefab._data["GameObjects"])
 		{
-			if (!DeserializeGameObjects(GameObjects)) { std::cout << "ERROR: Deserializing scene : " << m_Scene->m_Name << std::endl; return false; }
+			if (LLGP::GameObject* toReturn = DeserializeGameObjects(GameObjects)) { return toReturn; }
+			std::cout << "ERROR: Deserializing prefab : " << prefab._data << std::endl; 
 		}
-		return true;
+		return nullptr;
 	}
-	bool SceneSerializer::DeserializeGameObjects(YAML::Node GameObjects)
+	LLGP::GameObject* SceneSerializer::DeserializeGameObjects(YAML::Node GameObjects)
 	{
+		LLGP::GameObject* toReturn = nullptr;
 		for (YAML::Node goData : GameObjects)
 		{
 			//m_Scene->m_SceneObjects.insert_or_assign(goData["GameObject"].as<uint64_t>(), std::make_unique<GameObject>(*m_Scene, goData));
 			/*std::string name = goData["Name"].as<std::string>();
 			while (m_Scene->FindGameObjectByName(name)) { name += "0"; }*/ //not sure about this solution
 			LLGP::GameObject* newGO = m_Scene->Instantiate(goData["Name"].as<std::string>());
+			if (toReturn == nullptr)
+			{
+				toReturn = newGO;
+			}
 			newGO->SetActive(goData["Active"].as<bool>());
 			newGO->SetTag(goData["Tag"].as<std::string>());
 
@@ -211,11 +218,11 @@ namespace LLGP
 					}
 				}
 				newGO->OnStart();
-			}
+			}/*
 			else
 			{
-				return false;
-			}
+				return nullptr;
+			}*/
 		}
 
 		for (LLGP::LinkRequest& linkRequest : m_LinkRequests)
@@ -230,9 +237,9 @@ namespace LLGP
 			}*/
 			else
 			{
-				std::cout << "ERROR: deserializing scene: " << m_Scene->m_Name << ". Unable to find local token for " << linkRequest.linkToken << std::endl; return false;
+				std::cout << "ERROR: deserializing scene: " << m_Scene->m_Name << ". Unable to find local token for " << linkRequest.linkToken << std::endl;
 			}
 		}
-		return true;
+		return toReturn;
 	}
 }

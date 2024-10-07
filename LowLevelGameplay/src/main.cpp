@@ -14,6 +14,8 @@
 #include <iostream>
 #include <chrono>
 #include <Core/Maths/Matrix3x3.h>
+#include <Core/Assets/AssetManager.h>
+#include <Core/Assets/Prefab.h>
 
 using namespace LLGP;
 
@@ -47,6 +49,9 @@ int main()
 	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene");
 	//LLGP::GameObject* playerRef = _GameScene->FindGameObjectByName("player");
 	//_GameScene->Instantiate(playerRef);
+	std::shared_ptr<LLGP::Prefab> ballPrefab = LLGP::AssetManager::GetAsset<LLGP::Prefab>("Prefabs/BouncyBall.prefab");
+	LLGP::GameObject* newBall = _GameScene->Instantiate(*ballPrefab);
+	newBall->transform->SetPosition({1000, 450});
 
 #pragma endregion
 

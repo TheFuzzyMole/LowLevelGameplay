@@ -50,6 +50,12 @@ namespace LLGP
 		return nullptr;
 	}
 
+	LLGP::GameObject* Scene::Instantiate(LLGP::Prefab& prefab)
+	{
+		SceneSerializer serializer(*this);
+		return serializer.DeserializePrefab(prefab);
+	}
+
 	void Scene::Destroy(LLGP::GameObject* obj)
 	{
 	}

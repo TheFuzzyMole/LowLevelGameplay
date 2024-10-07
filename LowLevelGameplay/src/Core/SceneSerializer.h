@@ -12,6 +12,7 @@ namespace YAML
 namespace LLGP
 {
 	struct LinkRequest;
+	class Prefab;
 
 	class SceneSerializer
 	{
@@ -22,8 +23,8 @@ namespace LLGP
 		YAML::Node TempSerializeGameObject(LLGP::GameObject* toSerialize);
 
 		bool DeserializeScene(const std::string& filePath);
-		bool DeserializePrefab(const std::string& filePath);
-		bool DeserializeGameObjects(YAML::Node GameObjects);
+		LLGP::GameObject* DeserializePrefab(const LLGP::Prefab& prefab);
+		LLGP::GameObject* DeserializeGameObjects(YAML::Node GameObjects);
 
 	private:
 		std::vector<LinkRequest> m_LinkRequests;

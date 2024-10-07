@@ -9,6 +9,7 @@ namespace LLGP
 	class GameObject;
 	class Component;
 	class Asset;
+	class Prefab;
 
 	class Scene
 	{
@@ -26,6 +27,7 @@ namespace LLGP
 		//TODO: Make a version that can take a prefab asset
 		LLGP::GameObject* Instantiate(const std::string& name);
 		LLGP::GameObject* Instantiate(LLGP::GameObject* toCopy);
+		LLGP::GameObject* Instantiate(LLGP::Prefab& prefab);
 		void Destroy(LLGP::GameObject* obj);
 
 		LLGP::GameObject* FindGameObjectByUUID(uint64_t _uuid);
@@ -38,6 +40,7 @@ namespace LLGP
 		std::map<uint64_t, std::unique_ptr<LLGP::GameObject>> m_SceneObjects;
 		std::vector<std::shared_ptr<LLGP::Asset>> m_SceneTextures;
 		std::vector<std::shared_ptr<LLGP::Asset>> m_SceneAnimations;
+		std::vector<std::shared_ptr<LLGP::Asset>> m_ScenePrefabs;
 
 		friend class SceneSerializer;
 	};
