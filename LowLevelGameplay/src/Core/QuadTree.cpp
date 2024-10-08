@@ -1,5 +1,5 @@
-#include <Core/BoxCollider.h>
-#include <Core/CircleCollider.h>
+#include <Core/Components/BoxCollider.h>
+#include <Core/Components/CircleCollider.h>
 #include <Core/QuadTree.h>
 #include <iostream>
 

@@ -8,7 +8,6 @@ namespace LLGP
 {
 	Scene::Scene(const std::string& scenePath) : m_SceneAssetPath(scenePath), m_Name("Untitled")
 	{
-		//TODO:: load from here and deserialize the YAML
 		SceneSerializer serializer(*this);
 		if (!serializer.DeserializeScene(scenePath)) { std::cout << "Error Deserializing Scene: " << m_Name << std::endl; }
 	}

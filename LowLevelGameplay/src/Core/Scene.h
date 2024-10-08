@@ -24,7 +24,6 @@ namespace LLGP
 
 		void SaveScene();
 
-		//TODO: Make a version that can take a prefab asset
 		LLGP::GameObject* Instantiate(const std::string& name);
 		LLGP::GameObject* Instantiate(LLGP::GameObject* toCopy);
 		LLGP::GameObject* Instantiate(LLGP::Prefab& prefab);
