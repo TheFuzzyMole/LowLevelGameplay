@@ -6,6 +6,7 @@
 #include <Core/Components/BoxCollider.h>
 #include <Core/Components/Animator.h>
 #include <Core/Components/Renderer.h>
+#include <Core/Components/Camera.h>
 
 
 #include <App/PlayerMovement.h>

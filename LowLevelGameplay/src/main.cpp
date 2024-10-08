@@ -17,6 +17,9 @@
 #include <Core/Assets/AssetManager.h>
 #include <Core/Assets/Prefab.h>
 
+#define SCREEN_WIDTH 1800
+#define SCREEN_HEIGHT 900
+
 using namespace LLGP;
 
 std::condition_variable_any EndOfFrame;
@@ -28,8 +31,9 @@ int main()
 	std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
 	Time::deltaTime = 0.f;
 	float timeSincePhysicsStep = 0.f;
+	sf::View view;
 
-	sf::RenderWindow window(sf::VideoMode(1800, 900), "SFML Works!");
+	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "SFML Works!");
 
 #pragma region Input Initialisation
 	LLGP::InputAction* moveAction = LLGP::InputManager::AddAction("Move", LLGP::ActionType::Vector);
@@ -105,13 +109,20 @@ int main()
 
 #pragma region rendering
 		window.clear();
+		LLGP::Transform* cameraT = LLGP::Camera::main->GetGameObject()->transform;
+		view.reset(sf::FloatRect(cameraT->GetPosition(), {SCREEN_WIDTH, SCREEN_HEIGHT}));
+		//view.rotate(cameraT.GetRotation());
+		window.setView(view);
 		LLGP::Renderer::OnRenderLayer(window, RenderLayers::DEFAULT);
 		LLGP::Renderer::OnRenderLayer(window, RenderLayers::BACKGROUND);
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
 		{
 			LLGP::Renderer::OnRenderLayer(window, RenderLayers::DEBUG);
 		}
+		window.setView(window.getDefaultView());
+		//Render UI???
 		window.display();
+
 #pragma endregion
 
 		EndOfFrame.notify_all();
