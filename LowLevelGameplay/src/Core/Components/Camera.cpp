@@ -19,6 +19,6 @@ namespace LLGP
 
 	bool Camera::Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests)
 	{
-		return false;
+		return true;
 	}
 }

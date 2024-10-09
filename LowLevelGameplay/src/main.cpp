@@ -56,6 +56,8 @@ int main()
 	std::shared_ptr<LLGP::Prefab> ballPrefab = LLGP::AssetManager::GetAsset<LLGP::Prefab>("Prefabs/BouncyBall.prefab");
 	LLGP::GameObject* newBall = _GameScene->Instantiate(*ballPrefab);
 	newBall->transform->SetPosition({1000, 450});
+	LLGP::GameObject* Ball = _GameScene->Instantiate(*ballPrefab);
+	Ball->transform->SetPosition({ 1000, 600 });
 
 #pragma endregion
 
@@ -110,7 +112,10 @@ int main()
 #pragma region rendering
 		window.clear();
 		LLGP::Transform* cameraT = LLGP::Camera::main->GetGameObject()->transform;
-		view.reset(sf::FloatRect(cameraT->GetPosition(), {SCREEN_WIDTH, SCREEN_HEIGHT}));
+		view.reset(
+			sf::FloatRect(
+				cameraT->GetPosition() - LLGP::Vector2f{SCREEN_WIDTH/2, SCREEN_HEIGHT/2},
+				{ SCREEN_WIDTH, SCREEN_HEIGHT }));
 		//view.rotate(cameraT.GetRotation());
 		window.setView(view);
 		LLGP::Renderer::OnRenderLayer(window, RenderLayers::DEFAULT);

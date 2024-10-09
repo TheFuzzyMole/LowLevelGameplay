@@ -39,6 +39,8 @@ GameObjects:
           Extents: [50, 90]
           Restitution: 1
           IsTrigger: false
+      - Camera:
+          UUID: 17
   - GameObject: 3
     Name: notPlayer
     Active: true

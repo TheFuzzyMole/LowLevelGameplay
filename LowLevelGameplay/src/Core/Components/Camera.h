@@ -8,7 +8,7 @@ namespace LLGP
 	public:
 		Camera(LLGP::GameObject* owner);
 
-		static LLGP::Camera* main;
+		static inline LLGP::Camera* main;
 
 		void Serialize(YAML::Emitter& out) override;
 		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;

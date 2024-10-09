@@ -147,7 +147,8 @@ namespace LLGP
 	}
 	LLGP::GameObject* SceneSerializer::DeserializePrefab(const LLGP::Prefab& prefab)
 	{
-		if (YAML::Node GameObjects = prefab._data["GameObjects"])
+		YAML::Node data = YAML::Load(prefab._data);
+		if (YAML::Node GameObjects = data["GameObjects"])
 		{
 			if (LLGP::GameObject* toReturn = DeserializeGameObjects(GameObjects)) { return toReturn; }
 			std::cout << "ERROR: Deserializing prefab : " << prefab._data << std::endl; 
@@ -176,44 +177,51 @@ namespace LLGP
 				{
 					LLGP::Component* compRef = nullptr;
 					YAML::Node data;
+					std::string compName = "";
 					if (data = compNode["Transform"])
 					{
 						compRef = newGO->transform;
-						if (!compRef->Deserialize(data, m_LinkRequests)) { std::cout << "ERROR: Deserializing component: Transform" << std::endl; }
+						compName = "Transform";
 					}
 					else if (data = compNode["Rigidbody"])
 					{
 						compRef = newGO->AddComponent<LLGP::Rigidbody>();
-						if (!compRef->Deserialize(data, m_LinkRequests)) { std::cout << "ERROR: Deserializing component: Rigidbody" << std::endl; }
+						compName = "Rigidbody";
 					}
 					else if (data = compNode["CircleCollider"])
 					{
 						compRef = newGO->AddComponent<LLGP::CircleCollider>();
-						if (!compRef->Deserialize(data, m_LinkRequests)) { std::cout << "ERROR: Deserializing component: CircleCollider" << std::endl; }
+						compName = "CircleCollider";
 					}
 					else if (data = compNode["BoxCollider"])
 					{
 						compRef = newGO->AddComponent<LLGP::BoxCollider>();
-						if (!compRef->Deserialize(data, m_LinkRequests)) { std::cout << "ERROR: Deserializing component: BoxCollider" << std::endl; }
+						compName = "BoxCollider";
 					}
 					else if (data = compNode["Animator"])
 					{
 						compRef = newGO->AddComponent<LLGP::Animator>();
-						if (!compRef->Deserialize(data, m_LinkRequests)) { std::cout << "ERROR: Deserializing component: Animator" << std::endl; }
+						compName = "Animator";
 					}
 					else if (data = compNode["Renderer"])
 					{
 						compRef = newGO->AddComponent<LLGP::Renderer>();
-						if (!compRef->Deserialize(data, m_LinkRequests)) { std::cout << "ERROR: Deserializing component: Renderer" << std::endl; }
+						compName = "Renderer";
 					}
 					else if (data = compNode["PlayerMovement"])
 					{
 						compRef = newGO->AddComponent<TEST::PlayerMovement>();
-						if (!compRef->Deserialize(data, m_LinkRequests)) { std::cout << "ERROR: Deserializing component: PlayerMovement" << std::endl; }
+						compName = "PlayerMovement";
+					}
+					else if (data = compNode["Camera"])
+					{
+						compRef = newGO->AddComponent<LLGP::Camera>();
+						compName = "Camera";
 					}
 
 					if (compRef)
 					{
+						if (!compRef->Deserialize(data, m_LinkRequests)) { std::cout << "ERROR: Deserializing component: " << compName << std::endl; }
 						m_Token2PtrLUT.insert({ data["UUID"].as<uint64_t>(), compRef });
 					}
 				}

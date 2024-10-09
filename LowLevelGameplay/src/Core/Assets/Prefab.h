@@ -1,6 +1,6 @@
 #pragma once
 #include <Core/Assets/Asset.h>
-#include <yaml-cpp/yaml.h>
+#include <string>
 
 namespace LLGP
 {
@@ -9,6 +9,6 @@ namespace LLGP
 	public:
 		Prefab(std::string path);
 
-		YAML::Node _data;
+		std::string _data;
 	};
 }

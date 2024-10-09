@@ -8,6 +8,11 @@ GameObjects:
       - Transform:
           UUID: 991
           Position: [1000, 450]
+      - Rigidbody:
+          UUID: 993
+          Mass: 1
+          IsKinematic: false
+          HasGravity: false
       - Renderer:
           UUID: 992
           TextureFilePath: Textures/Egg_Hatch.png
@@ -15,11 +20,6 @@ GameObjects:
           SpritesInTex: [1, 1]
           CurrentSpriteIndex: [0, 0]
           RenderLayer: 0
-      - Rigidbody:
-          UUID: 993
-          Mass: 1
-          IsKinematic: false
-          HasGravity: false
       - CircleCollider:
           UUID: 994
           Center: [0, 0]
