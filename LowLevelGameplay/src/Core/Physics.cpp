@@ -239,7 +239,7 @@ namespace LLGP
 	{
 		LLGP::Vector2f diff = b->GetPosition() - a->GetPosition(); //Done as A->B
 		float radiusSum = a->GetRadius() + b->GetRadius();
-		if (radiusSum * radiusSum > diff.GetSqrMagnitude()) return nullptr;
+		if (radiusSum * radiusSum < diff.GetSqrMagnitude()) { return nullptr; }
 
 		LLGP::Rigidbody* aRB = a->GetGameObject()->GetComponent<Rigidbody>();
 		LLGP::Rigidbody* bRB = b->GetGameObject()->GetComponent<Rigidbody>();
