@@ -1,5 +1,6 @@
 #pragma once
 #include <concepts>
+#include <iostream>
 #include <Core/Maths/Vector2.h>
 #include <Core/Maths/Maths.h>
 
@@ -15,6 +16,9 @@ namespace LLGP
 
 		T x0, y0, z0, x1, y1, z1, x2, y2, z2;
 
+		Matrix3x3<T>& Inverse();
+		Matrix3x3<T> Inversed() const;
+	
 		template<typename U> requires std::is_arithmetic_v<U>
 		static Matrix3x3<T> FromPos(const LLGP::Vector2<U>& pos);
 		template<typename V> requires std::is_arithmetic_v<V>
@@ -83,8 +87,88 @@ namespace LLGP
 		return temp;
 	}
 
-	/*template<typename T, typename U> requires std::is_arithmetic_v<T> and std::is_arithmetic_v<U>
-	Vector2<U>*/
+	template<typename T, typename U> requires std::is_arithmetic_v<T> and std::is_arithmetic_v<U>
+	Matrix3x3<T>& operator*=(Matrix3x3<T>& m, const U a)
+	{
+		T Ta = static_cast<T>(a);
+		m.x0 = (m.x0 * Ta);
+		m.y0 = (m.y0 * Ta);
+		m.z0 = (m.z0 * Ta);
+		m.x1 = (m.x1 * Ta);
+		m.y1 = (m.y1 * Ta);
+		m.z1 = (m.z1 * Ta);
+		m.x2 = (m.x2 * Ta);
+		m.y2 = (m.y2 * Ta);
+		m.z2 = (m.z2 * Ta);
+		//m.x0 = static_cast<T>(static_cast<U>(m.x0) * a);
+		//m.y0 = static_cast<T>(static_cast<U>(m.y0) * a);
+		//m.z0 = static_cast<T>(static_cast<U>(m.z0) * a);
+		//m.x1 = static_cast<T>(static_cast<U>(m.x1) * a);
+		//m.y1 = static_cast<T>(static_cast<U>(m.y1) * a);
+		//m.z1 = static_cast<T>(static_cast<U>(m.z1) * a);
+		//m.x2 = static_cast<T>(static_cast<U>(m.x2) * a);
+		//m.y2 = static_cast<T>(static_cast<U>(m.y2) * a);
+		//m.z2 = static_cast<T>(static_cast<U>(m.z2) * a);
+		return m;
+	}
+
+	template<typename T, typename U> requires std::is_arithmetic_v<T> and std::is_arithmetic_v<U>
+	Matrix3x3<T> operator*(Matrix3x3<T> m, const U a)
+	{
+		return m *= a;
+	}
+
+	template<typename T, typename U> requires std::is_arithmetic_v<T> and std::is_arithmetic_v<U>
+	LLGP::Vector2<U> operator*(const LLGP::Vector2<U>& v, const Matrix3x3<T>& m)
+	{
+		/*
+		* in -> x   y   1     out
+		*       x0  y0  z0 -> x*x0 + y*y0 + z0
+		*       x1  y1  z1 -> x*x1 + y*y1 + z1
+		*       0   0   1  -> 1
+		*/
+		return LLGP::Vector2<U>(v.x * m.x0 + v.y * m.y0 + m.z0,
+								v.x * m.x1 + v.y * m.y1 + m.z1);
+	}
+
+	template<typename T, typename U> requires std::is_arithmetic_v<T> and std::is_arithmetic_v<U>
+	LLGP::Vector2<U>& operator*=(LLGP::Vector2<U>& v, const LLGP::Matrix3x3<T>& m)
+	{
+		v = LLGP::Vector2<U>(v.x * m.x0 + v.y * m.y0 + m.z0,
+			v.x * m.x1 + v.y * m.y1 + m.z1);
+		return v;
+	}
+
+	template<typename T> requires std::is_arithmetic_v<T>
+	Matrix3x3<T>& Matrix3x3<T>::Inverse()
+	{
+		/*
+		*   1     | d -b |
+		* ----- x |      |
+		* ad-bc   |-c  a |
+		* 
+		* a=x0
+		* b=y0
+		* c=x1
+		* d=y1
+		*/
+		T a = x0, b = y0, c = x1, d = y1;
+		T det = (a * d - b * c);
+		x0 = d / det; y0 = -b / det;
+		x1 = -c / det; y1 = a / det;
+
+		T x = z0, y = z1;
+		z0 = -(x * x0 + y * y0);
+		z1 = -(x * x1 + y * y1);
+		return *this;
+	}
+
+	template<typename T> requires std::is_arithmetic_v<T>
+	Matrix3x3<T> Matrix3x3<T>::Inversed() const
+	{
+		Matrix3x3<T> toReturn = *this;
+		return toReturn.Inverse();
+	}
 
 #pragma region (De)Composition
 
@@ -145,7 +229,7 @@ namespace LLGP
 	}
 
 	template<typename T> requires std::is_arithmetic_v<T>
-	template<typename U, typename V, typename W> requires std::is_arithmetic_v<U> && std::is_arithmetic_v<V>&& std::is_arithmetic_v<W>
+	template<typename U, typename V, typename W> requires std::is_arithmetic_v<U> && std::is_arithmetic_v<V> && std::is_arithmetic_v<W>
 	inline void Matrix3x3<T>::Decompose(LLGP::Matrix3x3<T> m, LLGP::Vector2<U>& pos, V& rot, LLGP::Vector2<W>& scale)
 	{
 		pos = LLGP::Vector2<U>( static_cast<U>(m.z0), static_cast<U>(m.z1));

@@ -42,11 +42,11 @@ int main()
 			1.f));
 #pragma endregion
 
-	//LLGP::Mat3f l2w = LLGP::Mat3f::FromPS(LLGP::Vector2f{900, 450}, LLGP::Vector2u{ 3, 6 });
-	//LLGP::Mat3f local = LLGP::Mat3f::FromPos(LLGP::Vector2f{100,-300});
-	//LLGP::Mat3f world = l2w * local;
-	//LLGP::Vector2f pos; float rot{ 0 }; LLGP::Vector2u scale;
-	//LLGP::Mat3f::Decompose(world, pos, rot, scale);
+	LLGP::Mat3f base = LLGP::Mat3f::FromPRS(LLGP::Vector2f{900, 450}, 90.0 * DEG2RAD, LLGP::Vector2u{ 2, 2 });
+	LLGP::Vector2f mod = LLGP::Vector2f{ 1000, 450 };
+	LLGP::Mat3f reverse = base.Inversed();
+	mod = mod * reverse;
+
 
 #pragma region level load
 

@@ -38,12 +38,12 @@ namespace LLGP
 		LLGP::Vector2f GetLocalPosition();
 
 		LLGP::Mat3f GetL2WMatrix();
-		LLGP::Vector2f TransformDirection(LLGP::Vector2f in);
-		LLGP::Vector2f TransformVector(LLGP::Vector2f in);
-		LLGP::Vector2f TransformPoint(LLGP::Vector2f in);
-		LLGP::Vector2f InverseTransformDirection(LLGP::Vector2f in);
-		LLGP::Vector2f InverseTransformVector(LLGP::Vector2f in);
-		LLGP::Vector2f InverseTransformPoint(LLGP::Vector2f in);
+		LLGP::Vector2f TransformDirection(const LLGP::Vector2f& in);
+		LLGP::Vector2f TransformVector(const LLGP::Vector2f& in);
+		LLGP::Vector2f TransformPoint(const LLGP::Vector2f& in);
+		LLGP::Vector2f InverseTransformDirection(const LLGP::Vector2f& in);
+		LLGP::Vector2f InverseTransformVector(const LLGP::Vector2f& in);
+		LLGP::Vector2f InverseTransformPoint(const LLGP::Vector2f& in);
 
 		void SetPosition(LLGP::Vector2f newPosition);
 		void ChangePosition(LLGP::Vector2f changeInPosition);

@@ -17,7 +17,7 @@ GameObjects:
           UUID: 992
           TextureFilePath: Textures/Egg_Hatch.png
           QuadSize: [100, 100]
-          SpritesInTex: [1, 1]
+          SpritesInTex: [2, 2]
           CurrentSpriteIndex: [0, 0]
           RenderLayer: 0
       - CircleCollider:

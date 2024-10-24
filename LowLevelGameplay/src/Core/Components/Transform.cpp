@@ -127,34 +127,48 @@ namespace LLGP
 	}
 
 #pragma region TODO these
-	LLGP::Vector2f Transform::TransformDirection(LLGP::Vector2f in)
+	LLGP::Vector2f Transform::TransformDirection(const LLGP::Vector2f& in)
 	{
-		return LLGP::Vector2f();
+		//local to world with rotation
+		LLGP::Vector2f pos, scale; float rot;
+		LLGP::Mat3f::Decompose(m_L2WMatrix, pos, rot, scale);
+		return in * LLGP::Mat3f::FromRot(rot);
 	}
 
-	LLGP::Vector2f Transform::TransformVector(LLGP::Vector2f in)
+	LLGP::Vector2f Transform::TransformVector(const LLGP::Vector2f& in)
 	{
-		return LLGP::Vector2f();
+		//local to world with rotation and scale
+		LLGP::Vector2f pos, scale; float rot;
+		LLGP::Mat3f::Decompose(m_L2WMatrix, pos, rot, scale);
+		return in * LLGP::Mat3f::FromRS(rot, scale);
 	}
 
-	LLGP::Vector2f Transform::TransformPoint(LLGP::Vector2f in)
+	LLGP::Vector2f Transform::TransformPoint(const LLGP::Vector2f& in)
 	{
-		return LLGP::Vector2f();
+		//local to world with all
+		return in * m_L2WMatrix;
 	}
 
-	LLGP::Vector2f Transform::InverseTransformDirection(LLGP::Vector2f in)
+	LLGP::Vector2f Transform::InverseTransformDirection(const LLGP::Vector2f& in)
 	{
-		return LLGP::Vector2f();
+		//world to local with rotation
+		LLGP::Vector2f pos, scale; float rot;
+		LLGP::Mat3f::Decompose(m_L2WMatrix, pos, rot, scale);
+		return in * LLGP::Mat3f::FromRot(rot).Inverse();
 	}
 
-	LLGP::Vector2f Transform::InverseTransformVector(LLGP::Vector2f in)
+	LLGP::Vector2f Transform::InverseTransformVector(const LLGP::Vector2f& in)
 	{
-		return LLGP::Vector2f();
+		//world to local with rotation and scale
+		LLGP::Vector2f pos, scale; float rot;
+		LLGP::Mat3f::Decompose(m_L2WMatrix, pos, rot, scale);
+		return in * LLGP::Mat3f::FromRS(rot, scale).Inverse();
 	}
 
-	LLGP::Vector2f Transform::InverseTransformPoint(LLGP::Vector2f in)
+	LLGP::Vector2f Transform::InverseTransformPoint(const LLGP::Vector2f& in)
 	{
-		return LLGP::Vector2f();
+		//world to local with all
+		return in * m_L2WMatrix.Inversed();
 	}
 #pragma endregion
 
