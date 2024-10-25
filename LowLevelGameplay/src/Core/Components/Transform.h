@@ -35,9 +35,14 @@ namespace LLGP
 		void SetParent(Transform* parent, bool worldTransformStays = true);
 
 		LLGP::Vector2f GetPosition();
-		LLGP::Vector2f GetLocalPosition();
+		const LLGP::Vector2f& GetLocalPosition();
+		float GetRotation();
+		const float& GetLocalRotation();
+		LLGP::Vector2f GetScale();
+		const LLGP::Vector2f& GetLocalScale();
 
-		LLGP::Mat3f GetL2WMatrix();
+		const LLGP::Mat3f& GetL2WMatrix();
+
 		LLGP::Vector2f TransformDirection(const LLGP::Vector2f& in);
 		LLGP::Vector2f TransformVector(const LLGP::Vector2f& in);
 		LLGP::Vector2f TransformPoint(const LLGP::Vector2f& in);
@@ -49,6 +54,11 @@ namespace LLGP
 		void ChangePosition(LLGP::Vector2f changeInPosition);
 		void SetLocalPosition(LLGP::Vector2f newLocalPosition);
 		void ChangeLocalPosition(LLGP::Vector2f changeInLocalPosition);
+
+		void SetRotation(float newRotation);
+		void ChangeRotation(float changeInRotation);
+		void SetLocalRotation(float newLocalRotation);
+		void ChangeLocalRotation(float changeInLocalRotation);
 
 		virtual void OwnerActiveChanged(bool newActive);
 
@@ -66,6 +76,8 @@ namespace LLGP
 		std::vector<Transform*> m_Children;
 
 		LLGP::Vector2f m_LocalPosition;
+		float m_LocalRotation;
+		LLGP::Vector2f m_LocalScale;
 
 		LLGP::Mat3f m_L2WMatrix;
 	};
