@@ -49,7 +49,7 @@ namespace TEST
 	}
 	void PlayerMovement::C_MoveUpdate()
 	{
-		m_RB->AddForce(m_InMoveVector * m_Speed, LLGP::ForceMode::Force);
+		m_RB->AddForce(m_InMoveVector * m_Speed, LLGP::ForceMode::Acceleration);
 		std::cout << "moveUpdate" << std::endl;
 		//std::shared_lock lock(m_CRm);
 		//NextFixedUpdate.wait(lock);

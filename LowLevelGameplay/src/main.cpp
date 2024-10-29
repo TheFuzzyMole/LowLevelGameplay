@@ -51,13 +51,14 @@ int main()
 #pragma region level load
 
 	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene");
-	//LLGP::GameObject* playerRef = _GameScene->FindGameObjectByName("player");
+	LLGP::GameObject* playerRef = _GameScene->FindGameObjectByName("player");
 	//_GameScene->Instantiate(playerRef);
 	std::shared_ptr<LLGP::Prefab> ballPrefab = LLGP::AssetManager::GetAsset<LLGP::Prefab>("Prefabs/BouncyBall.prefab");
 	LLGP::GameObject* newBall = _GameScene->Instantiate(*ballPrefab);
 	newBall->transform->SetPosition({1000, 450});
-	LLGP::GameObject* Ball = _GameScene->Instantiate(*ballPrefab);
-	Ball->transform->SetPosition({ 1000, 600 });
+	//LLGP::GameObject* Ball = _GameScene->Instantiate(*ballPrefab);
+	//Ball->transform->SetPosition({ 1000, 600 });
+
 
 #pragma endregion
 

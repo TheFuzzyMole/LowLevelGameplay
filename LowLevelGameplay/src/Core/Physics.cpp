@@ -310,7 +310,7 @@ namespace LLGP
 		toReturn->overlap = rad - diff.GetMagnitude();
 		toReturn->point = b->GetPosition() - diff;
 		float restitution = fminf(a->GetRestitution(), b->GetRestitution());
-		toReturn->impulseMagnitude = (-(1 + restitution) * LLGP::Vector2f::Dot((bRB ? bRB->Velocity : Vector2f::zero) - aRB->Velocity, toReturn->normal)) / ((1/aRB->Mass) + (bRB ? 1/bRB->Mass : 0));
+		toReturn->impulseMagnitude = (-(1 + restitution) * LLGP::Vector2f::Dot((bRB ? bRB->Velocity : LLGP::Vector2f::zero) - (aRB ? aRB->Velocity : LLGP::Vector2f::zero), toReturn->normal)) / ((aRB ? 1/aRB->Mass : 0) + (bRB ? 1/bRB->Mass : 0));
 		//toReturn->impulseMagnitude = LLGP::Vector2f::Dot(aRB->Velocity, toReturn->normal) + (bRB != nullptr ? LLGP::Vector2f::Dot(bRB->Velocity, -toReturn->normal) : 0.f);
 		return toReturn;
 	}

@@ -19,7 +19,7 @@ namespace LLGP
 	}
 
 	Transform::Transform(GameObject* owner, Transform* parent, Vector2f inPos)
-		: Component(owner), m_Parent(parent), m_LocalPosition(inPos), m_IsDirty(false)
+		: Component(owner), m_Parent(parent), m_LocalPosition(inPos), m_LocalRotation(0.f), m_LocalScale({1,1}), m_IsDirty(false)
 	{
 		if (parent != nullptr) { SetAsDirty(); return; }
 		m_L2WMatrix.FromPRS(inPos, 0.f, LLGP::Vector2f::one);
@@ -199,10 +199,18 @@ namespace LLGP
 
 	void Transform::SetPosition(LLGP::Vector2f newPosition)
 	{
-		m_LocalPosition = InverseTransformPoint(newPosition);
+		if (!m_Parent)
+		{
+			m_LocalPosition = newPosition;
+		}
+		else
+		{
+			m_LocalPosition = m_Parent->InverseTransformPoint(newPosition);
+		}
 
 		//m_LocalPosition = newPosition - (m_Parent ? m_Parent->GetPosition() : LLGP::Vector2f::zero);
 		
+		SetAsDirty();
 		for (Transform* child : m_Children)
 		{
 			child->SetAsDirty();
@@ -248,6 +256,32 @@ namespace LLGP
 	{
 		m_LocalRotation += changeInLocalRotation;
 		m_LocalRotation = static_cast<float>(dmod((double)m_LocalRotation + (2.0 * PI), 2.0 * PI));
+		SetAsDirty();
+	}
+
+	void Transform::SetScale(LLGP::Vector2f newScale)
+	{
+		LLGP::Vector2f pos; float rot;
+		LLGP::Mat3f::Decompose(LLGP::Mat3f::FromScale(newScale) * m_L2WMatrix.Inversed(),
+			pos, rot, m_LocalScale);
+		for (Transform* child : m_Children)
+		{
+			child->SetAsDirty();
+		}
+	}
+	void Transform::ChangeScale(LLGP::Vector2f changeInScale)
+	{
+		SetScale(GetScale() + changeInScale);
+	}
+	void Transform::SetLocalScale(LLGP::Vector2f newLocalScale)
+	{
+		m_LocalScale = newLocalScale;
+		SetAsDirty();
+	}
+	void Transform::ChangeLocalScale(LLGP::Vector2f changeInLocalScale)
+	{
+		m_LocalScale += changeInLocalScale;
+		SetAsDirty();
 	}
 
 	void Transform::OwnerActiveChanged(bool newActive)
@@ -259,7 +293,7 @@ namespace LLGP
 		if (!m_IsDirty) return; //already clean
 
 		//update all world space transform component
-		m_L2WMatrix = LLGP::Mat3f::FromPRS(m_LocalPosition, 0.f, LLGP::Vector2f::one);
+		m_L2WMatrix = LLGP::Mat3f::FromPRS(m_LocalPosition, m_LocalRotation, m_LocalScale);
 		if (!m_Parent)
 		{
 			m_Root = this;

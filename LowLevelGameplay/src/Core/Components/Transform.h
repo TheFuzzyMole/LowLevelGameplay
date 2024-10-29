@@ -60,6 +60,11 @@ namespace LLGP
 		void SetLocalRotation(float newLocalRotation);
 		void ChangeLocalRotation(float changeInLocalRotation);
 
+		void SetScale(LLGP::Vector2f newScale);
+		void ChangeScale(LLGP::Vector2f changeInScale);
+		void SetLocalScale(LLGP::Vector2f newLocalScale);
+		void ChangeLocalScale(LLGP::Vector2f changeInLocalScale);
+
 		virtual void OwnerActiveChanged(bool newActive);
 
 		void CleanTransform();
