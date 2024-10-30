@@ -24,7 +24,7 @@ GameObjects:
           RenderLayer: 0
       - Rigidbody:
           UUID: 13
-          Mass: 56
+          Mass: 10
           IsKinematic: false
           HasGravity: false
       - PlayerMovement:
