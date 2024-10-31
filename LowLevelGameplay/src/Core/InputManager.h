@@ -462,6 +462,9 @@ namespace LLGP
 		void AddBinding(InputBinding_Button* _binding);
 		void AddBinding(InputBinding_Axis* _binding);
 		void AddBinding(InputBinding_Vector* _binding);
+		bool RemoveBinding(InputBinding_Button* _binding);
+		bool RemoveBinding(InputBinding_Axis* _binding);
+		bool RemoveBinding(InputBinding_Vector* _binding);
 
 	private:
 		std::vector<std::unique_ptr<LLGP::InputBinding>> m_Bindings;
@@ -476,7 +479,8 @@ namespace LLGP
 		static inline std::unordered_map<std::string, InputAction> Actions;
 
 		static void ProcessInput();
-		static InputAction* AddAction(std::string _name, ActionType _type);
+		static InputAction* AddAction(std::string& _name, ActionType _type);
 		static InputAction* FindAction(const std::string& _name);
+		static bool RemoveAction(std::string& _name);
 	};
 }

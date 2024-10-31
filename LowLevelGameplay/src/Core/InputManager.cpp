@@ -105,7 +105,26 @@ namespace LLGP
 		m_Bindings.push_back(std::make_unique<InputBinding_Vector>(*_binding));
 	}
 
-	//std::unordered_map<std::string, LLGP::InputAction> InputManager::Actions;
+	bool InputAction::RemoveBinding(InputBinding_Button* _binding)
+	{
+		if (type != 0) { return false; }
+
+		std::erase_if(m_Bindings, [_binding](std::unique_ptr<LLGP::InputBinding>& binding) { return *dynamic_cast<InputBinding_Button*>(binding.get()) == *_binding; });
+	}
+
+	bool InputAction::RemoveBinding(InputBinding_Axis* _binding)
+	{
+		if (type != 1) { return false; }
+
+		std::erase_if(m_Bindings, [_binding](std::unique_ptr<LLGP::InputBinding>& binding) { return *dynamic_cast<InputBinding_Axis*>(binding.get()) == *_binding; });
+	}
+
+	bool InputAction::RemoveBinding(InputBinding_Vector* _binding)
+	{
+		if (type != 2) { return false; }
+
+		std::erase_if(m_Bindings, [_binding](std::unique_ptr<LLGP::InputBinding>& binding) { return *dynamic_cast<InputBinding_Vector*>(binding.get()) == *_binding; });
+	}
 
 	void InputManager::ProcessInput()
 	{
@@ -115,7 +134,7 @@ namespace LLGP
 		}
 	}
 
-	InputAction* InputManager::AddAction(std::string _name, ActionType _type)
+	InputAction* InputManager::AddAction(std::string& _name, ActionType _type)
 	{
 		Actions.insert({ _name, InputAction(_type) });
 		return &Actions.at(_name);
@@ -129,6 +148,19 @@ namespace LLGP
 		else
 		{
 			return nullptr;
+		}
+	}
+
+	bool InputManager::RemoveAction(std::string& _name)
+	{
+		if (Actions.find(_name) != Actions.end())
+		{
+			Actions.erase(_name);
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
