@@ -65,6 +65,41 @@ namespace LLGP
 
 			return output;
 		}
+
+		bool operator==(const CompositeButtonAxis& other)
+		{
+			if (positive.index() != other.positive.index()) { return false; }
+
+			switch (positive.index())
+			{
+			case 0:
+				if (std::get<0>(positive) != std::get<0>(other.positive)) { return false; }
+				break;
+			case 1:
+				if (std::get<1>(positive) != std::get<1>(other.positive)) { return false; }
+				break;
+			case 2:
+				if (std::get<2>(positive).buttonID != std::get<2>(other.positive).buttonID) { return false; }
+				break;
+			}
+
+			if (negative.index() != other.negative.index()) { return false; }
+
+			switch (negative.index())
+			{
+			case 0:
+				if (std::get<0>(negative) != std::get<0>(other.negative)) { return false; }
+				break;
+			case 1:
+				if (std::get<1>(negative) != std::get<1>(other.negative)) { return false; }
+				break;
+			case 2:
+				if (std::get<2>(negative).buttonID != std::get<2>(other.negative).buttonID) { return false; }
+				break;
+			}
+
+			return true;
+		}
 	};
 
 	struct CompositeButtonVector
@@ -128,6 +163,71 @@ namespace LLGP
 			}
 			return output;
 		}
+
+		bool operator==(const CompositeButtonVector& other)
+		{
+			if(up.index() != other.up.index()){ return false; }
+
+			switch (up.index())
+			{
+			case 0:
+				if (std::get<0>(up) != std::get<0>(other.up)) { return false; }
+				break;
+			case 1:
+				if(std::get<1>(up) != std::get<1>(other.up)) { return false; }
+				break;
+			case 2:
+				if(std::get<2>(up).buttonID != std::get<2>(other.up).buttonID) { return false; }
+				break;
+			}
+
+			if (down.index() != other.down.index()) { return false; }
+
+			switch (down.index())
+			{
+			case 0:
+				if (std::get<0>(down) != std::get<0>(other.down)) { return false; }
+				break;
+			case 1:
+				if (std::get<1>(down) != std::get<1>(other.down)) { return false; }
+				break;
+			case 2:
+				if (std::get<2>(down).buttonID != std::get<2>(other.down).buttonID) { return false; }
+				break;
+			}
+
+			if (left.index() != other.left.index()) { return false; }
+
+			switch (left.index())
+			{
+			case 0:
+				if (std::get<0>(left) != std::get<0>(other.left)) { return false; }
+				break;
+			case 1:
+				if (std::get<1>(left) != std::get<1>(other.left)) { return false; }
+				break;
+			case 2:
+				if (std::get<2>(left).buttonID != std::get<2>(other.left).buttonID) { return false; }
+				break;
+			}
+
+			if (right.index() != other.right.index()) { return false; }
+
+			switch (right.index())
+			{
+			case 0:
+				if (std::get<0>(right) != std::get<0>(other.right)) { return false; }
+				break;
+			case 1:
+				if (std::get<1>(right) != std::get<1>(other.right)) { return false; }
+				break;
+			case 2:
+				if (std::get<2>(right).buttonID != std::get<2>(other.right).buttonID) { return false; }
+				break;
+			}
+
+			return true;
+		}
 	};
 
 	struct CompositeAxisVector
@@ -157,6 +257,35 @@ namespace LLGP
 			}
 			return output;
 		}
+
+		bool operator==(const CompositeAxisVector& other)
+		{
+			if (x.index() != other.x.index()) { return false; }
+
+			switch (x.index())
+			{
+			case 0:
+				if (std::get<0>(x) != std::get<0>(other.x)) { return false; }
+				break;
+			case 1:
+				if (std::get<1>(x).buttonID != std::get<1>(other.x).buttonID) { return false; }
+				break;
+			}
+
+			if (y.index() != other.y.index()) { return false; }
+
+			switch (y.index())
+			{
+			case 0:
+				if (std::get<0>(y) != std::get<0>(other.y)) { return false; }
+				break;
+			case 1:
+				if (std::get<1>(y).buttonID != std::get<1>(other.y).buttonID) { return false; }
+				break;
+			}
+
+			return true;
+		}
 	};
 
 #pragma region Input Binding Types
@@ -172,6 +301,7 @@ namespace LLGP
 		int m_Modifier; //stored as BindingModifier
 
 		bool CheckModifiers();
+
 	};
 
 	class InputBinding_Button : public InputBinding
@@ -200,6 +330,22 @@ namespace LLGP
 
 		int GetType() override { return 0; }
 
+		bool operator==(const InputBinding_Button& other)
+		{
+			if (m_Button.index() != other.m_Button.index()) { return false; }
+			
+			switch (m_Button.index())
+			{
+			case 0:
+				return std::get<0>(m_Button) == std::get<0>(other.m_Button);
+			case 1:
+				return std::get<1>(m_Button) == std::get<1>(other.m_Button);
+			case 2:
+				return std::get<2>(m_Button).buttonID == std::get<2>(other.m_Button).buttonID;
+			}
+			return false;
+		}
+
 	private:
 		std::variant<sf::Keyboard::Key, sf::Mouse::Button, JoyWrapper> m_Button;
 	};
@@ -226,6 +372,19 @@ namespace LLGP
 		}
 
 		int GetType() override { return 1; }
+
+		bool operator==(const InputBinding_Axis& other)
+		{
+			if (m_Axis.index() != other.m_Axis.index()) { return false; }
+
+			switch (m_Axis.index())
+			{
+			case 0:
+				return std::get<0>(m_Axis) == std::get<0>(other.m_Axis);
+			case 1:
+				return std::get<1>(m_Axis).buttonID == std::get<1>(other.m_Axis).buttonID;
+			}
+		}
 
 	private:
 		std::variant<CompositeButtonAxis, JoyWrapper> m_Axis;
@@ -254,12 +413,24 @@ namespace LLGP
 
 		int GetType() override { return 2; }
 
+		bool operator==(const InputBinding_Vector& other)
+		{
+			if (m_Vector.index() != other.m_Vector.index()) { return false; }
+
+			switch (m_Vector.index())
+			{
+			case 0:
+				return	std::get<0>(m_Vector) == std::get<0>(other.m_Vector);
+			case 1:
+				return	std::get<1>(m_Vector) == std::get<1>(other.m_Vector);
+			}
+		}
+
 	private:
 		std::variant<CompositeButtonVector, CompositeAxisVector> m_Vector;
 	
 	};
 #pragma endregion
-
 
 	class InputAction
 	{
