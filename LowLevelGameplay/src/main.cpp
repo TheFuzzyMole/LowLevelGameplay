@@ -39,7 +39,7 @@ int main()
 	LLGP::InputAction* moveAction = LLGP::InputManager::AddAction("Move", LLGP::ActionType::Vector);
 	moveAction->AddBinding(new LLGP::InputBinding_Vector(
 			LLGP::CompositeButtonVector(sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::A, sf::Keyboard::D),
-			1.f));
+			1.f, 0));
 #pragma endregion
 
 	LLGP::Mat3f base = LLGP::Mat3f::FromPRS(LLGP::Vector2f{900, 450}, 90.0 * DEG2RAD, LLGP::Vector2u{ 2, 2 });

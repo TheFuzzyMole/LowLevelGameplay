@@ -131,4 +131,14 @@ namespace LLGP
 			return nullptr;
 		}
 	}
+
+	bool InputBinding::CheckModifiers()
+	{
+		if (m_Modifier == 0) { return true; }
+
+		return	((m_Modifier & BindingModifier::LSHIFT) > 0 && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) ||
+				((m_Modifier & BindingModifier::RSHIFT) > 0 && sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) ||
+				((m_Modifier & BindingModifier::CTRL) > 0 && (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))) ||
+				((m_Modifier & BindingModifier::ALT) > 0 && (sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt) || sf::Keyboard::isKeyPressed(sf::Keyboard::RAlt)));
+	}
 }

@@ -17,6 +17,14 @@ namespace LLGP
 		Vector = 2
 	};
 
+	enum BindingModifier : int
+	{
+		LSHIFT = 1 << 0,
+		RSHIFT = 1 << 1,
+		CTRL = 1 << 2,
+		ALT = 1 << 3
+	};
+
 	struct JoyWrapper
 	{
 		int deviceID;
@@ -155,22 +163,27 @@ namespace LLGP
 	class InputBinding
 	{
 	public:
-		InputBinding(float _mult) : m_Multiplier(_mult) {}
+		InputBinding(float _mult, int _modifier) : m_Multiplier(_mult), m_Modifier(_modifier) {}
 
 		virtual int GetType() { return -1; }
 
 	protected:
 		float m_Multiplier;
+		int m_Modifier; //stored as BindingModifier
+
+		bool CheckModifiers();
 	};
 
 	class InputBinding_Button : public InputBinding
 	{
 	public:
-		InputBinding_Button(std::variant<sf::Keyboard::Key, sf::Mouse::Button, JoyWrapper> _button, float _mult) : InputBinding(_mult), m_Button(_button) {}
+		InputBinding_Button(std::variant<sf::Keyboard::Key, sf::Mouse::Button, JoyWrapper> _button, float _mult, int _modifier) : InputBinding(_mult, _modifier), m_Button(_button) {}
 		InputBinding_Button(InputBinding_Button&) = default;
 
 		bool GetValue()
 		{
+			if (!CheckModifiers()) { return false; }
+
 			switch (m_Button.index())
 			{
 			case 0:
@@ -194,11 +207,13 @@ namespace LLGP
 	class InputBinding_Axis : public InputBinding
 	{
 	public:
-		InputBinding_Axis(std::variant<CompositeButtonAxis, JoyWrapper> _axis, float _mult) : InputBinding(_mult), m_Axis(_axis) {}
+		InputBinding_Axis(std::variant<CompositeButtonAxis, JoyWrapper> _axis, float _mult, int _modifier) : InputBinding(_mult, _modifier), m_Axis(_axis) {}
 		InputBinding_Axis(InputBinding_Axis&) = default;
 
 		float GetValue()
 		{
+			if (!CheckModifiers()) { return 0.f; }
+
 			switch (m_Axis.index())
 			{
 			case 0:
@@ -219,11 +234,13 @@ namespace LLGP
 	class InputBinding_Vector : public InputBinding
 	{
 	public:
-		InputBinding_Vector(std::variant<CompositeButtonVector, CompositeAxisVector> _vec, float _mult) : InputBinding(_mult), m_Vector(_vec) {}
+		InputBinding_Vector(std::variant<CompositeButtonVector, CompositeAxisVector> _vec, float _mult, int _modifier) : InputBinding(_mult, _modifier), m_Vector(_vec) {}
 		InputBinding_Vector(InputBinding_Vector&) = default;
 
 		LLGP::Vector2f GetValue()
 		{
+			if (!CheckModifiers()) { return LLGP::Vector2f::zero; }
+			
 			switch (m_Vector.index())
 			{
 			case 0:
