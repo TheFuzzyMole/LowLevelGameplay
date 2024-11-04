@@ -1,4 +1,4 @@
-#include <Core/Collider.h>
+#include <Core/Components/Collider.h>
 #include <Core/GameObject.h>
 
 namespace LLGP

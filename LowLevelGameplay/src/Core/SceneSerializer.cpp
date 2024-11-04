@@ -18,7 +18,7 @@ namespace LLGP
 	{
 	}
 
-	void SceneSerializer::Serialize(const std::string& filePath)
+	void SceneSerializer::Serialize(std::filesystem::path  filePath)
 	{
 		YAML::Emitter out;
 		out << YAML::BeginMap;
@@ -27,14 +27,14 @@ namespace LLGP
 		out << YAML::Key << "Textures" << YAML::Value << YAML::BeginSeq; //Textures
 		for (std::shared_ptr<LLGP::Asset>& a : m_Scene->m_SceneTextures)
 		{
-			out << a->GetAssetPath();
+			out << a->GetAssetPath().string();
 		}
 		out << YAML::EndSeq; //Textures
 
 		out << YAML::Key << "Animations" << YAML::Value << YAML::BeginSeq; //Animations
 		for (std::shared_ptr<LLGP::Asset>& a : m_Scene->m_SceneAnimations)
 		{
-			out << a->GetAssetPath();
+			out << a->GetAssetPath().string();
 		}
 		out << YAML::EndSeq; //Animations
 
@@ -106,7 +106,7 @@ namespace LLGP
 		return YAML::Load(out.c_str());
 	}
 
-	bool SceneSerializer::DeserializeScene(const std::string& filePath)
+	bool SceneSerializer::DeserializeScene(std::filesystem::path  filePath)
 	{
 		std::ifstream stream(filePath);
 		std::stringstream strStream;

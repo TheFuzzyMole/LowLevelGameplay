@@ -6,7 +6,7 @@
 
 namespace LLGP
 {
-	Scene::Scene(const std::string& scenePath) : m_SceneAssetPath(scenePath), m_Name("Untitled")
+	Scene::Scene(std::filesystem::path scenePath) : m_SceneAssetPath(scenePath), m_Name("Untitled")
 	{
 		SceneSerializer serializer(*this);
 		if (!serializer.DeserializeScene(scenePath)) { std::cout << "Error Deserializing Scene: " << m_Name << std::endl; }

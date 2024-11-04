@@ -1,4 +1,4 @@
-#include <Core/Component.h>
+#include <Core/Components/Component.h>
 #include <Core/GameObject.h>
 #include <iostream>
 

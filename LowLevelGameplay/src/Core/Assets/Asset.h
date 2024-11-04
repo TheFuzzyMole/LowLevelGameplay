@@ -1,18 +1,19 @@
 #pragma once
 #include <Core/Object.h>
 #include <string>
+#include <filesystem>
 
 namespace LLGP
 {
 	class Asset : public Object
 	{
 	public:
-		Asset(std::string path) : Object(), m_AssetPath(path) {}
+		Asset(std::filesystem::path path) : Object(), m_AssetPath(path) {}
 		virtual ~Asset() = default;
 
-		inline std::string& GetAssetPath() { return m_AssetPath; }
+		inline std::filesystem::path& GetAssetPath() { return m_AssetPath; }
 
-	private:
-		std::string m_AssetPath;
+	protected:
+		std::filesystem::path m_AssetPath;
 	};
 }

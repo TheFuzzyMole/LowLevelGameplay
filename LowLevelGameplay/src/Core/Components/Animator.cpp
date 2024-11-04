@@ -58,7 +58,7 @@ namespace LLGP
 		out << YAML::Key << "Animator" << YAML::Value << YAML::BeginMap; //Animator
 		out << YAML::Key << "UUID" << YAML::Value << uuid;
 
-		out << YAML::Key << "AnimationPath" << YAML::Value << m_CurAnimation->GetAssetPath();
+		out << YAML::Key << "AnimationPath" << YAML::Value << m_CurAnimation->GetAssetPath().string();
 
 		out << YAML::EndMap; //Animator
     }

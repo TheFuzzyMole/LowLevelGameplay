@@ -1,10 +1,11 @@
 #include <Core/Assets/Animation.h>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 
 namespace LLGP
 {
-	Animation::Animation(std::string path) : Asset(path)
+	Animation::Animation(std::filesystem::path path) : Asset(path)
 	{
 		std::ifstream animationFile;
 		animationFile.open(path);

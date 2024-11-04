@@ -19,10 +19,10 @@ namespace LLGP
 	public:
 		SceneSerializer(LLGP::Scene& const scene);
 
-		void Serialize(const std::string& filePath);
+		void Serialize(std::filesystem::path  filePath);
 		YAML::Node TempSerializeGameObject(LLGP::GameObject* toSerialize);
 
-		bool DeserializeScene(const std::string& filePath);
+		bool DeserializeScene(std::filesystem::path  filePath);
 		LLGP::GameObject* DeserializePrefab(const LLGP::Prefab& prefab);
 		LLGP::GameObject* DeserializeGameObjects(YAML::Node GameObjects);
 

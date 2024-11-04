@@ -36,23 +36,17 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "SFML Works!");
 
 #pragma region Input Initialisation
-	LLGP::InputAction* moveAction = LLGP::InputManager::AddAction("Move", LLGP::ActionType::Vector);
+	std::string MoveActionName = "Move";
+	LLGP::InputAction* moveAction = LLGP::InputManager::AddAction(MoveActionName, LLGP::ActionType::Vector);
 	moveAction->AddBinding(new LLGP::InputBinding_Vector(
 			LLGP::CompositeButtonVector(sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::A, sf::Keyboard::D),
 			1.f, 0));
 #pragma endregion
 
-	LLGP::Mat3f base = LLGP::Mat3f::FromPRS(LLGP::Vector2f{900, 450}, 90.0 * DEG2RAD, LLGP::Vector2u{ 2, 2 });
-	LLGP::Vector2f mod = LLGP::Vector2f{ 1000, 450 };
-	LLGP::Mat3f reverse = base.Inversed();
-	mod = mod * reverse;
-
-
 #pragma region level load
 
 	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene");
 	LLGP::GameObject* playerRef = _GameScene->FindGameObjectByName("player");
-	//_GameScene->Instantiate(playerRef);
 	std::shared_ptr<LLGP::Prefab> ballPrefab = LLGP::AssetManager::GetAsset<LLGP::Prefab>("Prefabs/BouncyBall.prefab");
 	LLGP::GameObject* newBall = _GameScene->Instantiate(*ballPrefab);
 	newBall->transform->SetPosition({1000, 450});

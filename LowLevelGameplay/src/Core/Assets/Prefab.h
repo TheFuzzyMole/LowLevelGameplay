@@ -7,7 +7,7 @@ namespace LLGP
 	class Prefab : public Asset
 	{
 	public:
-		Prefab(std::string path);
+		Prefab(std::filesystem::path path);
 
 		std::string _data;
 	};

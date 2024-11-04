@@ -13,7 +13,7 @@ namespace LLGP
 	class Texture : public Asset
 	{
 	public:
-		Texture(std::string path);
+		Texture(std::filesystem::path path);
 
 		operator sf::Texture*() { return _tex.get(); }
 

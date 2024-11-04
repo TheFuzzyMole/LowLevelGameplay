@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <filesystem>
 
 namespace LLGP
 {
@@ -14,7 +15,7 @@ namespace LLGP
 	class Scene
 	{
 	public:
-		Scene(const std::string& scenePath);
+		Scene(std::filesystem::path scenePath);
 		~Scene();
 
 		std::vector<GameObject*> s_PendingKillList;
@@ -35,7 +36,7 @@ namespace LLGP
 
 	private:
 		std::string m_Name;
-		std::string m_SceneAssetPath;
+		std::filesystem::path m_SceneAssetPath;
 		std::map<uint64_t, std::unique_ptr<LLGP::GameObject>> m_SceneObjects;
 		std::vector<std::shared_ptr<LLGP::Asset>> m_SceneTextures;
 		std::vector<std::shared_ptr<LLGP::Asset>> m_SceneAnimations;

@@ -24,7 +24,7 @@ namespace LLGP
 	class Animation : public Asset
 	{
 	public:
-		Animation(std::string path);
+		Animation(std::filesystem::path path);
 
 		KeyFrame GetNextKeyFrame(float curTime);
 		KeyFrame GetNextKeyFrame(KeyFrame& last);

@@ -1,4 +1,4 @@
-#include <Core/Renderer.h>
+#include <Core/Components/Renderer.h>
 #include <Core/Assets/AssetManager.h>
 #include <Core/Assets/Texture.h>
 #include <Core/GameObject.h>
@@ -63,7 +63,7 @@ namespace LLGP
 		out << YAML::Key << "Renderer" << YAML::Value << YAML::BeginMap; //Renderer
 		out << YAML::Key << "UUID" << YAML::Value << uuid;
 
-		out << YAML::Key << "TextureFilePath" << YAML::Value << m_Texture->GetAssetPath();
+		out << YAML::Key << "TextureFilePath" << YAML::Value << m_Texture->GetAssetPath().string();
 		out << YAML::Key << "QuadSize" << YAML::Value << (LLGP::Vector2f)m_Quad.getSize();
 		out << YAML::Key << "SpritesInTex" << YAML::Value << m_SpritesInTex;
 		out << YAML::Key << "CurrentSpriteIndex" << YAML::Value << m_SpriteIndex;
