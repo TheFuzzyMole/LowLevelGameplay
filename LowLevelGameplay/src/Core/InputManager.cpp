@@ -110,6 +110,7 @@ namespace LLGP
 		if (type != 0) { return false; }
 
 		std::erase_if(m_Bindings, [_binding](std::unique_ptr<LLGP::InputBinding>& binding) { return *dynamic_cast<InputBinding_Button*>(binding.get()) == *_binding; });
+		return true;
 	}
 
 	bool InputAction::RemoveBinding(InputBinding_Axis* _binding)
@@ -117,6 +118,7 @@ namespace LLGP
 		if (type != 1) { return false; }
 
 		std::erase_if(m_Bindings, [_binding](std::unique_ptr<LLGP::InputBinding>& binding) { return *dynamic_cast<InputBinding_Axis*>(binding.get()) == *_binding; });
+		return true;
 	}
 
 	bool InputAction::RemoveBinding(InputBinding_Vector* _binding)
@@ -124,6 +126,7 @@ namespace LLGP
 		if (type != 2) { return false; }
 
 		std::erase_if(m_Bindings, [_binding](std::unique_ptr<LLGP::InputBinding>& binding) { return *dynamic_cast<InputBinding_Vector*>(binding.get()) == *_binding; });
+		return true;
 	}
 
 	void InputManager::ProcessInput()

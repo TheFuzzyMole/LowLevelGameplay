@@ -66,35 +66,35 @@ namespace LLGP
 			return output;
 		}
 
-		bool operator==(const CompositeButtonAxis& other)
+		friend bool operator==(const CompositeButtonAxis& lhs, const CompositeButtonAxis& rhs)
 		{
-			if (positive.index() != other.positive.index()) { return false; }
+			if (lhs.positive.index() != rhs.positive.index()) { return false; }
 
-			switch (positive.index())
+			switch (lhs.positive.index())
 			{
 			case 0:
-				if (std::get<0>(positive) != std::get<0>(other.positive)) { return false; }
+				if (std::get<0>(lhs.positive) != std::get<0>(rhs.positive)) { return false; }
 				break;
 			case 1:
-				if (std::get<1>(positive) != std::get<1>(other.positive)) { return false; }
+				if (std::get<1>(lhs.positive) != std::get<1>(rhs.positive)) { return false; }
 				break;
 			case 2:
-				if (std::get<2>(positive).buttonID != std::get<2>(other.positive).buttonID) { return false; }
+				if (std::get<2>(lhs.positive).buttonID != std::get<2>(rhs.positive).buttonID) { return false; }
 				break;
 			}
 
-			if (negative.index() != other.negative.index()) { return false; }
+			if (lhs.negative.index() != rhs.negative.index()) { return false; }
 
-			switch (negative.index())
+			switch (lhs.negative.index())
 			{
 			case 0:
-				if (std::get<0>(negative) != std::get<0>(other.negative)) { return false; }
+				if (std::get<0>(lhs.negative) != std::get<0>(rhs.negative)) { return false; }
 				break;
 			case 1:
-				if (std::get<1>(negative) != std::get<1>(other.negative)) { return false; }
+				if (std::get<1>(lhs.negative) != std::get<1>(rhs.negative)) { return false; }
 				break;
 			case 2:
-				if (std::get<2>(negative).buttonID != std::get<2>(other.negative).buttonID) { return false; }
+				if (std::get<2>(lhs.negative).buttonID != std::get<2>(rhs.negative).buttonID) { return false; }
 				break;
 			}
 
@@ -164,65 +164,65 @@ namespace LLGP
 			return output;
 		}
 
-		bool operator==(const CompositeButtonVector& other)
+		friend bool operator==(const CompositeButtonVector& lhs, const CompositeButtonVector& rhs)
 		{
-			if(up.index() != other.up.index()){ return false; }
+			if(lhs.up.index() != rhs.up.index()){ return false; }
 
-			switch (up.index())
+			switch (lhs.up.index())
 			{
 			case 0:
-				if (std::get<0>(up) != std::get<0>(other.up)) { return false; }
+				if (std::get<0>(lhs.up) != std::get<0>(rhs.up)) { return false; }
 				break;
 			case 1:
-				if(std::get<1>(up) != std::get<1>(other.up)) { return false; }
+				if(std::get<1>(lhs.up) != std::get<1>(rhs.up)) { return false; }
 				break;
 			case 2:
-				if(std::get<2>(up).buttonID != std::get<2>(other.up).buttonID) { return false; }
+				if(std::get<2>(lhs.up).buttonID != std::get<2>(rhs.up).buttonID) { return false; }
 				break;
 			}
 
-			if (down.index() != other.down.index()) { return false; }
+			if (lhs.down.index() != rhs.down.index()) { return false; }
 
-			switch (down.index())
+			switch (lhs.down.index())
 			{
 			case 0:
-				if (std::get<0>(down) != std::get<0>(other.down)) { return false; }
+				if (std::get<0>(lhs.down) != std::get<0>(rhs.down)) { return false; }
 				break;
 			case 1:
-				if (std::get<1>(down) != std::get<1>(other.down)) { return false; }
+				if (std::get<1>(lhs.down) != std::get<1>(rhs.down)) { return false; }
 				break;
 			case 2:
-				if (std::get<2>(down).buttonID != std::get<2>(other.down).buttonID) { return false; }
+				if (std::get<2>(lhs.down).buttonID != std::get<2>(rhs.down).buttonID) { return false; }
 				break;
 			}
 
-			if (left.index() != other.left.index()) { return false; }
+			if (lhs.left.index() != rhs.left.index()) { return false; }
 
-			switch (left.index())
+			switch (lhs.left.index())
 			{
 			case 0:
-				if (std::get<0>(left) != std::get<0>(other.left)) { return false; }
+				if (std::get<0>(lhs.left) != std::get<0>(rhs.left)) { return false; }
 				break;
 			case 1:
-				if (std::get<1>(left) != std::get<1>(other.left)) { return false; }
+				if (std::get<1>(lhs.left) != std::get<1>(rhs.left)) { return false; }
 				break;
 			case 2:
-				if (std::get<2>(left).buttonID != std::get<2>(other.left).buttonID) { return false; }
+				if (std::get<2>(lhs.left).buttonID != std::get<2>(rhs.left).buttonID) { return false; }
 				break;
 			}
 
-			if (right.index() != other.right.index()) { return false; }
+			if (lhs.right.index() != rhs.right.index()) { return false; }
 
-			switch (right.index())
+			switch (lhs.right.index())
 			{
 			case 0:
-				if (std::get<0>(right) != std::get<0>(other.right)) { return false; }
+				if (std::get<0>(lhs.right) != std::get<0>(rhs.right)) { return false; }
 				break;
 			case 1:
-				if (std::get<1>(right) != std::get<1>(other.right)) { return false; }
+				if (std::get<1>(lhs.right) != std::get<1>(rhs.right)) { return false; }
 				break;
 			case 2:
-				if (std::get<2>(right).buttonID != std::get<2>(other.right).buttonID) { return false; }
+				if (std::get<2>(lhs.right).buttonID != std::get<2>(rhs.right).buttonID) { return false; }
 				break;
 			}
 
@@ -258,29 +258,29 @@ namespace LLGP
 			return output;
 		}
 
-		bool operator==(const CompositeAxisVector& other)
+		friend bool operator==(const CompositeAxisVector& lhs, const CompositeAxisVector& rhs)
 		{
-			if (x.index() != other.x.index()) { return false; }
+			if (lhs.x.index() != rhs.x.index()) { return false; }
 
-			switch (x.index())
+			switch (lhs.x.index())
 			{
 			case 0:
-				if (std::get<0>(x) != std::get<0>(other.x)) { return false; }
+				if (std::get<0>(lhs.x) != std::get<0>(rhs.x)) { return false; }
 				break;
 			case 1:
-				if (std::get<1>(x).buttonID != std::get<1>(other.x).buttonID) { return false; }
+				if (std::get<1>(lhs.x).buttonID != std::get<1>(rhs.x).buttonID) { return false; }
 				break;
 			}
 
-			if (y.index() != other.y.index()) { return false; }
+			if (lhs.y.index() != rhs.y.index()) { return false; }
 
-			switch (y.index())
+			switch (lhs.y.index())
 			{
 			case 0:
-				if (std::get<0>(y) != std::get<0>(other.y)) { return false; }
+				if (std::get<0>(lhs.y) != std::get<0>(rhs.y)) { return false; }
 				break;
 			case 1:
-				if (std::get<1>(y).buttonID != std::get<1>(other.y).buttonID) { return false; }
+				if (std::get<1>(lhs.y).buttonID != std::get<1>(rhs.y).buttonID) { return false; }
 				break;
 			}
 
@@ -326,22 +326,23 @@ namespace LLGP
 				return sf::Joystick::isButtonPressed(std::get<2>(m_Button).deviceID, std::get<2>(m_Button).buttonID) * m_Multiplier > 0;
 				break;
 			}
+			return false;
 		}
 
 		int GetType() override { return 0; }
 
-		bool operator==(const InputBinding_Button& other)
+		friend bool operator==(const InputBinding_Button& lhs, const InputBinding_Button& rhs)
 		{
-			if (m_Button.index() != other.m_Button.index()) { return false; }
+			if (lhs.m_Button.index() != rhs.m_Button.index()) { return false; }
 			
-			switch (m_Button.index())
+			switch (lhs.m_Button.index())
 			{
 			case 0:
-				return std::get<0>(m_Button) == std::get<0>(other.m_Button);
+				return std::get<0>(lhs.m_Button) == std::get<0>(rhs.m_Button);
 			case 1:
-				return std::get<1>(m_Button) == std::get<1>(other.m_Button);
+				return std::get<1>(lhs.m_Button) == std::get<1>(rhs.m_Button);
 			case 2:
-				return std::get<2>(m_Button).buttonID == std::get<2>(other.m_Button).buttonID;
+				return std::get<2>(lhs.m_Button).buttonID == std::get<2>(rhs.m_Button).buttonID;
 			}
 			return false;
 		}
@@ -369,21 +370,24 @@ namespace LLGP
 				return sf::Joystick::getAxisPosition(std::get<1>(m_Axis).deviceID, (sf::Joystick::Axis)std::get<1>(m_Axis).buttonID) * m_Multiplier;
 				break;
 			}
+			return 0.f;
 		}
 
 		int GetType() override { return 1; }
 
-		bool operator==(const InputBinding_Axis& other)
+		friend bool operator==(const InputBinding_Axis& lhs, const InputBinding_Axis& rhs)
 		{
-			if (m_Axis.index() != other.m_Axis.index()) { return false; }
+			if (lhs.m_Axis.index() != rhs.m_Axis.index()) { return false; }
 
-			switch (m_Axis.index())
+			switch (lhs.m_Axis.index())
 			{
 			case 0:
-				return std::get<0>(m_Axis) == std::get<0>(other.m_Axis);
+				return std::get<0>(lhs.m_Axis) == std::get<0>(rhs.m_Axis);
 			case 1:
-				return std::get<1>(m_Axis).buttonID == std::get<1>(other.m_Axis).buttonID;
+				return std::get<1>(lhs.m_Axis).buttonID == std::get<1>(rhs.m_Axis).buttonID;
 			}
+
+			return false;
 		}
 
 	private:
@@ -409,21 +413,24 @@ namespace LLGP
 				return std::get<1>(m_Vector).EvaluateVector() * m_Multiplier;
 				break;
 			}
+			return LLGP::Vector2f::zero;
 		}
 
 		int GetType() override { return 2; }
 
-		bool operator==(const InputBinding_Vector& other)
+		friend bool operator==(const InputBinding_Vector& lhs, const InputBinding_Vector& rhs)
 		{
-			if (m_Vector.index() != other.m_Vector.index()) { return false; }
+			if (lhs.m_Vector.index() != rhs.m_Vector.index()) { return false; }
 
-			switch (m_Vector.index())
+			switch (lhs.m_Vector.index())
 			{
 			case 0:
-				return	std::get<0>(m_Vector) == std::get<0>(other.m_Vector);
+				return	std::get<0>(lhs.m_Vector) == std::get<0>(rhs.m_Vector);
 			case 1:
-				return	std::get<1>(m_Vector) == std::get<1>(other.m_Vector);
+				return	std::get<1>(lhs.m_Vector) == std::get<1>(rhs.m_Vector);
 			}
+
+			return false;
 		}
 
 	private:
