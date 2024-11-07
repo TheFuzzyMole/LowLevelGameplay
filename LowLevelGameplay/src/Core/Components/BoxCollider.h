@@ -1,43 +1,27 @@
 #pragma once
 #include <Core/Components/Collider.h>
-#include <Core/Maths/Vector2.h>
-#include <Core/Physics.h>
 
 namespace LLGP
 {
 	class BoxCollider : public Collider
 	{
 	public:
-		BoxCollider(GameObject* owner) : Collider(owner), m_Extents(Vector2<float>::one) {}
+		BoxCollider(LLGP::GameObject* owner) : Collider(owner), m_Extents(LLGP::Vector2f::one) {}
 		
 		~BoxCollider() = default;
 
-		Vector2<float> GetExtents() { return m_Extents; }
-		void SetExtents(Vector2<float> newExtents) { m_Extents = Vector2<float>(abs(newExtents.x), abs(newExtents.y)); }
-		LLGP::Vector2f GetBoundsExtents() override { return m_Extents; }
+		LLGP::Vector2f GetExtents();
+		void SetExtents(LLGP::Vector2f newExtents);
+		LLGP::Vector2f GetBoundsExtents() override;
 		
 		//the other and this arguments are the 'wrong' way round becasue in double dispatch we are now looking at the collision from the other side
-		Collision* IsColliding(Collider* other) override { return other->IsColliding(this); }
-		Collision* IsColliding(BoxCollider* other) override { return Physics::Collision_AABBAABB(other, this); }
-		Collision* IsColliding(CircleCollider* other) override { return Physics::Collision_AABBCircle(other, this); }
+		LLGP::Collision* IsColliding(LLGP::Collider* other) override;
+		LLGP::Collision* IsColliding(LLGP::BoxCollider* other) override;
+		LLGP::Collision* IsColliding(LLGP::CircleCollider* other) override;
 		
-		void Serialize(YAML::Emitter& out) override
-		{
-			out << YAML::Key << "BoxCollider" << YAML::Value << YAML::BeginMap; //BoxCollider
+		void Serialize(YAML::Emitter& out) override;
 
-			LLGP::Collider::Serialize(out);
-
-			out << YAML::Key << "Extents" << YAML::Value << m_Extents;
-
-			out << YAML::EndMap; //BoxCollider
-		}
-
-		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override
-		{
-			if (!node["Extents"] || !LLGP::Collider::Deserialize(node, linkRequests)) { return false; }
-			m_Extents = node["Extents"].as<LLGP::Vector2f>();
-			return true;
-		}
+		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;
 	private:
 		LLGP::Vector2f m_Extents;
 	};
