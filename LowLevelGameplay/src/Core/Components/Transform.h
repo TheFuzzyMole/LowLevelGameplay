@@ -43,11 +43,29 @@ namespace LLGP
 
 		const LLGP::Mat3f& GetL2WMatrix();
 
+		/// <summary>
+		/// Local to World with rotation
+		/// </summary>
 		LLGP::Vector2f TransformDirection(const LLGP::Vector2f& in);
+		/// <summary>
+		/// Local to world with rotation and scale
+		/// </summary>
 		LLGP::Vector2f TransformVector(const LLGP::Vector2f& in);
+		/// <summary>
+		/// Local to World with rotation, scale and position
+		/// </summary>
 		LLGP::Vector2f TransformPoint(const LLGP::Vector2f& in);
+		/// <summary>
+		/// World to Local with rotation
+		/// </summary>
 		LLGP::Vector2f InverseTransformDirection(const LLGP::Vector2f& in);
+		/// <summary>
+		/// World to Local with rotation and scale
+		/// </summary>
 		LLGP::Vector2f InverseTransformVector(const LLGP::Vector2f& in);
+		/// <summary>
+		/// World to Local with rotation, scale and position
+		/// </summary>
 		LLGP::Vector2f InverseTransformPoint(const LLGP::Vector2f& in);
 
 		void SetPosition(LLGP::Vector2f newPosition);

@@ -23,7 +23,6 @@ namespace LLGP
 		bool GetIsTrigger() { return m_IsTrigger; }
 		void SetIsTrigger(bool _isTrigger) { m_IsTrigger = _isTrigger; }
 		virtual LLGP::Vector2f GetBoundsExtents();
-		//TODO: make this TransformPosition instead
 		Vector2<float> GetPosition();
 
 		virtual Collision* IsColliding(Collider* other) = 0;
