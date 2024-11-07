@@ -19,8 +19,14 @@ namespace LLGP
 
 	std::vector<LLGP::Collider*> QuadTree::GetCollidersInArea(LLGP::Vector2f center, LLGP::Vector2f extents)
 	{
-		//TODO: do this!!
+		std::vector<LLGP::Collider*> toReturn;
+		if()
 		return std::vector<LLGP::Collider*>();
+	}
+
+	bool QuadTree::Query(const LLGP::Vector2f& _center, const LLGP::Vector2f& _extents, std::vector<LLGP::Collider*>& outColliders)
+	{
+		return m_Root->Query(_center, _extents, outColliders);
 	}
 
 	QuadTree::Cell::Cell(int _depth, LLGP::Vector2f _center, LLGP::Vector2f _extents)
@@ -58,6 +64,53 @@ namespace LLGP
 			values.push_back(c);
 		}
 		return true;
+	}
+
+	bool QuadTree::Cell::Query(const LLGP::Vector2f& _center, const LLGP::Vector2f& _extents, std::vector<LLGP::Collider*>& outColliders)
+	{
+		LLGP::Vector2f qMin, qMax, cMin, cMax;
+		qMin = _center - _extents;
+		qMax = _center + _extents;
+		cMin = center - extents;
+		cMax = center + extents;
+
+		if (qMin.x >= cMax.x || qMax.x <= cMin.x || qMin.y >= cMax.y || qMax.y <= cMin.y) { return false; }
+
+		if (qMin.x <= cMin.x && qMin.y <= cMin.y && qMax.x >= cMax.x && qMax.y >= cMax.y) { RecursiveFill(outColliders); return true; }
+
+		for (LLGP::Collider* c : values)
+		{
+			cMin = c->GetCenter() - c->GetBoundsExtents();
+			cMax = c->GetCenter() + c->GetBoundsExtents();
+			if (qMin.x >= cMax.x || qMax.x <= cMin.x || qMin.y >= cMax.y || qMax.y <= cMin.y) { continue; }
+			outColliders.push_back(c);
+		}
+
+		if (children[0])
+		{
+			for (int childIdx = 0; childIdx < 4; childIdx++)
+			{
+				children[childIdx]->Query(_center, _extents, outColliders);
+			}
+		}
+
+		return true;
+	}
+
+	void QuadTree::Cell::RecursiveFill(std::vector<LLGP::Collider*>& outColliders)
+	{
+		for (LLGP::Collider* c : values)
+		{
+			outColliders.push_back(c);
+		}
+
+		if (children[0])
+		{
+			for (int childIdx = 0; childIdx < 4; childIdx++)
+			{
+				children[childIdx]->RecursiveFill(outColliders);
+			}
+		}
 	}
 
 	void QuadTree::Cell::Split()

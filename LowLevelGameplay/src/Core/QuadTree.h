@@ -16,6 +16,7 @@ namespace LLGP
 
 		void Insert(LLGP::Collider* c);
 		std::vector<LLGP::Collider*> GetCollidersInArea(LLGP::Vector2f center, LLGP::Vector2f extents);
+		bool Query(const LLGP::Vector2f& _center, const LLGP::Vector2f& _extents, std::vector<LLGP::Collider*>& outColliders);
 
 	private:
 		struct Cell
@@ -30,6 +31,8 @@ namespace LLGP
 			int depth;
 
 			bool Insert(LLGP::Collider* c, const int& _threshold, const int& _maxDepth);
+			bool Query(const LLGP::Vector2f& _center, const LLGP::Vector2f& _extents, std::vector<LLGP::Collider*>& outColliders);
+			void RecursiveFill(std::vector<LLGP::Collider*>& outColliders);
 		private:
 			void Split();
 			inline bool IsWithinBounds(LLGP::Collider* c);
