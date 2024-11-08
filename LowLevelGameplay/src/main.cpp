@@ -11,11 +11,11 @@
 #include <Core/Components/Components.h>
 #include <functional>
 #include <string>
-#include <iostream>
 #include <chrono>
 #include <Core/Maths/Matrix3x3.h>
 #include <Core/Assets/AssetManager.h>
 #include <Core/Assets/Prefab.h>
+#include <Utils/Debug.h>
 
 #define SCREEN_WIDTH 1800
 #define SCREEN_HEIGHT 900
@@ -42,6 +42,10 @@ int main()
 			LLGP::CompositeButtonVector(sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::A, sf::Keyboard::D),
 			1.f, 0));
 #pragma endregion
+
+	Debug::Log("first type");
+	Debug::LogWarning("second type");
+	Debug::LogError("third type");
 
 #pragma region level load
 
@@ -101,7 +105,6 @@ int main()
 		NextUpdate.notify_all();
 
 		LLGP::GameObject::OnWorldUpdate();
-
 #pragma endregion
 
 #pragma region rendering
@@ -111,7 +114,7 @@ int main()
 			sf::FloatRect(
 				cameraT->GetPosition() - LLGP::Vector2f{SCREEN_WIDTH/2, SCREEN_HEIGHT/2},
 				{ SCREEN_WIDTH, SCREEN_HEIGHT }));
-		//view.rotate(cameraT.GetRotation());
+		view.rotate(cameraT->GetRotation() * RAD2DEG);
 		window.setView(view);
 		LLGP::Renderer::OnRenderLayer(window, RenderLayers::DEFAULT);
 		LLGP::Renderer::OnRenderLayer(window, RenderLayers::BACKGROUND);
