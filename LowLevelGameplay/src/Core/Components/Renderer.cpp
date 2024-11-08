@@ -22,7 +22,7 @@ namespace LLGP
 		OnRenderLayer.RemoveListener(this, std::bind(&Renderer::Handle_Render, this, _1, _2));
 	}
 
-	void Renderer::SetupTexture(std::string filePath, LLGP::Vector2u spritesInTex)
+	void Renderer::SetupTexture(const std::string& filePath, LLGP::Vector2u spritesInTex)
 	{
 		m_Texture = AssetManager::GetAsset<LLGP::Texture>(filePath);
 		m_SpritesInTex = spritesInTex;

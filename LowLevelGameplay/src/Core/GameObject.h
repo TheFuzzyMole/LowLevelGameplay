@@ -44,13 +44,13 @@ namespace LLGP
 		LLGP::Scene* OwningScene;
 
 #pragma region getters + setters
-		inline void SetName(std::string newName) { m_Name = newName; }
-		inline std::string GetName() { return m_Name; }
+		inline void SetName(const std::string& newName) { m_Name = newName; }
+		inline const std::string& GetName() { return m_Name; }
 		void SetActive(bool newActive);
 		inline bool GetActive() { return m_Active; }
-		inline void SetTag(std::string newTag) { m_Tag = newTag; }
-		inline bool CompareTag(std::string comp) { return m_Tag == comp; }
-		inline std::string GetTag() { return m_Tag; }
+		inline void SetTag(const std::string& newTag) { m_Tag = newTag; }
+		inline bool CompareTag(const std::string& comp) { return m_Tag == comp; }
+		inline const std::string& GetTag() { return m_Tag; }
 #pragma endregion
 
 		void Destroy();

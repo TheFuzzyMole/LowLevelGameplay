@@ -485,8 +485,8 @@ namespace LLGP
 		static inline std::unordered_map<std::string, InputAction> Actions;
 
 		static void ProcessInput();
-		static InputAction* AddAction(std::string& _name, ActionType _type);
+		static InputAction* AddAction(const std::string& _name, ActionType _type);
 		static InputAction* FindAction(const std::string& _name);
-		static bool RemoveAction(std::string& _name);
+		static bool RemoveAction(const std::string& _name);
 	};
 }

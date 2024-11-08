@@ -31,8 +31,8 @@ namespace LLGP
 		void Destroy(LLGP::GameObject* obj);
 
 		LLGP::GameObject* FindGameObjectByUUID(uint64_t _uuid);
-		LLGP::GameObject* FindGameObjectByTag(std::string _tag);
-		LLGP::GameObject* FindGameObjectByName(std::string _name);
+		LLGP::GameObject* FindGameObjectByTag(const std::string& _tag);
+		LLGP::GameObject* FindGameObjectByName(const std::string& _name);
 
 	private:
 		std::string m_Name;

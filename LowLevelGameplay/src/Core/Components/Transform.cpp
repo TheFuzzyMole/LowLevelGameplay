@@ -30,7 +30,7 @@ namespace LLGP
 
 		return m_Children[index];
 	}
-	Transform* Transform::GetChild(std::string name)
+	Transform* Transform::GetChild(const std::string& name)
 	{
 		for (int i = 0; i < m_Children.size(); i++)
 		{

@@ -66,7 +66,7 @@ namespace LLGP
 
 		return m_SceneObjects[_uuid].get();
 	}
-	LLGP::GameObject* Scene::FindGameObjectByTag(std::string _tag)
+	LLGP::GameObject* Scene::FindGameObjectByTag(const std::string& _tag)
 	{
 		for (int objIndex = 0; objIndex < m_SceneObjects.size(); objIndex++)
 		{
@@ -76,7 +76,7 @@ namespace LLGP
 		}
 		return nullptr;
 	}
-	LLGP::GameObject* Scene::FindGameObjectByName(std::string _name)
+	LLGP::GameObject* Scene::FindGameObjectByName(const std::string& _name)
 	{
 		for (int objIndex = 0; objIndex < m_SceneObjects.size(); objIndex++)
 		{

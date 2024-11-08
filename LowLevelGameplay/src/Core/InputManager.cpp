@@ -138,7 +138,7 @@ namespace LLGP
 		}
 	}
 
-	InputAction* InputManager::AddAction(std::string& _name, ActionType _type)
+	InputAction* InputManager::AddAction(const std::string& _name, ActionType _type)
 	{
 		Actions.insert({ _name, InputAction(_type) });
 		return &Actions.at(_name);
@@ -155,7 +155,7 @@ namespace LLGP
 		}
 	}
 
-	bool InputManager::RemoveAction(std::string& _name)
+	bool InputManager::RemoveAction(const std::string& _name)
 	{
 		if (Actions.find(_name) != Actions.end())
 		{

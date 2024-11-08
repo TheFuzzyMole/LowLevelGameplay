@@ -29,7 +29,7 @@ namespace LLGP
 
 		static Event<sf::RenderWindow&, RenderLayers> OnRenderLayer;
 
-		void SetupTexture(std::string filePath, LLGP::Vector2u spritesInTex);
+		void SetupTexture(const std::string& filePath, LLGP::Vector2u spritesInTex);
 		void SetupQuad(LLGP::Vector2f inSize);
 		void SetupSpriteUV(LLGP::Vector2u inIndex);
 		void SetupRenderLayer(LLGP::RenderLayers layer);

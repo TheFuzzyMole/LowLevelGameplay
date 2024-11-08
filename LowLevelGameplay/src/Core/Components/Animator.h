@@ -19,7 +19,7 @@ namespace LLGP
 		void Start() override;
 		void Update() override;
 
-		void SetAnimation(std::string path);
+		void SetAnimation(const std::string& path);
 		void SetAnimation(std::shared_ptr<LLGP::Animation> assetRef);
 
 		void Serialize(YAML::Emitter& out) override;

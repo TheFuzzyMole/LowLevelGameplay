@@ -36,8 +36,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "SFML Works!");
 
 #pragma region Input Initialisation
-	std::string MoveActionName = "Move";
-	LLGP::InputAction* moveAction = LLGP::InputManager::AddAction(MoveActionName, LLGP::ActionType::Vector);
+	LLGP::InputAction* moveAction = LLGP::InputManager::AddAction("Move", LLGP::ActionType::Vector);
 	moveAction->AddBinding(new LLGP::InputBinding_Vector(
 			LLGP::CompositeButtonVector(sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::A, sf::Keyboard::D),
 			1.f, 0));

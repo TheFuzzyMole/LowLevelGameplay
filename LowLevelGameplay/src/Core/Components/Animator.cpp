@@ -36,7 +36,7 @@ namespace LLGP
 		}
 	}
 
-	void Animator::SetAnimation(std::string path)
+	void Animator::SetAnimation(const std::string& path)
 	{
 		m_CurAnimation = LLGP::AssetManager::GetAsset<LLGP::Animation>(path);
 		assert(m_CurAnimation);
