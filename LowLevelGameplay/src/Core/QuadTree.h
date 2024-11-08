@@ -15,7 +15,6 @@ namespace LLGP
 		QuadTree(int _threshold, int maxDepth, LLGP::Vector2f& min, LLGP::Vector2f& max);
 
 		void Insert(LLGP::Collider* c);
-		std::vector<LLGP::Collider*> GetCollidersInArea(LLGP::Vector2f center, LLGP::Vector2f extents);
 		bool Query(const LLGP::Vector2f& _center, const LLGP::Vector2f& _extents, std::vector<LLGP::Collider*>& outColliders);
 
 	private:

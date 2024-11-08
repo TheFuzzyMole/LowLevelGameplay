@@ -17,13 +17,6 @@ namespace LLGP
 		if (!m_Root->Insert(c, m_Threshold, m_MaxDepth)) { std::cout << "trying to insert collider into quadtree but the collider is larger than the root object!" << std::endl; }
 	}
 
-	std::vector<LLGP::Collider*> QuadTree::GetCollidersInArea(LLGP::Vector2f center, LLGP::Vector2f extents)
-	{
-		std::vector<LLGP::Collider*> toReturn;
-		if()
-		return std::vector<LLGP::Collider*>();
-	}
-
 	bool QuadTree::Query(const LLGP::Vector2f& _center, const LLGP::Vector2f& _extents, std::vector<LLGP::Collider*>& outColliders)
 	{
 		return m_Root->Query(_center, _extents, outColliders);
