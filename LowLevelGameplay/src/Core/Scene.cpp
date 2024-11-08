@@ -3,13 +3,14 @@
 #include <Core/GameObject.h>
 #include <Core/Components/Component.h>
 #include <Core/Scene.h>
+#include <Utils/Debug.h>
 
 namespace LLGP
 {
 	Scene::Scene(std::filesystem::path scenePath) : m_SceneAssetPath(scenePath), m_Name("Untitled")
 	{
 		SceneSerializer serializer(*this);
-		if (!serializer.DeserializeScene(scenePath)) { std::cout << "Error Deserializing Scene: " << m_Name << std::endl; }
+		if (!serializer.DeserializeScene(scenePath)) { Debug::LogError("Deserializing Scene : " + m_Name); }
 	}
 
 	Scene::~Scene()

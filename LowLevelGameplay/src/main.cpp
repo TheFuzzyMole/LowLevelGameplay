@@ -43,10 +43,6 @@ int main()
 			1.f, 0));
 #pragma endregion
 
-	Debug::Log("first type");
-	Debug::LogWarning("second type");
-	Debug::LogError("third type");
-
 #pragma region level load
 
 	LLGP::Scene* _GameScene = new Scene("Scenes/testing.scene");

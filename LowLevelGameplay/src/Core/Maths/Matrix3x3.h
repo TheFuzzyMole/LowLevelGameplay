@@ -1,6 +1,5 @@
 #pragma once
 #include <concepts>
-#include <iostream>
 #include <Core/Maths/Vector2.h>
 #include <Core/Maths/Maths.h>
 

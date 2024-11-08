@@ -3,7 +3,6 @@
 #include <Core/Maths/Maths.h>
 #include <cstdlib>
 #include <algorithm>
-#include <iostream>
 
 namespace LLGP
 {

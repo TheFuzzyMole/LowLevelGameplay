@@ -66,7 +66,6 @@ namespace LLGP
 		if (HasGravity) { m_AccumulatedForce += Physics::Gravity * FIXED_FRAMERATE / PHYSICS_SOLVER_ITERATIONS; }
 		Velocity += m_AccumulatedForce;
 		if (Velocity.GetSqrMagnitude() < EPSILON) { return; }
-		std::cout << _GameObject->transform->GetPosition().x << " + " << Velocity.x << std::endl;
 		_GameObject->transform->ChangePosition(Velocity * FIXED_FRAMERATE / PHYSICS_SOLVER_ITERATIONS);
 		m_AccumulatedForce = LLGP::Vector2f::zero;
 	}

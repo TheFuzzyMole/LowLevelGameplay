@@ -11,6 +11,8 @@
 #include <Core/Assets/AssetManager.h>
 #include <Core/Assets/Prefab.h>
 
+#include <Utils/Debug.h>
+
 namespace LLGP
 {
 	SceneSerializer::SceneSerializer(LLGP::Scene& const scene)
@@ -113,7 +115,7 @@ namespace LLGP
 		strStream << stream.rdbuf();
 
 		YAML::Node data = YAML::Load(strStream.str());
-		if (!data["Scene"]) { std::cout << "ERROR: Deserializing non-scene file as scene at: " << filePath << std::endl; return false; }
+		if (!data["Scene"]) { Debug::LogError("Deserializing non - scene file as scene at : " + filePath.string()); return false; }
 
 		m_Scene->m_Name = data["Scene"].as<std::string>();
 
@@ -141,7 +143,7 @@ namespace LLGP
 
 		if (YAML::Node GameObjects = data["GameObjects"])
 		{
-			if (DeserializeGameObjects(GameObjects) == nullptr) { std::cout << "ERROR: Deserializing scene : " << m_Scene->m_Name << std::endl; return false; }
+			if (DeserializeGameObjects(GameObjects) == nullptr) { Debug::LogError("Deserializing scene : " + m_Scene->m_Name); return false; }
 		}
 		return true;
 	}
@@ -151,7 +153,7 @@ namespace LLGP
 		if (YAML::Node GameObjects = data["GameObjects"])
 		{
 			if (LLGP::GameObject* toReturn = DeserializeGameObjects(GameObjects)) { return toReturn; }
-			std::cout << "ERROR: Deserializing prefab : " << prefab._data << std::endl; 
+			Debug::LogError("Deserializing prefab : " + prefab._data);
 		}
 		return nullptr;
 	}
@@ -221,7 +223,7 @@ namespace LLGP
 
 					if (compRef)
 					{
-						if (!compRef->Deserialize(data, m_LinkRequests)) { std::cout << "ERROR: Deserializing component: " << compName << std::endl; }
+						if (!compRef->Deserialize(data, m_LinkRequests)) { Debug::LogError("Deserializing component : " + compName); }
 						m_Token2PtrLUT.insert({ data["UUID"].as<uint64_t>(), compRef });
 					}
 				}
@@ -245,7 +247,7 @@ namespace LLGP
 			}*/
 			else
 			{
-				std::cout << "ERROR: deserializing scene: " << m_Scene->m_Name << ". Unable to find local token for " << linkRequest.linkToken << std::endl;
+				Debug::LogError("Deserializing scene : " + m_Scene->m_Name + ".Unable to find local token for " + std::to_string(linkRequest.linkToken));
 			}
 		}
 		return toReturn;

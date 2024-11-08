@@ -1,5 +1,5 @@
 #include <Core/InputManager.h>
-#include <iostream>
+#include <Utils/Debug.h>
 
 namespace LLGP
 {
@@ -79,7 +79,8 @@ namespace LLGP
 	{
 		if (_binding->GetType() != (int)type)
 		{
-			std::cout << "trying to add binding of type " << (ActionType)_binding->GetType() << " to an Action of type " << type << std::endl;
+			
+			Debug::LogWarning("trying to add binding of type " + std::to_string((ActionType)_binding->GetType()) + " to an Action of type " + std::to_string(type));
 			return;
 		}
 		m_Bindings.push_back(std::make_unique<InputBinding_Button>(*_binding));
@@ -89,7 +90,7 @@ namespace LLGP
 	{
 		if (_binding->GetType() != (int)type)
 		{
-			std::cout << "trying to add binding of type " << (ActionType)_binding->GetType() << " to an Action of type " << type << std::endl;
+			Debug::LogWarning("trying to add binding of type " + std::to_string((ActionType)_binding->GetType()) + " to an Action of type " + std::to_string(type));
 			return;
 		}
 		m_Bindings.push_back(std::make_unique<InputBinding_Axis>(*_binding));
@@ -99,7 +100,7 @@ namespace LLGP
 	{
 		if (_binding->GetType() != (int)type)
 		{
-			std::cout << "trying to add binding of type " << (ActionType)_binding->GetType() << " to an Action of type " << type << std::endl;
+			Debug::LogWarning("trying to add binding of type " + std::to_string((ActionType)_binding->GetType()) + " to an Action of type " + std::to_string(type));
 			return;
 		}
 		m_Bindings.push_back(std::make_unique<InputBinding_Vector>(*_binding));

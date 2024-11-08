@@ -1,6 +1,5 @@
 #include <Core/Components/Component.h>
 #include <Core/GameObject.h>
-#include <iostream>
 
 namespace LLGP
 {

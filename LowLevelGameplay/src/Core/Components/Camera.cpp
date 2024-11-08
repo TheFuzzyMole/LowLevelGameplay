@@ -1,12 +1,12 @@
 #include "Camera.h"
-#include <iostream>
+#include <Utils/Debug.h>
 
 namespace LLGP
 {
 	Camera::Camera(LLGP::GameObject* owner) : Component(owner)
 	{
 		if (main == nullptr) { main = this; }
-		else { std::cout << "ERROR: too many camera components in the scene" << std::endl; }
+		else { Debug::LogError("too many camera components in the scene"); }
 	}
 
 	void Camera::Serialize(YAML::Emitter& out)

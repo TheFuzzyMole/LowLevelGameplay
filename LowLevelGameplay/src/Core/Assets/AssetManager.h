@@ -4,8 +4,8 @@
 #include <string>
 #include <concepts>
 #include <filesystem>
-#include <iostream>
 #include <Core/Assets/Asset.h>
+#include <Utils/Debug.h>
 
 namespace LLGP
 {
@@ -49,7 +49,7 @@ namespace LLGP
 			std::shared_ptr<T> check = dynamic_pointer_cast<T>(map[filePath].lock());
 			if (check == nullptr)
 			{
-				std::cout << "ERROR: AssetManager - GetAsset has been invoked with a mismatch type compared to the filepath supplied" << std::endl;
+				Debug::LogError("AssetManager - GetAsset has been invoked with a mismatch type compared to the filepath supplied");
 
 			}
 			return check;

@@ -2,7 +2,6 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
-#include <iostream>
 #include <variant>
 #include <SFML/Window.hpp>
 #include <Core/Event.h>

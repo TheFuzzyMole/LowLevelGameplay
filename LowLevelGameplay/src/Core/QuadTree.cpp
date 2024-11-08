@@ -1,7 +1,7 @@
 #include <Core/Components/BoxCollider.h>
 #include <Core/Components/CircleCollider.h>
 #include <Core/QuadTree.h>
-#include <iostream>
+#include <Utils/Debug.h>
 
 namespace LLGP
 {
@@ -14,7 +14,7 @@ namespace LLGP
 
 	void QuadTree::Insert(LLGP::Collider* c)
 	{
-		if (!m_Root->Insert(c, m_Threshold, m_MaxDepth)) { std::cout << "trying to insert collider into quadtree but the collider is larger than the root object!" << std::endl; }
+		if (!m_Root->Insert(c, m_Threshold, m_MaxDepth)) { Debug::LogWarning("trying to insert collider into quadtree but the collider is larger than the root object!"); }
 	}
 
 	bool QuadTree::Query(const LLGP::Vector2f& _center, const LLGP::Vector2f& _extents, std::vector<LLGP::Collider*>& outColliders)
