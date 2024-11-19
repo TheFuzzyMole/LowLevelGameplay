@@ -85,13 +85,13 @@ namespace LLGP
 
 		virtual void OwnerActiveChanged(bool newActive);
 
-		void CleanTransform();
+		virtual void CleanTransform();
 		void SetAsDirty();
 
 		void Serialize(YAML::Emitter& out) override;
 		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;
 
-	private:
+	protected:
 		bool m_IsDirty;
 
 		Transform* m_Root;
