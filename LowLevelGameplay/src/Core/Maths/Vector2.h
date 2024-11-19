@@ -28,6 +28,9 @@ namespace LLGP
 		template<typename U> requires arithmetic<U>
 		operator sf::Vector2<U>() { return sf::Vector2<U>(static_cast<U>(x), static_cast<U>(y)); }
 
+		template<typename U> requires arithmetic<U>
+		operator const sf::Vector2<U>() const { return sf::Vector2<U>(static_cast<U>(x), static_cast<U>(y)); }
+
 #pragma endregion
 
 		float GetSqrMagnitude() { return x * x + y * y; }
