@@ -1,6 +1,7 @@
 #include "Debug.h"
 #include <iostream>
 #include <Core/GameObject.h>
+#include <cassert>
 #if defined(_WIN32)
 #include <Windows.h>
 #endif
@@ -8,7 +9,20 @@
 
 namespace LLGP
 {
-	void Debug::Log(const std::string& message, LLGP::GameObject* context)
+    void Debug::Assert(bool pred, const std::string& message, LLGP::GameObject* context)
+    {
+		if (!pred)
+		{
+#if defined(_WIN32)
+			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(hConsole, 12);
+#endif
+			std::cout << "ASSERT FAILED: ";
+			LogImpl(message, context);
+			assert(pred); //use the c++ assert library to actually pause execution
+		}
+    }
+    void Debug::Log(const std::string& message, LLGP::GameObject* context)
 	{
 #if defined(_WIN32)
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
