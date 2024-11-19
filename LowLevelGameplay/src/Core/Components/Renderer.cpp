@@ -7,8 +7,6 @@
 
 namespace LLGP
 {
-	Event<sf::RenderWindow&, RenderLayers> Renderer::OnRenderLayer;
-
 	Renderer::Renderer(GameObject* owner) : Component(owner)
 	{
 		m_RenderLayer = RenderLayers::DEFAULT;

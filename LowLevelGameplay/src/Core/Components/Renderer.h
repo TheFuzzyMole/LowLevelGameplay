@@ -27,7 +27,7 @@ namespace LLGP
 		Renderer(GameObject* owner);
 		~Renderer();
 
-		static Event<sf::RenderWindow&, RenderLayers> OnRenderLayer;
+		static inline Event<sf::RenderWindow&, RenderLayers> OnRenderLayer;
 
 		void SetupTexture(const std::string& filePath, LLGP::Vector2u spritesInTex);
 		void SetupQuad(LLGP::Vector2f inSize);
