@@ -17,8 +17,6 @@
 #include <Core/Assets/Prefab.h>
 #include <Utils/Debug.h>
 
-#define SCREEN_WIDTH 1800
-#define SCREEN_HEIGHT 900
 
 using namespace LLGP;
 
@@ -41,6 +39,11 @@ int main()
 			LLGP::CompositeButtonVector(sf::Keyboard::S, sf::Keyboard::W, sf::Keyboard::A, sf::Keyboard::D),
 			1.f, 0));
 #pragma endregion
+
+	Debug::Log("doing stuff");
+	Debug::LogWarning("and things");
+	Debug::LogError("wbu?");
+	Debug::Assert(true, "it broke");
 
 #pragma region level load
 
