@@ -94,3 +94,33 @@ GameObjects:
           SpritesInTex: [1, 1]
           CurrentSpriteIndex: [0, 0]
           RenderLayer: 2
+  - GameObject: 6
+    Name: UI
+    Active: true
+    Tag: ""
+    Components:
+      - RectTransform:
+          UUID: 61
+          Position: [0, 0]
+          AnchorMin: [0, 0]
+          AnchorMax: [1, 1]
+          OffsetMin: [0, 0]
+          OffsetMax: [0, 0]
+      - Canvas:
+          UUID: 62
+  - GameObject: 7
+    Name: TestImage
+    Active: true
+    Tag: ""
+    Components:
+      - RectTransform:
+          UUID: 71
+          Position: [0, 0]
+          AnchorMin: [0, 0]
+          AnchorMax: [0.15, 0.25]
+          OffsetMin: [0, 0]
+          OffsetMax: [0, 0]
+          Parent: 61
+      - Image:
+          UUID: 72
+          TextureFilePath: Textures/UIDebug.UI

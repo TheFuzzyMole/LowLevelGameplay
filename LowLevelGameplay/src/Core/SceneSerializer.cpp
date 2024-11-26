@@ -5,6 +5,7 @@
 
 #include <Core/GameObject.h>
 #include <Core/Components/Components.h>
+#include <Core/Components/UI/UIComponents.h>
 #include <Core/Components/Component.h>
 #include <Core/Assets/Animation.h>
 #include <Core/Assets/Texture.h>
@@ -160,6 +161,7 @@ namespace LLGP
 	LLGP::GameObject* SceneSerializer::DeserializeGameObjects(YAML::Node GameObjects)
 	{
 		LLGP::GameObject* toReturn = nullptr;
+		std::vector<LLGP::GameObject*> newGOs;
 		for (YAML::Node goData : GameObjects)
 		{
 			//m_Scene->m_SceneObjects.insert_or_assign(goData["GameObject"].as<uint64_t>(), std::make_unique<GameObject>(*m_Scene, goData));
@@ -220,6 +222,33 @@ namespace LLGP
 						compRef = newGO->AddComponent<LLGP::Camera>();
 						compName = "Camera";
 					}
+					else if (data = compNode["RectTransform"])
+					{
+						newGO->RemoveComponent(newGO->transform);
+						newGO->transform = newGO->AddComponent<LLGP::RectTransform>();
+						compRef= newGO->transform;
+						compName = "RectTransform";
+					}
+					else if (data = compNode["Canvas"])
+					{
+						compRef = newGO->AddComponent<LLGP::Canvas>();
+						compName = "Canvas";
+					}
+					else if (data = compNode["Image"])
+					{
+						compRef = newGO->AddComponent<Image>();
+						compName = "Image";
+					}
+					else if (data = compNode["LayoutElement"])
+					{
+						compRef = newGO->AddComponent<LLGP::LayoutElement>();
+						compName = "LayoutElement";
+					}
+					else if (data = compNode["RatioAxisLayoutGroup"])
+					{
+						compRef = newGO->AddComponent<LLGP::RatioAxisLayoutGroup>();
+						compName = "RatioAxisLayoutGroup";
+					}
 
 					if (compRef)
 					{
@@ -227,12 +256,8 @@ namespace LLGP
 						m_Token2PtrLUT.insert({ data["UUID"].as<uint64_t>(), compRef });
 					}
 				}
-				newGO->OnStart();
-			}/*
-			else
-			{
-				return nullptr;
-			}*/
+				newGOs.push_back(newGO);
+			}
 		}
 
 		for (LLGP::LinkRequest& linkRequest : m_LinkRequests)
@@ -250,6 +275,12 @@ namespace LLGP
 				Debug::LogError("Deserializing scene : " + m_Scene->m_Name + ".Unable to find local token for " + std::to_string(linkRequest.linkToken));
 			}
 		}
+
+		for (LLGP::GameObject* go : newGOs)
+		{
+			go->OnStart();
+		}
+
 		return toReturn;
 	}
 }

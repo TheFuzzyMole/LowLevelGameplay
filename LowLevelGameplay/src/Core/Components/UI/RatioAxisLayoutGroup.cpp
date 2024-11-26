@@ -58,4 +58,24 @@ namespace LLGP
 			}
 		}
 	}
+	void RatioAxisLayoutGroup::Serialize(YAML::Emitter& out)
+	{
+		out << YAML::Key << "RatioAxisLayoutGroup" << YAML::Value << YAML::BeginMap;
+
+		out << YAML::Key << "StretchOtherAxis" << YAML::Value << m_StretchOtherAxis;
+		out << YAML::Key << "LayoutDirection" << YAML::Value << (int)m_Direction;
+		out << YAML::Key << "Spacing" << YAML::Value << m_Spacing;
+
+		out << YAML::EndMap;
+	}
+	bool RatioAxisLayoutGroup::Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests)
+	{
+		if (!node["StretchOtherAxis"] || !node["LayoutDirection"] || !node["Spacing"]) { return false; }
+
+		m_StretchOtherAxis = node["StretchOtherAxis"].as<bool>();
+		m_Direction = (LayoutDirection)node["LayoutDirection"].as<int>();
+		m_Spacing = node["Spacing"].as<float>();
+
+		return true;
+	}
 }

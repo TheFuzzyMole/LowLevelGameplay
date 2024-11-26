@@ -96,7 +96,7 @@ namespace LLGP
 			T* castedType = nullptr;
 			for (int i = 0; i < m_Components.size(); i++)
 			{
-				if (castedType = dynamic_cast<T>(m_Components[i].get()))
+				if (castedType = dynamic_cast<T*>(m_Components[i].get()))
 				{
 					if (*castedType == *comp)
 					{

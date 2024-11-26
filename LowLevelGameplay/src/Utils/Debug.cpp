@@ -19,6 +19,7 @@ namespace LLGP
 #endif
 			std::cout << "ASSERT FAILED: ";
 			LogImpl(message, context);
+			if (!pred) { DebugBreak(); }
 			assert(pred); //use the c++ assert library to actually pause execution
 		}
     }

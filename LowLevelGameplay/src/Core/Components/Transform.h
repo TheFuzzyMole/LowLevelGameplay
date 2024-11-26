@@ -88,8 +88,8 @@ namespace LLGP
 		virtual void CleanTransform();
 		void SetAsDirty();
 
-		void Serialize(YAML::Emitter& out) override;
-		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;
+		virtual void Serialize(YAML::Emitter& out) override;
+		virtual bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;
 
 	protected:
 		bool m_IsDirty;

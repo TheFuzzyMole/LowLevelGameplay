@@ -15,6 +15,9 @@ namespace LLGP
 		float GetFlexibleWidth();
 		float GetFlexibleHeight();
 
+		void Serialize(YAML::Emitter& out) override;
+		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;
+
 	private:
 		float m_MinWidth;
 		float m_MinHeight;

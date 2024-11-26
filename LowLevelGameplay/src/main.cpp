@@ -9,6 +9,7 @@
 #include <Core/Physics.h>
 #include <Core/Time.h>
 #include <Core/Components/Components.h>
+#include <Core/Components/UI/UIComponents.h>
 #include <functional>
 #include <string>
 #include <chrono>
@@ -121,7 +122,7 @@ int main()
 			LLGP::Renderer::OnRenderLayer(window, RenderLayers::DEBUG);
 		}
 		window.setView(window.getDefaultView());
-		//Render UI???
+		LLGP::Canvas::OnRenderUI(window);
 		window.display();
 
 #pragma endregion

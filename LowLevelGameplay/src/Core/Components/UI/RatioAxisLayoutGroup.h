@@ -16,6 +16,9 @@ namespace LLGP
 
 		virtual void UpdateChildSizeAndPosition() override;
 
+		void Serialize(YAML::Emitter& out) override;
+		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;
+
 	private:
 		bool m_StretchOtherAxis;
 		LayoutDirection m_Direction;

@@ -1,5 +1,6 @@
 #include <Core/Components/UI/RectTransform.h>
 #include <Core/Components/UI/Canvas.h>
+#include <Core/Components/Camera.h>
 #include <Core/GameObject.h>
 #include <Core/Commons.h>
 #include <Utils/Debug.h>
@@ -8,19 +9,8 @@ namespace LLGP
 {
 	RectTransform::RectTransform(GameObject* owner, Transform* parent, Vector2f inPos) : Transform(owner, parent, inPos)
 	{
-		if (parent)
-		{
-			if (LLGP::RectTransform* parentRect = dynamic_cast<LLGP::RectTransform*>(parent))
-			{
-				m_Canvas = const_cast<LLGP::Canvas*>(parentRect->GetCanvasRef());
-			}
-			else
-			{
-				m_Canvas = _GameObject->GetComponent<LLGP::Canvas>();
-			}
-
-			Debug::Assert(m_Canvas != nullptr, "No Canvas Component added to base RectTransform", _GameObject);
-		}
+		m_Canvas = nullptr;
+		m_IsBeingControlled = 0;
 	}
 	const LLGP::Vector2f& RectTransform::GetRenderSize()
 	{
@@ -50,6 +40,7 @@ namespace LLGP
 			Debug::LogWarning("trying to set UI rect transform size along axis " + axis, _GameObject);
 			break;
 		}
+		SetAsDirty();
 	}
 	void RectTransform::ReleaseControl(uint8_t releaseMask)
 	{
@@ -63,27 +54,95 @@ namespace LLGP
 	{
 		return ((m_IsBeingControlled & ~m_IsIgnoringControl) & controlMask) == controlMask;
 	}
-	const LLGP::Canvas* RectTransform::GetCanvasRef() const
+	LLGP::Canvas& RectTransform::GetCanvasRef() const
 	{
-		return m_Canvas;
+		return *m_Canvas;
 	}
 	void RectTransform::CleanTransform()
 	{
 		LLGP::Transform::CleanTransform();
 
-		m_LocalRenderSize = { SCREEN_WIDTH, SCREEN_HEIGHT };
+		LLGP::Vector2f parentSize = { SCREEN_WIDTH, SCREEN_HEIGHT };
+		LLGP::Vector2f baseOffset = -parentSize / 2.f;
 		if (m_Parent)
 		{
 			if(LLGP::RectTransform* parentRect = dynamic_cast<LLGP::RectTransform*>(m_Parent))
 			{
-				m_LocalRenderSize = parentRect->GetRenderSize();
+				parentSize = parentRect->GetRenderSize();
+				baseOffset = LLGP::Vector2f::zero;
 			}
 		}
 
 		m_LocalRenderSize =
-			{fmaxf((m_LocalRenderSize.x * (m_AnchorMax.x - m_AnchorMin.x)) - (m_OffsetMin.x + m_OffsetMax.x), 0.f),
-			 fmaxf((m_LocalRenderSize.y * (m_AnchorMax.y - m_AnchorMin.y)) - (m_OffsetMin.y + m_OffsetMax.y), 0.f) };
+			{fmaxf((parentSize.x * (m_AnchorMax.x - m_AnchorMin.x)) - (m_OffsetMin.x + m_OffsetMax.x), 0.f),
+			 fmaxf((parentSize.y * (m_AnchorMax.y - m_AnchorMin.y)) - (m_OffsetMin.y + m_OffsetMax.y), 0.f) };
 
-		OnTransformSizeChanged();
+		SetLocalPosition(baseOffset + LLGP::Vector2f(
+			(parentSize.x * ((m_AnchorMax.x + m_AnchorMin.x) / 2.f) - 0.5f) + ((m_OffsetMin.x - m_OffsetMax.x) / 2.f),
+			(parentSize.y * ((m_AnchorMax.y + m_AnchorMin.y) / 2.f) - 0.5f) + ((m_OffsetMin.y - m_OffsetMax.y) / 2.f)
+			));
+
+		OnTransformSizeChanged(m_LocalRenderSize);
+	}
+	void RectTransform::Start()
+	{
+		if (m_Parent)
+		{
+			if (LLGP::RectTransform* parentRect = dynamic_cast<LLGP::RectTransform*>(m_Parent))
+			{
+				m_Canvas = &parentRect->GetCanvasRef();
+			}
+		}
+
+		if (m_Canvas == nullptr)
+		{
+			m_Canvas = _GameObject->GetComponent<LLGP::Canvas>();
+		}
+		SetAsDirty();
+
+		Debug::Assert(m_Canvas != nullptr, "No Canvas Component added to base RectTransform", _GameObject);
+	}
+	void RectTransform::Serialize(YAML::Emitter& out)
+	{
+		out << YAML::Key << "RectTransform" << YAML::Value << YAML::BeginMap;
+		out << YAML::Key << "UUID" << YAML::Value << uuid;
+
+		out << YAML::Key << "Position" << YAML::Value << GetLocalPosition();
+		out << YAML::Key << "AnchorMin" << YAML::Value << m_AnchorMin;
+		out << YAML::Key << "AnchorMax" << YAML::Value << m_AnchorMax;
+		out << YAML::Key << "OffsetMin" << YAML::Value << m_OffsetMin;
+		out << YAML::Key << "OffsetMax" << YAML::Value << m_OffsetMax;
+
+		if (m_Parent)
+		{
+			out << YAML::Key << "Parent" << YAML::Value << m_Parent->uuid;
+		}
+
+		out << YAML::EndMap;
+	}
+	bool RectTransform::Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests)
+	{
+		if (!node["Position"] || !node["AnchorMin"] || !node["AnchorMax"] || !node["OffsetMin"] || !node["OffsetMax"]) { return false; }
+		m_LocalPosition = node["Position"].as<LLGP::Vector2f>();
+		m_AnchorMin = node["AnchorMin"].as<LLGP::Vector2f>();
+		m_AnchorMax = node["AnchorMax"].as<LLGP::Vector2f>();
+		m_OffsetMin = node["OffsetMin"].as<LLGP::Vector2f>();
+		m_OffsetMax = node["OffsetMax"].as<LLGP::Vector2f>();
+
+		if (node["Parent"])
+		{
+			linkRequests.emplace_back(std::bind(
+				[](LLGP::Transform* context, LLGP::Component* parent)
+					{context->SetParent(dynamic_cast<LLGP::Transform*>(parent), false); },
+				this, std::placeholders::_1),
+				node["Parent"].as<uint64_t>()
+			);
+		}
+		else
+		{
+			m_Parent = nullptr;
+		}
+		SetAsDirty();
+		return true;
 	}
 }

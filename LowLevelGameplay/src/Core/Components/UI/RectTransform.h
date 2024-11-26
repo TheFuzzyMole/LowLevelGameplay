@@ -11,7 +11,7 @@ namespace LLGP
 	public:
 		RectTransform(GameObject* owner, Transform* parent = nullptr, Vector2f inPos = Vector2f::zero);
 		
-		LLGP::Event<> OnTransformSizeChanged;
+		LLGP::Event<LLGP::Vector2f> OnTransformSizeChanged;
 		
 		const LLGP::Vector2f& GetRenderSize();
 		void SetTransformAlongAxis(int axis, const LLGP::Vector2f& _anchors, const LLGP::Vector2f& _offsets);
@@ -31,9 +31,14 @@ namespace LLGP
 		/// <param name="controlMask">packed boolean flags for (anchor(min|max)|offset(min|max))</param>
 		bool IsBeingControlled(uint8_t controlMask) const;
 
-		const LLGP::Canvas* GetCanvasRef() const;
+		LLGP::Canvas& GetCanvasRef() const;
 
 		virtual void CleanTransform() override;
+
+		void Start() override;
+
+		virtual void Serialize(YAML::Emitter& out) override;
+		virtual bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;
 
 	private:
 		uint8_t m_IsBeingControlled;
