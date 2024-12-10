@@ -10,7 +10,7 @@ namespace LLGP
 	{
 	}
 
-	void RatioAxisLayoutGroup::UpdateChildSizeAndPosition()
+	void RatioAxisLayoutGroup::UpdateChildSizeAndPosition(LLGP::Vector2f newSize)
 	{
 		/*
 		* cache and loop through children
@@ -39,7 +39,7 @@ namespace LLGP
 			}
 		}
 
-		float totalSize = m_Direction == LayoutDirection::HORIZONTAL ? m_Transform->GetRenderSize().x : m_Transform->GetRenderSize().y;
+		float totalSize = m_Direction == LayoutDirection::HORIZONTAL ? newSize.x : newSize.y;
 		float unitSize = totalSize - m_Spacing * (m_Transform->GetChildCount() - 1);
 		unitSize /= flexibleTotal == 0 ? m_Transform->GetChildCount() : flexibleTotal;
 

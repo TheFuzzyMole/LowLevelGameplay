@@ -14,7 +14,7 @@ namespace LLGP
 	public:
 		RatioAxisLayoutGroup(LLGP::GameObject* owner);
 
-		virtual void UpdateChildSizeAndPosition() override;
+		virtual void UpdateChildSizeAndPosition(LLGP::Vector2f newSize) override;
 
 		void Serialize(YAML::Emitter& out) override;
 		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;

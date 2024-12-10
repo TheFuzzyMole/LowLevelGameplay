@@ -5,6 +5,7 @@
 namespace LLGP
 {
 	class Canvas;
+	class LayoutGroup;
 
 	class RectTransform : public Transform
 	{

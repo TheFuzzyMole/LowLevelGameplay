@@ -10,7 +10,7 @@ namespace LLGP
 	public:
 		LayoutGroup(GameObject* owner);
 
-		virtual void UpdateChildSizeAndPosition();
+		virtual void UpdateChildSizeAndPosition(LLGP::Vector2f newSize);
 
 		virtual void Serialize(YAML::Emitter& out) override = 0;
 		virtual bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override = 0;

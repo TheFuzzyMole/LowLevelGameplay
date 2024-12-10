@@ -7,11 +7,9 @@
 
 namespace LLGP
 {
-	RectTransform::RectTransform(GameObject* owner, Transform* parent, Vector2f inPos) : Transform(owner, parent, inPos)
-	{
-		m_Canvas = nullptr;
-		m_IsBeingControlled = 0;
-	}
+	RectTransform::RectTransform(GameObject* owner, Transform* parent, Vector2f inPos) : Transform(owner, parent, inPos), m_Canvas(nullptr), m_IsBeingControlled(0)
+	{}
+
 	const LLGP::Vector2f& RectTransform::GetRenderSize()
 	{
 		if (m_IsDirty) { CleanTransform(); }
@@ -98,6 +96,7 @@ namespace LLGP
 		{
 			m_Canvas = _GameObject->GetComponent<LLGP::Canvas>();
 		}
+
 		SetAsDirty();
 
 		Debug::Assert(m_Canvas != nullptr, "No Canvas Component added to base RectTransform", _GameObject);
