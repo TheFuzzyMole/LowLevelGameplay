@@ -5,7 +5,7 @@
 namespace LLGP
 {
 	class Canvas;
-	class LayoutGroup;
+	class LayoutElement;
 
 	class RectTransform : public Transform
 	{
@@ -15,7 +15,7 @@ namespace LLGP
 		LLGP::Event<LLGP::Vector2f> OnTransformSizeChanged;
 		
 		const LLGP::Vector2f& GetRenderSize();
-		void SetTransformAlongAxis(int axis, const LLGP::Vector2f& _anchors, const LLGP::Vector2f& _offsets);
+		void SetTransformAlongAxis(int axis, const LLGP::Vector2f& _anchors, const LLGP::Vector2f& _offsets, const LLGP::Vector2f& _parentSize);
 		/// <summary>
 		/// release control of aspects of the transform, should be called from a layout group only
 		/// </summary>
@@ -53,5 +53,6 @@ namespace LLGP
 		LLGP::Vector2f m_LocalRenderSize;
 
 		LLGP::Canvas* m_Canvas;
+		LLGP::LayoutElement* m_LayoutElement;
 	};
 }

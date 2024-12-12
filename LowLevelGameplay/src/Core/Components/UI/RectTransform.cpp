@@ -1,5 +1,6 @@
 #include <Core/Components/UI/RectTransform.h>
 #include <Core/Components/UI/Canvas.h>
+#include <Core/Components/UI/LayoutElement.h>
 #include <Core/Components/Camera.h>
 #include <Core/GameObject.h>
 #include <Core/Commons.h>
@@ -7,7 +8,7 @@
 
 namespace LLGP
 {
-	RectTransform::RectTransform(GameObject* owner, Transform* parent, Vector2f inPos) : Transform(owner, parent, inPos), m_Canvas(nullptr), m_IsBeingControlled(0)
+	RectTransform::RectTransform(GameObject* owner, Transform* parent, Vector2f inPos) : Transform(owner, parent, inPos), m_Canvas(nullptr), m_LayoutElement(nullptr), m_IsBeingControlled(0)
 	{}
 
 	const LLGP::Vector2f& RectTransform::GetRenderSize()
@@ -16,8 +17,11 @@ namespace LLGP
 		return m_LocalRenderSize;
 	}
 
-	void RectTransform::SetTransformAlongAxis(int axis, const LLGP::Vector2f& _anchors, const LLGP::Vector2f& _offsets)
+	void RectTransform::SetTransformAlongAxis(int axis, const LLGP::Vector2f& _anchors, const LLGP::Vector2f& _offsets, const LLGP::Vector2f& _parentSize)
 	{
+		float totalSpace = 0.f;
+		float actualSpace = 0.f;
+
 		switch (axis)
 		{
 		case 0:
@@ -26,6 +30,8 @@ namespace LLGP
 			m_OffsetMin.x = _offsets.x;
 			m_OffsetMax.x = _offsets.y;
 			m_IsBeingControlled |= 0b10101010;
+			totalSpace = _parentSize.x * (m_AnchorMax.x - m_AnchorMin.x);
+			actualSpace = totalSpace - (m_OffsetMin.x + m_OffsetMax.x);
 			break;
 		case 1:
 			m_AnchorMin.y = _anchors.x;
@@ -33,11 +39,14 @@ namespace LLGP
 			m_OffsetMin.y = _offsets.x;
 			m_OffsetMax.y = _offsets.y;
 			m_IsBeingControlled |= 0b01010101;
+			totalSpace = _parentSize.y * (m_AnchorMax.y - m_AnchorMin.y);
+			actualSpace = totalSpace - (m_OffsetMin.y + m_OffsetMax.y);
 			break;
 		default:
 			Debug::LogWarning("trying to set UI rect transform size along axis " + axis, _GameObject);
 			break;
 		}
+
 		SetAsDirty();
 	}
 	void RectTransform::ReleaseControl(uint8_t releaseMask)
@@ -71,6 +80,18 @@ namespace LLGP
 			}
 		}
 
+		LLGP::Vector2f overshoot(
+			(m_LayoutElement && m_LayoutElement->HasMinWidth() ? fmaxf(m_LayoutElement->GetMinWidth() - ((parentSize.x * (m_AnchorMax.x - m_AnchorMin.x)) - (m_OffsetMax.x + m_OffsetMin.x)), 0.f) : 0.f),
+			(m_LayoutElement && m_LayoutElement->HasMinHeight() ? fmaxf(m_LayoutElement->GetMinHeight() - ((parentSize.y * (m_AnchorMax.y - m_AnchorMin.y)) - (m_OffsetMax.y + m_OffsetMin.y)), 0.f) : 0.f)
+		);
+
+		LLGP::Vector2f ratioDenominators = m_AnchorMin + (LLGP::Vector2f::one - m_AnchorMax);
+
+		m_OffsetMin.x -= overshoot.x * (ratioDenominators.x == 0 ? 0.5f : m_AnchorMin.x / ratioDenominators.x);
+		m_OffsetMax.x -= overshoot.x * (ratioDenominators.x == 0 ? 0.5f : (1.f - m_AnchorMax.x) / ratioDenominators.x);
+		m_OffsetMin.y -= overshoot.y * (ratioDenominators.y == 0 ? 0.5f : m_AnchorMin.y / ratioDenominators.y);
+		m_OffsetMax.y -= overshoot.y * (ratioDenominators.y == 0 ? 0.5f : (1.f - m_AnchorMax.y) / ratioDenominators.y);
+
 		m_LocalRenderSize =
 			{fmaxf((parentSize.x * (m_AnchorMax.x - m_AnchorMin.x)) - (m_OffsetMin.x + m_OffsetMax.x), 0.f),
 			 fmaxf((parentSize.y * (m_AnchorMax.y - m_AnchorMin.y)) - (m_OffsetMin.y + m_OffsetMax.y), 0.f) };
@@ -79,6 +100,7 @@ namespace LLGP
 			(parentSize.x * ((m_AnchorMax.x + m_AnchorMin.x) / 2.f) - 0.5f) + ((m_OffsetMin.x - m_OffsetMax.x) / 2.f),
 			(parentSize.y * ((m_AnchorMax.y + m_AnchorMin.y) / 2.f) - 0.5f) + ((m_OffsetMin.y - m_OffsetMax.y) / 2.f)
 			));
+
 
 		OnTransformSizeChanged(m_LocalRenderSize);
 	}
@@ -96,6 +118,10 @@ namespace LLGP
 		{
 			m_Canvas = _GameObject->GetComponent<LLGP::Canvas>();
 		}
+
+		m_LayoutElement = _GameObject->GetComponent<LLGP::LayoutElement>();
+		LLGP::RectTransform* rectParent = nullptr;
+		if (m_Parent) { rectParent = dynamic_cast<LLGP::RectTransform*>(m_Parent); }
 
 		SetAsDirty();
 

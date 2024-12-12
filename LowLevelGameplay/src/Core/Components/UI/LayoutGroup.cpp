@@ -6,7 +6,7 @@
 namespace LLGP
 {
 
-	LayoutGroup::LayoutGroup(GameObject* owner) : Component(owner)
+	LayoutGroup::LayoutGroup(GameObject* owner) : Component(owner), m_ChildAlignment(LayoutAlignment::TOPLEFT)
 	{
 		m_Transform = dynamic_cast<LLGP::RectTransform*>(_GameObject->transform);
 		Debug::Assert((m_Transform != nullptr), "LayoutGroup component added to GameObject which doesnt have a RectTransform");
@@ -16,7 +16,7 @@ namespace LLGP
 		}
 	}
 
-	void LayoutGroup::UpdateChildSizeAndPosition(LLGP::Vector2f newSize)
+	void LayoutGroup::UpdateChildSizeAndPosition(const LLGP::Vector2f& newSize)
 	{
 	}
 }

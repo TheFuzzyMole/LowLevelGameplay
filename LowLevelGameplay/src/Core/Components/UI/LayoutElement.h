@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/Components/Component.h>
+#include <optional>
 
 namespace LLGP
 {
@@ -14,16 +15,22 @@ namespace LLGP
 		float GetPreferredHeight();
 		float GetFlexibleWidth();
 		float GetFlexibleHeight();
+		bool HasMinWidth();
+		bool HasMinHeight();
+		bool HasPreferredWidth();
+		bool HasPreferredHeight();
+		bool HasFlexibleWidth();
+		bool HasFlexibleHeight();
 
 		void Serialize(YAML::Emitter& out) override;
 		bool Deserialize(YAML::Node node, std::vector<LinkRequest>& linkRequests) override;
 
 	private:
-		float m_MinWidth;
-		float m_MinHeight;
-		float m_PreferredWidth;
-		float m_PreferredHeight;
-		float m_FlexibleWidth;
-		float m_FlexibleHeight;
+		std::optional<float> m_MinWidth;
+		std::optional<float> m_MinHeight;
+		std::optional<float> m_PreferredWidth;
+		std::optional<float> m_PreferredHeight;
+		std::optional<float> m_FlexibleWidth;
+		std::optional<float> m_FlexibleHeight;
 	};
 }
