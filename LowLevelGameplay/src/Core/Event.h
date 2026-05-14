@@ -37,7 +37,7 @@ namespace LLGP
 
 	public:
 
-		Event<T...>& Invoke(T... args) { for (Binding<T...> l : listeners) l.Invoke(static_cast<T&&>(args)...); return (*this); }
+		Event<T...>& Invoke(T... args) { for (Binding<T...>& l : listeners) { l.Invoke(static_cast<T&&>(args)...); } return (*this); }
 		
 		void AddListener(void* contextObj, const std::function<void(T...)> inFunc)
 		{
